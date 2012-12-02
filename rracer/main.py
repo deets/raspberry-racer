@@ -3,23 +3,23 @@ import pyglet
 from pyglet.window import key
 ## from car import Car
 ## from debug import DebugDraw
-## from track import Track
-## from camera import Camera
-## from util import Grid, SkidMarks
+from .track import Track
+from .camera import Camera
+from util import Grid #SkidMarks
 
 
-## track = Track("""
-##  +----->-----+
-##  |           |
-##  |         +-+
-##  |         |  
-##  +---------+  
-## """, (0, 0), 10.0)
+track = Track("""
+ +----->-----+
+ |           |
+ |         +-+
+ |         |  
+ +---------+  
+""", (0, 0), 10.0)
 
 ## skidmarks = SkidMarks()
 ## car = Car(world, (0, 0), skidmarks=skidmarks)
 ## grid = Grid(worldAABB, step=3.0)
-## camera = Camera(window, zoom=20.0)
+
 ## camera.follow(car)
 
 
@@ -40,26 +40,6 @@ class PlayerState(object):
             self.throttle = .0
             self.braking = True
 
-def update(dt):
-    ## debugDraw.pre_world_step()
-    ## track.update(dt, keys)
-    ## camera.update(dt)
-    ## world.Step(dt, vel_iters, pos_iters)
-
-
-    ## camera.worldProjection()
-    ## #car.blit(*body.position)
-    ## grid.render()
-    ## track.render()
-    ## _, (slot_position, _) = track.nearest_point_on_slot(car.guide_position)
-    ## if slot_position:
-    ##     debugDraw.DrawCircle(slot_position, 2.0, (1.0, 0, 0))
-    ## skidmarks.render()
-    ## debugDraw.render()
-    ## camera.hudProjection()
-    ## fps_display.draw()
-    ## ci_display.draw()
-    pass
 
 
 def main():
@@ -67,13 +47,45 @@ def main():
 
     keys = key.KeyStateHandler()
     window.push_handlers(keys)
-        
-    pyglet.clock.schedule_interval(update, 1/60.0) # update at 60Hz
+    camera = Camera(window, zoom=20.0)
 
+    camera.follow(track)
+    ## worldAABB=box2d.b2AABB()
+    ## worldAABB.lowerBound = (-100.0, -100.0)
+    ## worldAABB.upperBound = (100.0, 100.0)
+
+    fps_display = pyglet.clock.ClockDisplay()
+    grid = Grid((-100, -100, 100, 100), step=3.0) 
+    
     @window.event
     def on_draw():
         window.clear()
+        camera.worldProjection()
+        #car.blit(*body.position)
+        grid.render()
+        track.render()
+        camera.hudProjection()
+        fps_display.draw()
+        
 
+    def update(dt):
+        ## debugDraw.pre_world_step()
+        ## track.update(dt, keys)
+        camera.update(dt)
+        ## world.Step(dt, vel_iters, pos_iters)
+
+
+        ## _, (slot_position, _) = track.nearest_point_on_slot(car.guide_position)
+        ## if slot_position:
+        ##     debugDraw.DrawCircle(slot_position, 2.0, (1.0, 0, 0))
+        ## skidmarks.render()
+        ## debugDraw.render()
+        ## camera.hudProjection()
+
+        ## ci_display.draw()
+        pass
+
+    pyglet.clock.schedule_interval(update, 1/60.0) # update at 60Hz
     pyglet.app.run()
 
 
