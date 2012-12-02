@@ -1,11 +1,12 @@
 #!/usr/bin/arch -i386  /Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7
 import pyglet
 from pyglet.window import key
-## from car import Car
-## from debug import DebugDraw
+from .car import Car
 from .track import Track
 from .camera import Camera
-from util import Grid #SkidMarks
+from .util import Grid #SkidMarks
+from .world import World
+from .debug import DebugDraw
 
 
 track = Track("""
@@ -45,34 +46,46 @@ class PlayerState(object):
 def main():
     window = pyglet.window.Window()
 
+    debug_draw = DebugDraw()
+    
     keys = key.KeyStateHandler()
     window.push_handlers(keys)
     camera = Camera(window, zoom=20.0)
 
-    camera.follow(track)
     ## worldAABB=box2d.b2AABB()
     ## worldAABB.lowerBound = (-100.0, -100.0)
     ## worldAABB.upperBound = (100.0, 100.0)
 
+    player_state = PlayerState(key.UP)
+    
+    world = World(debug_draw)
     fps_display = pyglet.clock.ClockDisplay()
     grid = Grid((-100, -100, 100, 100), step=3.0) 
+    car = Car(world, (0, 0),)# skidmarks=skidmarks)
+    camera.follow(car)
+
+    ci = track.add_car(car, player_state)
+    track.reset()
+
+
     
     @window.event
     def on_draw():
         window.clear()
         camera.worldProjection()
-        #car.blit(*body.position)
         grid.render()
         track.render()
+        car.render()
+        world.render()
         camera.hudProjection()
         fps_display.draw()
         
 
     def update(dt):
-        ## debugDraw.pre_world_step()
-        ## track.update(dt, keys)
+        track.update(dt, keys)
         camera.update(dt)
-        ## world.Step(dt, vel_iters, pos_iters)
+        world.step(dt)
+        
 
 
         ## _, (slot_position, _) = track.nearest_point_on_slot(car.guide_position)

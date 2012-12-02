@@ -195,6 +195,7 @@ class CarInfo(object):
 
 
     def constrain_car(self):
+        return 
         guide_p = self.car.guide_position
         tile, (slot_p, relpos) = self.track.nearest_point_on_slot(guide_p)
         self.current_tile = tile
