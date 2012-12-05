@@ -20,8 +20,11 @@ class World(object):
                     self.debug_draw.DrawPolygon(shape)
 
 
-    def add(self, body, shape):
-        self.space.add(body, shape)
+    def add(self, body_or_joint, shape=None):
+        if shape is not None:
+            self.space.add(body_or_joint, shape)
+        else:
+            self.space.add(body_or_joint)
 
 
     def render(self):
