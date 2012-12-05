@@ -61,7 +61,6 @@ class WorldObject(object):
 
 
     def apply_force(self, force):
-        print "apply_force", force
         self.body.apply_force(force)
 
 
@@ -74,10 +73,10 @@ class WorldObject(object):
 class Tire(WorldObject):
 
 
-    MAX_DRIVE_FORCE = 3.0
-    BRAKE_FORCE = MAX_DRIVE_FORCE * 1.5
+    MAX_DRIVE_FORCE = 30.0
+    BRAKE_FORCE = MAX_DRIVE_FORCE * .5
     MAX_LATERAL_IMPULSE = 1.0
-    DRAG_COEFFICIENT = .02
+    DRAG_COEFFICIENT = 1.0
     
     
     def __init__(self, car, position, width=10.0, length=20.0, steerable=True, skidmarks=None, powered=True, density=1.0):
@@ -130,7 +129,6 @@ class Tire(WorldObject):
         
 
     def update(self, dt):
-        print "forward_velocity", self.forward_velocity
         drag_force = self.forward_velocity * -self.DRAG_COEFFICIENT
         self.apply_force(drag_force)
         return
@@ -155,12 +153,10 @@ class Tire(WorldObject):
             forward_normal = self.forward_normal
             force = self.MAX_DRIVE_FORCE * direction
             forward_force = force * forward_normal
-            print "forward_force", forward_force
             self.apply_force(forward_force)
 
 
     def brake(self):
-        return
         n = self.forward_velocity
         if not n.get_length():
             return
@@ -180,7 +176,7 @@ class Tire(WorldObject):
 class Car(WorldObject):
 
 
-    def __init__(self, world, position, width=1.6, length=4.0, tire_width=.25, tire_length=.8, skidmarks=None, body_density=10.0):
+    def __init__(self, world, position, width=1.6, length=4.0, tire_width=.25, tire_length=.8, skidmarks=None, body_density=1.0):
         mass = width * length * body_density
         inertia = moment_for_box(mass, width, length)
         self.world = world
@@ -197,17 +193,17 @@ class Car(WorldObject):
 
 
         flpos = position[0] - width / 2.0 - tire_width * 2, position[1] + length / 2.0
-        self.front_left = Tire(self, flpos, tire_width, tire_length, skidmarks=skidmarks, powered=False)
+        self.front_left = Tire(self, flpos, tire_width, tire_length, skidmarks=skidmarks, powered=False, density=body_density)
 
 
         frpos = position[0] + width / 2.0 + tire_width * 2, position[1] + length / 2.0
-        self.front_right = Tire(self, frpos, tire_width, tire_length, skidmarks=skidmarks, powered=False)
+        self.front_right = Tire(self, frpos, tire_width, tire_length, skidmarks=skidmarks, powered=False, density=body_density)
         
         rlpos = position[0] - width / 2.0 - tire_width * 2, position[1] - length / 2.0
-        self.rear_left = Tire(self, rlpos, tire_width * 1.5, tire_length, steerable=False, skidmarks=skidmarks)
+        self.rear_left = Tire(self, rlpos, tire_width * 1.5, tire_length, steerable=False, skidmarks=skidmarks, density=body_density)
 
         rrpos = position[0] + width / 2.0 + tire_width * 2, position[1] - length / 2.0
-        self.rear_right = Tire(self, rrpos, tire_width * 1.5, tire_length, steerable=False, skidmarks=skidmarks)
+        self.rear_right = Tire(self, rrpos, tire_width * 1.5, tire_length, steerable=False, skidmarks=skidmarks, density=body_density)
         self.tires = [self.front_left, self.front_right, self.rear_left, self.rear_right]
 
 

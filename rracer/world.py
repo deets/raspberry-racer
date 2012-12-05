@@ -19,6 +19,10 @@ class World(object):
                 if isinstance(shape, Poly):
                     self.debug_draw.DrawPolygon(shape)
 
+        for body in self.space.bodies:
+            body.reset_forces()
+
+            
 
     def add(self, body_or_joint, shape=None):
         if shape is not None:
