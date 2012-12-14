@@ -88,12 +88,14 @@ int main(void)
 	for (;;)
 	{
 		CheckJoystickMovement();
-
+		ReadControllerInput();
 		/* Must throw away unused bytes from the host, or it will lock up while waiting for the device */
 		CDC_Device_ReceiveByte(&VirtualSerial_CDC_Interface);
 
 		CDC_Device_USBTask(&VirtualSerial_CDC_Interface);
 		USB_USBTask();
+		/* PORTA ^= 0xff; */
+		/* PORTF ^= 0xff; */
 	}
 }
 
@@ -111,6 +113,14 @@ void SetupHardware(void)
 	Joystick_Init();
 	LEDs_Init();
 	USB_Init();
+
+	ADC_Init(ADC_FREE_RUNNING | ADC_PRESCALE_32);
+	ADC_SetupChannel(1);
+	/* // Port F init */
+	/* DDRA = 0xff; */
+
+	/* ADCSRA = 0xff; */
+	/* DDRF = 0xff; */
 }
 
 /** Checks for changes in the position of the board joystick, sending strings to the host upon each change. */
@@ -143,6 +153,15 @@ void CheckJoystickMovement(void)
 		/* Alternatively, without the stream: */
 		// CDC_Device_SendString(&VirtualSerial_CDC_Interface, ReportString);
 	}
+}
+
+void ReadControllerInput(void)
+{
+  char out_string[200];
+  ADC_GetChannelReading(ADC_REFERENCE_AVCC | ADC_RIGHT_ADJUSTED | ADC_CHANNEL1);
+  int value = ADC_GetResult();
+  sprintf(out_string, "%04d\n", value);
+  fputs(out_string, &USBSerialStream);
 }
 
 /** Event handler for the library USB Connection event. */
