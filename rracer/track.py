@@ -214,6 +214,9 @@ class CarInfo(object):
     def update(self, dt, keys):
         ps = self.player_state
         ps.update(dt, keys)
+
+        self.car.steer(ps.steering)
+        
         if ps.braking:
             self.car.brake()
         else:

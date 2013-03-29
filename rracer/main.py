@@ -27,10 +27,12 @@ track = Track("""
 class PlayerState(object):
 
 
-    def __init__(self, throttle_key):
+    def __init__(self, throttle_key, left_key=None, right_key=None):
         self.throttle = .0
+        self.steering = .0
         self.braking = True
         self.throttle_key = throttle_key
+        self.left_key, self.right_key = left_key, right_key
         
 
     def update(self, dt, keys):
@@ -40,6 +42,14 @@ class PlayerState(object):
         else:
             self.throttle = .0
             self.braking = True
+
+        if self.left_key is not None and keys[self.left_key]:
+            self.steering = -1.0
+        elif self.right_key is not None and keys[self.right_key]:
+            self.steering = 1.0
+        else:
+            self.steering = .0
+            
 
 
 
@@ -56,7 +66,7 @@ def main():
     ## worldAABB.lowerBound = (-100.0, -100.0)
     ## worldAABB.upperBound = (100.0, 100.0)
 
-    player_state = PlayerState(key.UP)
+    player_state = PlayerState(key.UP, key.LEFT, key.RIGHT)
     
     world = World(debug_draw)
     fps_display = pyglet.clock.ClockDisplay()

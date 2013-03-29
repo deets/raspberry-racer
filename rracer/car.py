@@ -73,9 +73,12 @@ class WorldObject(object):
 class Tire(WorldObject):
 
 
-    MAX_DRIVE_FORCE = 30.0
+    MAX_DRIVE_FORCE = 180.0
     BRAKE_FORCE = MAX_DRIVE_FORCE * .5
-    MAX_LATERAL_IMPULSE = 1.0
+
+    MAX_LATERAL_IMPULSE = 15.0
+    MIN_LATERAL_IMPULSE = MAX_LATERAL_IMPULSE * .1
+
     DRAG_COEFFICIENT = 1.0
     
     
@@ -83,7 +86,7 @@ class Tire(WorldObject):
         world = car.world
         self.steerable = steerable
         self.powered = powered
-
+        self.skidding = False
 
         mass = width * length * density
         inertia = moment_for_box(mass, width, length)
@@ -108,14 +111,15 @@ class Tire(WorldObject):
 
         # our joint
         joint = PivotJoint(self.body, car.body, self.position)
+        joint.error_bias = pow(1.0 - 0.1, 60.0) * 10
         self.world.add(joint)
 
 
         #joint = PinJoint(self.body, car.body)
         #self.world.add(joint)
 
-        rot_joint = RotaryLimitJoint(self.body, car.body, 0, 0)
-        self.world.add(rot_joint)
+        self.rot_joint = RotaryLimitJoint(self.body, car.body, 0, 0)
+        self.world.add(self.rot_joint)
         
         
         ## jointDef = box2d.b2RevoluteJointDef()
@@ -131,20 +135,37 @@ class Tire(WorldObject):
     def update(self, dt):
         drag_force = self.forward_velocity * -self.DRAG_COEFFICIENT
         self.apply_force(drag_force)
-        return
     
         impulse = self.body.mass * -self.lateral_velocity
-        print "impulse, lv", impulse, self.lateral_velocity
+
         il = impulse.get_length()
-        mli = self.MAX_LATERAL_IMPULSE
-        if self.steerable:
-            mli *= 1.5
-        if il > mli:
-            impulse *= mli / il
-            if self.skidmarks:
-                self.skidmarks += self.center
+
+        if self.skidding:
+
+            if il <= self.MIN_LATERAL_IMPULSE:
+                self.skidding = False
+
+            impulse /= il / self.MIN_LATERAL_IMPULSE
+
                 
-        #self.body.apply_impulse( impulse, self.position)
+        elif not self.skidding and il >= self.MAX_LATERAL_IMPULSE:
+            impulse /= il / self.MAX_LATERAL_IMPULSE
+            self.skidding = True
+
+        
+
+
+        if self.steerable:
+            impulse *= 1.3
+
+        ## if il > mli:
+        ##     impulse *= mli / il
+        ##     if self.skidmarks:
+        ##         self.skidmarks += self.center
+
+        correction_force = impulse / dt
+
+        self.apply_force(correction_force)#, self.position)
 
 
 
@@ -152,11 +173,12 @@ class Tire(WorldObject):
         if self.powered:
             forward_normal = self.forward_normal
             force = self.MAX_DRIVE_FORCE * direction
-            forward_force = force * forward_normal
-            self.apply_force(forward_force)
-
+            self.forward_force = force * forward_normal
+            self.apply_force(self.forward_force)
+            
 
     def brake(self):
+        return
         n = self.forward_velocity
         if not n.get_length():
             return
@@ -167,8 +189,8 @@ class Tire(WorldObject):
 
     def steer(self, direction):
         if self.steerable:
-            self.joint.lowerAngle = direction
-            self.joint.upperAngle = direction
+            self.rot_joint.max = direction
+            self.rot_joint.min = direction
         
     
 
@@ -223,7 +245,7 @@ class Car(WorldObject):
             
 
     def steer(self, direction):
-        return
+        direction *= .6
         for tire in self.tires:
             tire.steer(direction)
 
