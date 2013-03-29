@@ -160,7 +160,7 @@ void ReadControllerInput(void)
   char out_string[200];
   ADC_GetChannelReading(ADC_REFERENCE_AVCC | ADC_RIGHT_ADJUSTED | ADC_CHANNEL1);
   int value = ADC_GetResult();
-  sprintf(out_string, "%04d\n", value);
+  sprintf(out_string, "%04x\n", value);
   fputs(out_string, &USBSerialStream);
 }
 

@@ -8,7 +8,7 @@
 # --------------------------------------
 #         LUFA Project Makefile.
 # --------------------------------------
-
+LUFA_BASE    = /Users/deets/software/archives/LUFA-120730/LUFA
 MCU          = at90usb1287
 ARCH         = AVR8
 BOARD        = USBKEY
