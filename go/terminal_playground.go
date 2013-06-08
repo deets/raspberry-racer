@@ -234,6 +234,9 @@ func pump_events() ([]Event) {
 			if err != nil {
 				panic("error reading stdin!");
 			}
+			// the highest bit determines
+			// if the key was pressed, or 
+			// released
 			for i := 0; i < rc; i++ {
 				c := buffer[i];
 				pressed := c & 0x80 == 0;
@@ -279,7 +282,7 @@ func (world *World) Init(width, height int) {
 	world.now = time.Now();
 	world.width = width;
 	world.height = height;
-	world.pressed_keys = *new(map[int] bool);
+	world.pressed_keys = make(map[int] bool, 128);
 }
 
 
