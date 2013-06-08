@@ -92,7 +92,7 @@ const (
 )
 
 
-func test(fd uintptr, use_scancodes bool) (func()) {
+func SetupTerminal(fd uintptr, use_scancodes bool) (func()) {
 	var original_settings termios;
 	
 	resetters := []func(){};
@@ -248,14 +248,6 @@ func pump_events() ([]Event) {
 	return res;
 }
 
-func show(width, height int, w2, h2, w float64) {
-	openvg.BackgroundColor("black")                           // Black background
-	openvg.FillRGB(44, 100, 232, 1)                           // Big blue marble
-	openvg.Circle(w2, 0, w)                                   // The "world"
-	openvg.FillColor("white")                                 // White text
-	openvg.TextMid(w2, h2, "hello, world", "serif", width/10) // Greetings 
-}	
-
 
 func fps(width, height int, elapsed time.Duration) {
 	openvg.FillColor("white") ;
@@ -268,6 +260,11 @@ func fps(width, height int, elapsed time.Duration) {
 }
 
 
+type WorldObject interface {
+	Begin(world *World);
+	Show(world *World);
+}
+
 
 type World struct {
 	now time.Time;
@@ -275,6 +272,7 @@ type World struct {
 	width, height int;
 	show_hud bool;
 	pressed_keys map[int] bool;
+	objects [] WorldObject;
 }
 
 
@@ -283,21 +281,38 @@ func (world *World) Init(width, height int) {
 	world.width = width;
 	world.height = height;
 	world.pressed_keys = make(map[int] bool, 128);
+    world.objects = []WorldObject{}; //make([]WorldObject, 100);
 }
 
 
-func (world *World) Begin() {
+func (world *World) Begin(events []Event) {
 	world.elapsed = time.Since(world.now);
 	world.now = world.now.Add(world.elapsed);
 	openvg.Start(world.width, world.height);
+	world.ProcessEvents(events);
+	
+	for i := 0; i < len(world.objects); i++ {
+		world.objects[i].Begin(world);
+	}
 }
 
+func (world *World) Show() {
+	for i := 0; i < len(world.objects); i++ {
+		world.objects[i].Show(world);
+	}
+}
+
+func (world *World) Add(object WorldObject) {
+	world.objects = append(world.objects, object);
+}
 
 func (world *World) End(tie_to_fps float64) {
 	if world.show_hud {
 		fps(world.width, world.height, world.elapsed);
 	}
 	openvg.End();
+	// wait to reach the passed in
+	// framerate
 	if tie_to_fps > 0 {
 		period := time.Duration((1.0 / tie_to_fps) * float64(time.Second));
 		frame_time := time.Since(world.now);
@@ -321,35 +336,56 @@ func (world *World) IsPressed(key int) bool {
 }
 
 
+type Foo struct {
+	w2 float64;		
+	h2 float64;
+}
+
+
+func (foo *Foo) Show(world *World) {
+	//func show(width, height int, w2, h2, w float64) {
+	openvg.BackgroundColor("black");
+	openvg.FillRGB(44, 100, 232, 1);
+	openvg.Circle(foo.w2, 0, float64(world.width));                                   // The "world"
+	openvg.FillColor("white");                                 // White text
+	openvg.TextMid(foo.w2, foo.h2, "hello, world", "serif", world.width/10) // Greetings 
+}
+
+
+func (foo *Foo) Begin(world *World) {
+	if world.IsPressed(K_LEFT) {
+		foo.w2 -= 1;
+	}
+	if world.IsPressed(K_RIGHT) {
+		foo.w2 += 1;
+	}
+}
+
 func main() {
-	width, height := openvg.Init() // OpenGL, etc initialization
-
-	w2 := float64(width / 2);
-	h2 := float64(height / 2);
-	w := float64(width);
-
-		
+	width, height := openvg.Init(); // OpenGL, etc initialization
+	
 	stdin_fd := os.Stdin.Fd();
-	f := test(stdin_fd, true);
+	f := SetupTerminal(stdin_fd, true);
 	defer f();
+	log.Printf("setup world");
 	running := true;
 	world := World{};
 	world.show_hud = true;
 	world.Init(width, height);
+	w2 := float64(width / 2);
+	h2 := float64(height / 2);
+
+	foo := Foo{w2 : w2, h2 : h2};
+
+	world.Add(&foo);
+
 	for running {
 		events := pump_events();
-		world.ProcessEvents(events);
-		world.Begin();
+		world.Begin(events);
 		if world.IsPressed(K_ESC) {
 			running = false;
 		}
-		if world.IsPressed(K_LEFT) {
-			w2 -= 1;
-		}
-		if world.IsPressed(K_RIGHT) {
-			w2 += 1;
-		}
-		show(width, height, w2, h2, w);
+		world.Show();
 		world.End(30.0);
 	}
 }
