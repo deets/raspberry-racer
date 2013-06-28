@@ -1,0 +1,8 @@
+** Chipmunk
+
+ - download 6.1.5
+ - untar
+ - create build-subdir, change into
+ - create makefiles with
+
+$ cmake -DCMAKE_INSTALL_PREFIX:PATH=/opt/chipmunk -DINSTALL_DEMOS:BOOL=OFF -DBUILD_DEMOS:BOOL=OFF 
