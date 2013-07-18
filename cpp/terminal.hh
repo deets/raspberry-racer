@@ -5,8 +5,10 @@
 #include <unistd.h>
 
 #include <vector>
+#include <boost/function.hpp>
 #include <boost/bind.hpp>
-#include <tr1/functional>
+
+#include "posix-adapter.hh"
 
 using namespace std;
 
@@ -15,19 +17,21 @@ class Terminal {
 
 private:
 
-  struct termios _terminal_settings;
-
-  vector< std::tr1::function<void (Terminal*) > > _resetters;
-
   void reset_raw_kb_mode();
 
+
 public:
-  Terminal();
+  Terminal(PosixAdapter &adapter);
   virtual ~Terminal();
 
   void reset();
   void install_signal_handler();
   int read_character();
+private:
+  struct termios _terminal_settings;
+  vector< boost::function<void () > > _resetters;
+  PosixAdapter &_p;
+
 };
 
 #endif

@@ -36,3 +36,6 @@ nosetests.xml
 .project
 .pydevproject
 
+gtest-1.6.0
+*.o
+test
