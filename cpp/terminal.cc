@@ -9,7 +9,7 @@
 
 #include "terminal.hh"
 
-static Terminal *the_terminal;
+Terminal *Terminal::s_signal_handler_terminal;
 
 Terminal::Terminal(PosixAdapter &adapter) :
   _p(adapter)
@@ -66,11 +66,11 @@ int Terminal::read_character() {
   // return -1;
 }
 
-void reset_terminal(int s) {
-   the_terminal->reset();
+void Terminal::reset_terminal(int s) {
+  Terminal::s_signal_handler_terminal->reset();
 }
 
 void Terminal::install_signal_handler() {
-  the_terminal = this;
+  s_signal_handler_terminal = this;
   _p.signal(SIGTERM, reset_terminal);
 }

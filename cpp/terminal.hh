@@ -27,10 +27,14 @@ public:
   void reset();
   void install_signal_handler();
   int read_character();
+  static void reset_terminal(int s);
+
 private:
   struct termios _terminal_settings;
   vector< boost::function<void () > > _resetters;
   PosixAdapter &_p;
+
+  static Terminal *s_signal_handler_terminal;
 
 };
 

@@ -30,8 +30,10 @@ TEST(TerminalTest, TestNormalSetup) {
   TestPosixAdapter adapter;
   EXPECT_CALL(adapter, tcgetattr(Eq(0), _));
   EXPECT_CALL(adapter, tcsetattr(Eq(0), Eq(0), _)).Times(2);
+  EXPECT_CALL(adapter, signal(Eq(SIGTERM), Eq(Terminal::reset_terminal))).Times(1);
   {
     Terminal t(adapter);
+    t.install_signal_handler();
   }
 }
 
