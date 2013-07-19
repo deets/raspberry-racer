@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 #include <stdio.h>
 
 #include "posix-adapter.hh"
@@ -6,6 +6,9 @@
 
 
 using ::testing::InitGoogleTest;
+using ::testing::_;
+using ::testing::Eq;
+
 
 class TestPosixAdapter : public PosixAdapter {
 public:
@@ -14,24 +17,22 @@ public:
     return 0;
   }
 
-  virtual int tcgetattr(int fd, struct termios *t) {
-    return 0;
-  }
+  MOCK_METHOD2(tcgetattr, int(int fd, struct termios *t));
 
-  virtual int tcsetattr(int, int, const struct termios *) {
-    return 0;
-  }
+  MOCK_METHOD3(tcsetattr, int(int, int, const struct termios *));
 
-  virtual sig_t signal(int sig, sig_t func) {
-    return NULL;
-  }
+  MOCK_METHOD2(signal, sig_t (int sig, sig_t func));
 
 };
 
 
 TEST(TerminalTest, TestNormalSetup) {
   TestPosixAdapter adapter;
-  Terminal t(adapter);
+  EXPECT_CALL(adapter, tcgetattr(Eq(0), _));
+  EXPECT_CALL(adapter, tcsetattr(Eq(0), Eq(0), _)).Times(2);
+  {
+    Terminal t(adapter);
+  }
 }
 
 

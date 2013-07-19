@@ -2,7 +2,7 @@
 #define POSIX_ADAPTER_HH
 
 #include <sys/termios.h>
-
+#include <signal.h>
 #ifdef __APPLE__
 
 // mock linux headers
