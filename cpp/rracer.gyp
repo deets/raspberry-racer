@@ -37,10 +37,28 @@
             'type': 'executable',
             'cflags' : ["-g"],
             'sources': [
-                'terminal.cc',
+                'linux-event-pump.cc',
                 'main.cc',
+                'rpi-adapter-impl.cc',
                 'posix-adapter.cc',
-                'posix-adapter-impl.cc',
+                'terminal.cc',
+                'rpi-window-adapter.cc',
+                ],
+            'include_dirs': [
+                '/opt/vc/include',
+                '/opt/vc/include/interface/vcos/pthreads',
+                ],
+            'libraries' : [
+                '-lbcm_host',
+                ],
+            'conditions' : [
+                 ['OS=="linux"',
+                  {
+                      'ldflags': [
+                          '-L/opt/vc/lib',
+                          ],
+                      }
+                  ],
                 ],
             }
         ],

@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class WindowSystemAdapter {
+class WindowAdapter {
 
 public:
   virtual pair<int, int> window_dimensions()=0;

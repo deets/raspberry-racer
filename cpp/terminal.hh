@@ -21,6 +21,11 @@ private:
   void reset_raw_kb_mode();
   void reset_kb_repeat();
 
+  // prevent construction
+
+  Terminal(const Terminal&);
+  Terminal & operator=(const Terminal&);
+
 public:
   Terminal(PosixAdapter &adapter);
   virtual ~Terminal();
