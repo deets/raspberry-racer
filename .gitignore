@@ -40,3 +40,4 @@ gtest-1.6.0
 gmock-1.6.0
 *.o
 test
+cpp/out
