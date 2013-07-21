@@ -1,1 +1,1 @@
-/home/deets/software/vc/ninja/ninja -C out/Default/ all
+/home/deets/software/vc/ninja/ninja -C out/Default/ -v test

@@ -27,7 +27,8 @@ public:
   void reset();
   void install_signal_handler();
   int read_character();
-  static void reset_terminal(int s);
+
+  static void reset_terminal(int signal);
 
 private:
   struct termios _terminal_settings;

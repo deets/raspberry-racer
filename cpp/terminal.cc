@@ -53,17 +53,19 @@ Terminal::~Terminal() {
 
 
 int Terminal::read_character() {
-  // struct timeval timeout = {0, 0};
-  // fd_set rdfs;
-  // FD_ZERO(&rdfs);
-  // FD_SET(STDIN_FILENO, &rdfs);  
-  // select(1, &rdfs, NULL, NULL, &timeout);
-  // if(FD_ISSET(STDIN_FILENO, &rdfs)) {
-  //   char buf[1];
-  //   read(STDIN_FILENO, (void*)buf, sizeof(buf));
-  //   return (buf[0] & 0x7f);
-  // }
-  // return -1;
+  struct timeval timeout = {0, 0};
+  fd_set rdfs;
+  FD_ZERO(&rdfs);
+  FD_SET(STDIN_FILENO, &rdfs);  
+  int res = _p.select(1, &rdfs, NULL, NULL, &timeout);
+  if(res > 0) {
+    if(FD_ISSET(STDIN_FILENO, &rdfs)) {
+      char buf[1];
+      _p.read(STDIN_FILENO, (void*)buf, sizeof(buf));
+      return (buf[0] & 0x7f);
+    }
+  }
+  return -1;
 }
 
 void Terminal::reset_terminal(int s) {
