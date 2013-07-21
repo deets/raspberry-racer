@@ -4,6 +4,7 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <utility>
 #include <vector>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
@@ -18,7 +19,7 @@ class Terminal {
 private:
 
   void reset_raw_kb_mode();
-
+  void reset_kb_repeat();
 
 public:
   Terminal(PosixAdapter &adapter);

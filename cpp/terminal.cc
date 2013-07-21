@@ -24,14 +24,31 @@ Terminal::Terminal(PosixAdapter &adapter) :
     throw runtime_error(strerror(errno));
   }
   
-  if(_p.ioctl(STDIN_FILENO, KDSKBMODE, K_RAW)) {
+  if(_p.ioctl(STDIN_FILENO, KDSKBMODE, (unsigned long)K_RAW)) {
     throw runtime_error(strerror(errno));
   }
   _resetters.push_back(boost::bind(&Terminal::reset_raw_kb_mode, this));
+
+  kbd_repeat kbdrep_s;
+  kbdrep_s.delay = 100000;
+  kbdrep_s.period = 100000;
+  if(_p.ioctl(STDIN_FILENO, KDKBDREP, &kbdrep_s)) {
+    throw runtime_error(strerror(errno));
+  }
+  _resetters.push_back(boost::bind(&Terminal::reset_kb_repeat, this));
 }
 
+
+void Terminal::reset_kb_repeat() {
+  kbd_repeat kbdrep_s;
+  kbdrep_s.delay = 250;
+  kbdrep_s.period = 33;
+  _p.ioctl(STDIN_FILENO, KDKBDREP, &kbdrep_s);
+}
+
+
 void Terminal::reset_raw_kb_mode() {
-  if(_p.ioctl(STDIN_FILENO, KDSKBMODE, K_XLATE)) {
+  if(_p.ioctl(STDIN_FILENO, KDSKBMODE, (unsigned long)K_XLATE)) {
     throw runtime_error(strerror(errno));
   }
 }
@@ -61,8 +78,8 @@ int Terminal::read_character() {
   if(res > 0) {
     if(FD_ISSET(STDIN_FILENO, &rdfs)) {
       char buf[1];
-      _p.read(STDIN_FILENO, (void*)buf, sizeof(buf));
-      return (buf[0] & 0x7f);
+      read(STDIN_FILENO, (void*)buf, sizeof(buf));
+      return buf[0];
     }
   }
   return -1;

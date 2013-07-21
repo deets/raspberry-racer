@@ -21,7 +21,8 @@ class PosixAdapter {
 public:
   virtual ~PosixAdapter();
 
-  virtual int ioctl(int, unsigned long, ...)=0;
+  virtual int ioctl(int, unsigned long, unsigned long)=0;
+  virtual int ioctl(int, unsigned long, kbd_repeat*)=0;
   virtual int tcgetattr(int, struct termios *)=0;
   virtual int tcsetattr(int, int, const struct termios *)=0;
   virtual sig_t signal(int sig, sig_t func)=0;

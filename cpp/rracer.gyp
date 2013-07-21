@@ -35,9 +35,11 @@
         {
             'target_name': 'rracer',
             'type': 'executable',
+            'cflags' : ["-g"],
             'sources': [
                 'terminal.cc',
                 'main.cc',
+                'posix-adapter.cc',
                 'posix-adapter-impl.cc',
                 ],
             }
