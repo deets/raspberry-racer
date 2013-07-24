@@ -2,7 +2,6 @@
 #include <sys/termios.h>
 #include <unistd.h>
 #include <sys/select.h>
-#include <bcm_host.h>
 
 #include "rpi-adapter-impl.hh"
 
@@ -38,22 +37,6 @@ int RPiAdapterImpl::select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *
 
 ssize_t RPiAdapterImpl::read(int fd, void *buf, size_t count) {
   return ::read(fd, buf, count);
-}
-
-
-void RPiAdapterImpl::bcm_host_init() {
-  ::bcm_host_init();
-}
-void RPiAdapterImpl::bcm_host_deinit() {
-  ::bcm_host_deinit();
-}
-
-
-int32_t RPiAdapterImpl::graphics_get_display_size(
-      const uint16_t display_number,
-      uint32_t *width,
-      uint32_t *height) {
-  return ::graphics_get_display_size(display_number, width, height);
 }
 
 

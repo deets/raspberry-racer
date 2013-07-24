@@ -1,9 +1,9 @@
 #ifndef POSIX_ADAPTER_IMPL_HH
 #define POSIX_ADAPTER_IMPL_HH
 
-#include "rpi-adapter.hh"
+#include "posix-adapter.hh"
 
-class RPiAdapterImpl : public RPiAdapter {
+class RPiAdapterImpl : public PosixAdapter {
 
 public:
   virtual ~RPiAdapterImpl();
@@ -15,16 +15,6 @@ public:
   virtual sig_t signal(int sig, sig_t func);
   virtual int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
   virtual ssize_t read(int fd, void *buf, size_t count);
-
-
-  // rpi-specific calls
-
-  virtual void bcm_host_init();
-  virtual void bcm_host_deinit();
-  virtual int32_t graphics_get_display_size(
-      const uint16_t display_number,
-      uint32_t *width,
-      uint32_t *height);
 
 };
 

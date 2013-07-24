@@ -16,15 +16,17 @@ int main(int argc, char **argv) {
 
   LinuxEventPump event_pump(boost::bind(&Terminal::read_character, &terminal));
 
-  RPiWindowAdapter window_adapter(rpi_adapter);
+  RPiWindowAdapter window_adapter;
 
   bool running = true;
   while(running) {
+    window_adapter.start();
     BOOST_FOREACH(const Event event, event_pump.pump_events()) {
       cout << "scancode: " << event.scancode << endl;
       if(event.key == K_ESC) {
 	running = false;
       }
     }
+    window_adapter.end();
   }
 }

@@ -43,6 +43,7 @@
                 'posix-adapter.cc',
                 'terminal.cc',
                 'rpi-window-adapter.cc',
+                'oglinit.cc',
                 ],
             'include_dirs': [
                 '/opt/vc/include',
@@ -50,6 +51,7 @@
                 ],
             'libraries' : [
                 '-lbcm_host',
+                '-lGLESv2',
                 ],
             'conditions' : [
                  ['OS=="linux"',

@@ -10,19 +10,19 @@
 #include <boost/bind.hpp>
 
 #include "posix-adapter.hh"
+#include "non-copyable.hh"
 
 using namespace std;
 
 
-class Terminal {
+class Terminal: public NonCopyAble {
 
 private:
 
   void reset_raw_kb_mode();
   void reset_kb_repeat();
 
-  // prevent construction
-
+  // prevent copying
   Terminal(const Terminal&);
   Terminal & operator=(const Terminal&);
 
