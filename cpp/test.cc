@@ -2,9 +2,14 @@
 #include <stdio.h>
 #include <linux/kd.h>
 
-#include "posix-adapter.hh"
-#include "terminal.hh"
+// include mocks
+#include "tests/test-posix-adapter.hh"
+#include "tests/test-window-adapter.hh"
+#include "tests/test-openvg-adapter.hh"
 
+// include objects under test
+#include "world.hh"
+#include "terminal.hh"
 
 using ::testing::InitGoogleTest;
 using ::testing::_;
@@ -13,26 +18,6 @@ using ::testing::IsNull;
 using ::testing::An;
 using ::testing::Return;
 using ::testing::TypedEq;
-
-
-class TestPosixAdapter : public PosixAdapter {
-public:
-
-  MOCK_METHOD3(ioctl, int(int, unsigned long, unsigned long));
-
-  MOCK_METHOD3(ioctl, int(int, unsigned long, kbd_repeat *));
-
-  MOCK_METHOD2(tcgetattr, int(int fd, struct termios *t));
-
-  MOCK_METHOD3(tcsetattr, int(int, int, const struct termios *));
-
-  MOCK_METHOD2(signal, sig_t (int sig, sig_t func));
-
-  MOCK_METHOD5(select, int (int, fd_set *, fd_set *, fd_set *, struct timeval *));
-
-  MOCK_METHOD3(read, ssize_t(int, void *, size_t));
-
-};
 
 
 TEST(TerminalTest, TestNormalSetup) {
@@ -60,6 +45,16 @@ TEST(TerminalTest, TestNormalSetup) {
 }
 
 
+TEST(WorldTests, TestWorldLifeCycle) {
+  TestWindowAdaptper window_adapter;
+  TestOpenvgAdaptper ovg_adapter;
+  vector<Event> events;
+  EXPECT_CALL(window_adapter, start()).Times(1);
+  EXPECT_CALL(window_adapter, end()).Times(1);
+  World world(window_adapter, ovg_adapter);
+  world.begin(events);
+  world.end();
+}
 
 int main(int argc, char** argv) {
   InitGoogleTest(&argc, argv);

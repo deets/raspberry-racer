@@ -9,11 +9,16 @@
             'sources': [
                 'terminal.cc',
                 'test.cc',
+                'world.cc',
                 ],
-            'cflags' : ["-g", "-H"],
+            'cflags' : ["-g"],
             'include_dirs': [
+                '.',
+                'src',
                 'gmock-1.6.0/include',
                 'gmock-1.6.0/gtest/include',
+                '/opt/vc/include',
+                '/opt/vc/include/interface/vcos/pthreads',
                 ],
             'libraries' : [
                 '-lgmock',

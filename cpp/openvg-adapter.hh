@@ -50,7 +50,8 @@ public:
 
   virtual VGPath vgCreatePath(VGint pathFormat,
 			      VGPathDatatype datatype,
-			      VGfloat scale, VGfloat bias,
+			      VGfloat scale,
+			      VGfloat bias,
 			      VGint segmentCapacityHint,
 			      VGint coordCapacityHint,
 			      VGbitfield capabilities)=0;
