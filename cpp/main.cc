@@ -2,7 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 
-#include "rpi-adapter-impl.hh"
+#include "posix-adapter-impl.hh"
 #include "terminal.hh"
 #include "linux-event-pump.hh"
 #include "rpi-window-adapter.hh"
@@ -10,7 +10,7 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-  RPiAdapterImpl posix_adapter;
+  PosixAdapterImpl posix_adapter;
   Terminal terminal(posix_adapter);
   terminal.install_signal_handler();
 

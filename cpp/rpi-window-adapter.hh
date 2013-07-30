@@ -6,7 +6,6 @@
 #include "EGL/egl.h"
 #include "window-adapter.hh"
 #include "openvg-adapter.hh"
-#include "rpi-adapter.hh"
 #include "non-copyable.hh"
 #include "eglstate.h"
 

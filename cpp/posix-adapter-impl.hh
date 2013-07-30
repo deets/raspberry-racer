@@ -1,13 +1,9 @@
-#ifndef POSIX_ADAPTER_IMPL_HH
-#define POSIX_ADAPTER_IMPL_HH
-
 #include "posix-adapter.hh"
 
-class RPiAdapterImpl : public PosixAdapter {
+
+class PosixAdapterImpl : public PosixAdapter {
 
 public:
-  virtual ~RPiAdapterImpl();
-
   virtual int ioctl(int, unsigned long, unsigned long);
   virtual int ioctl(int, unsigned long, kbd_repeat*);
   virtual int tcgetattr(int, struct termios *);
@@ -17,5 +13,3 @@ public:
   virtual ssize_t read(int fd, void *buf, size_t count);
 
 };
-
-#endif

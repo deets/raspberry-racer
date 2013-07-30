@@ -9,7 +9,6 @@
             'sources': [
                 'terminal.cc',
                 'test.cc',
-                'posix-adapter.cc',
                 ],
             'cflags' : ["-g", "-H"],
             'include_dirs': [
@@ -39,8 +38,7 @@
             'sources': [
                 'linux-event-pump.cc',
                 'main.cc',
-                'rpi-adapter-impl.cc',
-                'posix-adapter.cc',
+                'posix-adapter-impl.cc',
                 'terminal.cc',
                 'rpi-window-adapter.cc',
                 'oglinit.cc',
