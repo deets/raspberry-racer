@@ -41,3 +41,91 @@ void RPiWindowAdapter::end() {
   ::eglSwapBuffers(_state.display, _state.surface);
   assert(::eglGetError() == EGL_SUCCESS);
 }
+
+
+void RPiWindowAdapter::vgSetf (VGParamType type, VGfloat value) {
+  ::vgSetf(type, value);
+}
+
+
+void RPiWindowAdapter::vgClear(VGint x, VGint y, VGint width, VGint height) {
+  ::vgClear(x, y, width, height);
+}
+
+
+void RPiWindowAdapter::vgLoadIdentity() {
+  ::vgLoadIdentity();
+}
+
+
+VGPaint RPiWindowAdapter::vgCreatePaint() {
+  return ::vgCreatePaint();
+}
+
+
+void RPiWindowAdapter::vgDestroyPaint(VGPaint paint) {
+  ::vgDestroyPaint(paint);
+}
+
+
+void RPiWindowAdapter::vgSetPaint(VGPaint paint, VGbitfield paintModes) {
+  ::vgSetPaint(paint, paintModes);
+}
+
+
+void RPiWindowAdapter::vgSetParameteri(VGHandle object,
+					       VGint paramType,
+					       VGint value) {
+  ::vgSetParameteri(object, paramType, value);
+}
+
+
+void RPiWindowAdapter::vgSetParameteriv(VGHandle object,
+					VGint paramType,
+					VGint count,
+					VGint *values) {
+  ::vgSetParameteriv(object, paramType, count, values);
+}
+
+
+void RPiWindowAdapter::vgSetParameterf(VGHandle object,
+					       VGint paramType,
+					       VGfloat value) {
+  ::vgSetParameterf(object, paramType, value);
+}
+
+
+void RPiWindowAdapter::vgSetParameterfv(VGHandle object,
+					VGint paramType,
+					VGint count,
+					VGfloat *values) {
+  ::vgSetParameterfv(object, paramType, count, values);
+}
+
+
+
+void RPiWindowAdapter::vgDrawPath(VGPath path, VGbitfield paintModes) {
+  ::vgDrawPath(path, paintModes);
+}
+
+
+void RPiWindowAdapter::vgDestroyPath(VGPath path) {
+  ::vgDestroyPath(path);
+}
+
+
+VGUErrorCode RPiWindowAdapter::vguEllipse(VGPath path,
+						  VGfloat cx, VGfloat cy,
+						  VGfloat width, VGfloat height) {
+  return ::vguEllipse(path, cx, cy, width, height);
+}
+
+
+VGPath RPiWindowAdapter::vgCreatePath(VGint pathFormat,
+				      VGPathDatatype datatype,
+				      VGfloat scale, VGfloat bias,
+				      VGint segmentCapacityHint,
+				      VGint coordCapacityHint,
+				      VGbitfield capabilities) {
+  return ::vgCreatePath(pathFormat, datatype, scale, bias, segmentCapacityHint, coordCapacityHint, capabilities);
+}

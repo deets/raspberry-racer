@@ -15,10 +15,6 @@ public:
   virtual void start()=0;
   virtual void end()=0;
 
-  // passing through OpenVG calls
-  //  virtual vgSetf (VGParamType type, VGfloat value)=0;
-  //virtual vgClear(VGint x, VGint y, VGint width, VGint height)=0;
-  //virtual void vgLoadIdentity()=0;
 };
 
 #endif

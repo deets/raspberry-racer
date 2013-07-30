@@ -5,6 +5,7 @@
 #include "GLES/gl.h"
 #include "EGL/egl.h"
 #include "window-adapter.hh"
+#include "openvg-adapter.hh"
 #include "rpi-adapter.hh"
 #include "non-copyable.hh"
 #include "eglstate.h"
@@ -13,7 +14,7 @@ using namespace std;
 
 
 
-class RPiWindowAdapter : public WindowAdapter, public NonCopyAble {
+class RPiWindowAdapter : public WindowAdapter, public OpenVGAdapter, public NonCopyAble {
 
   uint32_t _width, _height;
 
@@ -28,9 +29,45 @@ public:
   virtual void start();
   virtual void end();
 
-  //virtual vgSetf (VGParamType type, VGfloat value);
-  //virtual vgClear(VGint x, VGint y, VGint width, VGint height);
-  //virtual void vgLoadIdentity();
+  // OpenVGAdapter implementation
+  virtual void vgSetf (VGParamType type, VGfloat value);
+  virtual void vgClear(VGint x, VGint y, VGint width, VGint height);
+  virtual void vgLoadIdentity();
+  virtual VGPaint vgCreatePaint();
+  virtual void vgDestroyPaint(VGPaint paint);
+  virtual void vgSetPaint(VGPaint paint, VGbitfield paintModes);
+  virtual void vgSetParameteri(VGHandle object,
+			       VGint paramType,
+			       VGint value);
+
+  virtual void vgSetParameteriv(VGHandle object,
+				VGint paramType,
+				VGint count,
+				VGint * values);
+
+  virtual void vgSetParameterf(VGHandle object,
+                                 VGint paramType,
+			       VGfloat value);
+
+  virtual void vgSetParameterfv(VGHandle object,
+				VGint paramType,
+				VGint count,
+				VGfloat * values);
+
+
+  virtual void vgDrawPath(VGPath path, VGbitfield paintModes);
+  virtual void vgDestroyPath(VGPath path);
+  virtual VGUErrorCode vguEllipse(VGPath path,
+				  VGfloat cx, VGfloat cy,
+				  VGfloat width, VGfloat height);
+
+  virtual VGPath vgCreatePath(VGint pathFormat,
+			      VGPathDatatype datatype,
+			      VGfloat scale, VGfloat bias,
+			      VGint segmentCapacityHint,
+			      VGint coordCapacityHint,
+			      VGbitfield capabilities);
+
 
 };
 

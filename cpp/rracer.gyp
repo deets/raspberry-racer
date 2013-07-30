@@ -11,7 +11,7 @@
                 'test.cc',
                 'posix-adapter.cc',
                 ],
-            'cflags' : ["-g"],
+            'cflags' : ["-g", "-H"],
             'include_dirs': [
                 'gmock-1.6.0/include',
                 'gmock-1.6.0/gtest/include',
@@ -44,6 +44,7 @@
                 'terminal.cc',
                 'rpi-window-adapter.cc',
                 'oglinit.cc',
+                'openvg-adapter.cc',
                 ],
             'include_dirs': [
                 '/opt/vc/include',
