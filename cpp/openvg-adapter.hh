@@ -4,49 +4,52 @@
 #include <VG/openvg.h>
 #include <VG/vgu.h>
 
+#include "fonts/fonts.hh"
+
 class OpenVGAdapter {
 
 public:
   // utility functions
-  VGPath newPath();
-  void setFillColor(VGfloat color[4]);
-  void drawEllipse(VGfloat x, VGfloat y, VGfloat w, VGfloat h);
-  void drawCircle(VGfloat x, VGfloat y, VGfloat r) {
+  VGPath newPath() const;
+  void setFillColor(VGfloat color[4]) const;
+  void drawEllipse(VGfloat x, VGfloat y, VGfloat w, VGfloat h) const;
+  void drawCircle(VGfloat x, VGfloat y, VGfloat r) const {
     drawEllipse(x, y, r, r);
   }
-
+  void drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int pointsize) const;
+  VGfloat textWidth(char *s, Fontinfo f, int pointsize) const;
 
   // passing through of OpenVG calls
-  virtual void vgSetf(VGParamType type, VGfloat value)=0;
-  virtual void vgClear(VGint x, VGint y, VGint width, VGint height)=0;
-  virtual void vgLoadIdentity()=0;
-  virtual VGPaint vgCreatePaint()=0;
-  virtual void vgDestroyPaint(VGPaint paint)=0;
-  virtual void vgSetPaint(VGPaint paint, VGbitfield paintModes)=0;
+  virtual void vgSetf(VGParamType type, VGfloat value) const=0;
+  virtual void vgClear(VGint x, VGint y, VGint width, VGint height) const=0;
+  virtual void vgLoadIdentity() const=0;
+  virtual VGPaint vgCreatePaint() const=0;
+  virtual void vgDestroyPaint(VGPaint paint) const=0;
+  virtual void vgSetPaint(VGPaint paint, VGbitfield paintModes) const=0;
   virtual void vgSetParameteri(VGHandle object,
 			       VGint paramType,
-			       VGint value)=0;
+			       VGint value) const=0;
 
   virtual void vgSetParameteriv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGint * values)=0;
+				VGint * values) const=0;
 
   virtual void vgSetParameterf(VGHandle object,
                                  VGint paramType,
-			       VGfloat value)=0;
+			       VGfloat value) const=0;
 
   virtual void vgSetParameterfv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGfloat * values)=0;
+				VGfloat * values) const=0;
 
 
-  virtual void vgDrawPath(VGPath path, VGbitfield paintModes)=0;
-  virtual void vgDestroyPath(VGPath path)=0;
+  virtual void vgDrawPath(VGPath path, VGbitfield paintModes) const=0;
+  virtual void vgDestroyPath(VGPath path) const=0;
   virtual VGUErrorCode vguEllipse(VGPath path,
 				  VGfloat cx, VGfloat cy,
-				  VGfloat width, VGfloat height)=0;
+				  VGfloat width, VGfloat height) const=0;
 
   virtual VGPath vgCreatePath(VGint pathFormat,
 			      VGPathDatatype datatype,
@@ -54,7 +57,10 @@ public:
 			      VGfloat bias,
 			      VGint segmentCapacityHint,
 			      VGint coordCapacityHint,
-			      VGbitfield capabilities)=0;
+			      VGbitfield capabilities) const=0;
 
+  virtual void vgGetMatrix(VGfloat * m) const=0;
+  virtual void vgLoadMatrix(VGfloat *m) const=0;
+  virtual void vgMultMatrix(VGfloat *m) const=0;
 };
 #endif

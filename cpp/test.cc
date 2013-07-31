@@ -8,7 +8,7 @@
 #include "tests/test-openvg-adapter.hh"
 
 // include objects under test
-#include "world.hh"
+#include "world/world.hh"
 #include "terminal.hh"
 
 using ::testing::InitGoogleTest;
@@ -55,6 +55,7 @@ TEST(WorldTests, TestWorldLifeCycle) {
   world.begin(events);
   world.end();
 }
+
 
 int main(int argc, char** argv) {
   InitGoogleTest(&argc, argv);

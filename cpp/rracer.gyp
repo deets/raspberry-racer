@@ -9,7 +9,8 @@
             'sources': [
                 'terminal.cc',
                 'test.cc',
-                'world.cc',
+                'src/world/world.cc',
+                'src/fonts/fonts.cc',
                 ],
             'cflags' : ["-g"],
             'include_dirs': [
@@ -19,6 +20,7 @@
                 'gmock-1.6.0/gtest/include',
                 '/opt/vc/include',
                 '/opt/vc/include/interface/vcos/pthreads',
+                '/usr/include/eigen3',
                 ],
             'libraries' : [
                 '-lgmock',
@@ -48,10 +50,14 @@
                 'rpi-window-adapter.cc',
                 'oglinit.cc',
                 'openvg-adapter.cc',
+                'src/fonts/fonts.cc',
                 ],
             'include_dirs': [
+                '.',
+                'src',
                 '/opt/vc/include',
                 '/opt/vc/include/interface/vcos/pthreads',
+                '/usr/include/eigen3',
                 ],
             'libraries' : [
                 '-lbcm_host',

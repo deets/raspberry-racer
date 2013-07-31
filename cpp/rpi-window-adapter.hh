@@ -29,44 +29,47 @@ public:
   virtual void end();
 
   // OpenVGAdapter implementation
-  virtual void vgSetf (VGParamType type, VGfloat value);
-  virtual void vgClear(VGint x, VGint y, VGint width, VGint height);
-  virtual void vgLoadIdentity();
-  virtual VGPaint vgCreatePaint();
-  virtual void vgDestroyPaint(VGPaint paint);
-  virtual void vgSetPaint(VGPaint paint, VGbitfield paintModes);
+  virtual void vgSetf (VGParamType type, VGfloat value) const;
+  virtual void vgClear(VGint x, VGint y, VGint width, VGint height) const;
+  virtual void vgLoadIdentity() const;
+  virtual VGPaint vgCreatePaint() const;
+  virtual void vgDestroyPaint(VGPaint paint) const;
+  virtual void vgSetPaint(VGPaint paint, VGbitfield paintModes) const;
   virtual void vgSetParameteri(VGHandle object,
 			       VGint paramType,
-			       VGint value);
+			       VGint value) const;
 
   virtual void vgSetParameteriv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGint * values);
+				VGint * values) const;
 
   virtual void vgSetParameterf(VGHandle object,
                                  VGint paramType,
-			       VGfloat value);
+			       VGfloat value) const;
 
   virtual void vgSetParameterfv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGfloat * values);
+				VGfloat * values) const;
 
 
-  virtual void vgDrawPath(VGPath path, VGbitfield paintModes);
-  virtual void vgDestroyPath(VGPath path);
+  virtual void vgDrawPath(VGPath path, VGbitfield paintModes) const;
+  virtual void vgDestroyPath(VGPath path) const;
   virtual VGUErrorCode vguEllipse(VGPath path,
 				  VGfloat cx, VGfloat cy,
-				  VGfloat width, VGfloat height);
+				  VGfloat width, VGfloat height) const;
 
   virtual VGPath vgCreatePath(VGint pathFormat,
 			      VGPathDatatype datatype,
 			      VGfloat scale, VGfloat bias,
 			      VGint segmentCapacityHint,
 			      VGint coordCapacityHint,
-			      VGbitfield capabilities);
+			      VGbitfield capabilities) const;
 
+  virtual void vgGetMatrix(VGfloat * m) const;
+  virtual void vgLoadMatrix(VGfloat *m) const;
+  virtual void vgMultMatrix(VGfloat *m) const;
 
 };
 

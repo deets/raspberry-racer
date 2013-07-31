@@ -1,9 +1,18 @@
 #ifndef WORLD_HH
 #define WORLD_HH
 
+#include "common/common.hh"
 #include "window-adapter.hh"
 #include "openvg-adapter.hh"
 #include "event-pump.hh"
+
+class WorldObject {
+
+public:
+
+  virtual ~WorldObject() {}
+};
+
 
 class World {
 

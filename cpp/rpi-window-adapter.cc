@@ -43,39 +43,39 @@ void RPiWindowAdapter::end() {
 }
 
 
-void RPiWindowAdapter::vgSetf (VGParamType type, VGfloat value) {
+void RPiWindowAdapter::vgSetf (VGParamType type, VGfloat value) const {
   ::vgSetf(type, value);
 }
 
 
-void RPiWindowAdapter::vgClear(VGint x, VGint y, VGint width, VGint height) {
+void RPiWindowAdapter::vgClear(VGint x, VGint y, VGint width, VGint height) const {
   ::vgClear(x, y, width, height);
 }
 
 
-void RPiWindowAdapter::vgLoadIdentity() {
+void RPiWindowAdapter::vgLoadIdentity() const {
   ::vgLoadIdentity();
 }
 
 
-VGPaint RPiWindowAdapter::vgCreatePaint() {
+VGPaint RPiWindowAdapter::vgCreatePaint() const {
   return ::vgCreatePaint();
 }
 
 
-void RPiWindowAdapter::vgDestroyPaint(VGPaint paint) {
+void RPiWindowAdapter::vgDestroyPaint(VGPaint paint) const {
   ::vgDestroyPaint(paint);
 }
 
 
-void RPiWindowAdapter::vgSetPaint(VGPaint paint, VGbitfield paintModes) {
+void RPiWindowAdapter::vgSetPaint(VGPaint paint, VGbitfield paintModes) const {
   ::vgSetPaint(paint, paintModes);
 }
 
 
 void RPiWindowAdapter::vgSetParameteri(VGHandle object,
 					       VGint paramType,
-					       VGint value) {
+					       VGint value) const {
   ::vgSetParameteri(object, paramType, value);
 }
 
@@ -83,14 +83,14 @@ void RPiWindowAdapter::vgSetParameteri(VGHandle object,
 void RPiWindowAdapter::vgSetParameteriv(VGHandle object,
 					VGint paramType,
 					VGint count,
-					VGint *values) {
+					VGint *values) const {
   ::vgSetParameteriv(object, paramType, count, values);
 }
 
 
 void RPiWindowAdapter::vgSetParameterf(VGHandle object,
 					       VGint paramType,
-					       VGfloat value) {
+					       VGfloat value) const {
   ::vgSetParameterf(object, paramType, value);
 }
 
@@ -98,25 +98,25 @@ void RPiWindowAdapter::vgSetParameterf(VGHandle object,
 void RPiWindowAdapter::vgSetParameterfv(VGHandle object,
 					VGint paramType,
 					VGint count,
-					VGfloat *values) {
+					VGfloat *values) const {
   ::vgSetParameterfv(object, paramType, count, values);
 }
 
 
 
-void RPiWindowAdapter::vgDrawPath(VGPath path, VGbitfield paintModes) {
+void RPiWindowAdapter::vgDrawPath(VGPath path, VGbitfield paintModes) const {
   ::vgDrawPath(path, paintModes);
 }
 
 
-void RPiWindowAdapter::vgDestroyPath(VGPath path) {
+void RPiWindowAdapter::vgDestroyPath(VGPath path) const {
   ::vgDestroyPath(path);
 }
 
 
 VGUErrorCode RPiWindowAdapter::vguEllipse(VGPath path,
 						  VGfloat cx, VGfloat cy,
-						  VGfloat width, VGfloat height) {
+						  VGfloat width, VGfloat height) const {
   return ::vguEllipse(path, cx, cy, width, height);
 }
 
@@ -126,6 +126,21 @@ VGPath RPiWindowAdapter::vgCreatePath(VGint pathFormat,
 				      VGfloat scale, VGfloat bias,
 				      VGint segmentCapacityHint,
 				      VGint coordCapacityHint,
-				      VGbitfield capabilities) {
+				      VGbitfield capabilities) const {
   return ::vgCreatePath(pathFormat, datatype, scale, bias, segmentCapacityHint, coordCapacityHint, capabilities);
+}
+
+
+void RPiWindowAdapter::vgGetMatrix(VGfloat * m) const {
+  ::vgGetMatrix(m);
+}
+
+
+void RPiWindowAdapter::vgLoadMatrix(VGfloat *m) const {
+  ::vgLoadMatrix(m);
+}
+
+
+void RPiWindowAdapter::vgMultMatrix(VGfloat *m) const {
+  ::vgMultMatrix(m);
 }
