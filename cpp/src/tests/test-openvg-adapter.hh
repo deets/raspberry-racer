@@ -26,5 +26,10 @@ class TestOpenvgAdaptper : public OpenVGAdapter {
   MOCK_CONST_METHOD1(vgLoadMatrix, void(VGfloat*));
   MOCK_CONST_METHOD1(vgMultMatrix, void(VGfloat*));
 
+  MOCK_CONST_METHOD4(vgAppendPathData, void(VGPath, VGint, const VGubyte *, const void*));
+
+
+  MOCK_CONST_METHOD4(vgCreateImage, VGImage(VGImageFormat, VGint, VGint, VGbitfield));
+
 };
 #endif

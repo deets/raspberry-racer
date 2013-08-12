@@ -10,7 +10,7 @@
                 'terminal.cc',
                 'test.cc',
                 'src/world/world.cc',
-                'src/fonts/fonts.cc',
+                'src/assets/assets.cc',
                 ],
             'cflags' : ["-g"],
             'include_dirs': [
@@ -26,6 +26,9 @@
                 '-lgmock',
                 '-lgtest',
                 '-lpthread',
+                '-lboost_filesystem',
+                '-lboost_system',
+                '-lpng12',
                 ],
             'conditions' : [
                  ['OS=="linux"',
@@ -50,7 +53,7 @@
                 'rpi-window-adapter.cc',
                 'oglinit.cc',
                 'openvg-adapter.cc',
-                'src/fonts/fonts.cc',
+                'src/assets/assets.cc',
                 ],
             'include_dirs': [
                 '.',
@@ -62,6 +65,9 @@
             'libraries' : [
                 '-lbcm_host',
                 '-lGLESv2',
+                '-lboost_filesystem',
+                '-lboost_system',
+                '-lpng12',
                 ],
             'conditions' : [
                  ['OS=="linux"',

@@ -4,7 +4,6 @@
 #include <VG/openvg.h>
 #include <VG/vgu.h>
 
-#include "fonts/fonts.hh"
 
 class OpenVGAdapter {
 
@@ -16,8 +15,6 @@ public:
   void drawCircle(VGfloat x, VGfloat y, VGfloat r) const {
     drawEllipse(x, y, r, r);
   }
-  void drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int pointsize) const;
-  VGfloat textWidth(char *s, Fontinfo f, int pointsize) const;
 
   // passing through of OpenVG calls
   virtual void vgSetf(VGParamType type, VGfloat value) const=0;
@@ -62,5 +59,21 @@ public:
   virtual void vgGetMatrix(VGfloat * m) const=0;
   virtual void vgLoadMatrix(VGfloat *m) const=0;
   virtual void vgMultMatrix(VGfloat *m) const=0;
+
+  virtual void vgAppendPathData(VGPath dstPath,
+				VGint numSegments,
+				const VGubyte * pathSegments,
+				const void * pathData) const=0;
+
+
+  virtual VGImage vgCreateImage(VGImageFormat format,
+				VGint width, VGint height,
+				VGbitfield allowedQuality) const=0;
+
+
+  virtual void vgImageSubData(VGImage image,
+			      const void * data, VGint dataStride,
+			      VGImageFormat dataFormat,
+			      VGint x, VGint y, VGint width, VGint height) const=0;
 };
 #endif

@@ -2,7 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 
-#include "fonts/fonts.hh"
+#include "assets/assets.hh"
 #include "posix-adapter-impl.hh"
 #include "terminal.hh"
 #include "linux-event-pump.hh"
@@ -17,12 +17,13 @@ int main(int argc, char **argv) {
 
   LinuxEventPump event_pump(boost::bind(&Terminal::read_character, &terminal));
 
-  RPiWindowAdapter rpi_adapter;
+  RPiWindowAdapter window_adapter;
 
-  fonts_init();
+  AssetManager am(&window_adapter);
+  
   bool running = true;
   while(running) {
-    rpi_adapter.start();
+    window_adapter.start();
     BOOST_FOREACH(const Event event, event_pump.pump_events()) {
       cout << "scancode: " << event.scancode << endl;
       if(event.key == K_ESC) {
@@ -30,9 +31,9 @@ int main(int argc, char **argv) {
       }
     }
     VGfloat black[4] = {.0, .0, .0, .1};
-    rpi_adapter.setFillColor(black);
-    rpi_adapter.drawCircle(100, 100, 100.0);
-    rpi_adapter.drawText(500, 500, "Hallo!", get_font(), 30);
-    rpi_adapter.end();
+    window_adapter.setFillColor(black);
+    window_adapter.drawCircle(100, 100, 100.0);
+    am.drawText(500, 500, "Hallo!", am.get_font(), 30);
+    window_adapter.end();
   }
 }

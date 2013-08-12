@@ -19,13 +19,13 @@
 
 class PosixAdapter {
 public:
-  virtual int ioctl(int, unsigned long, unsigned long)=0;
-  virtual int ioctl(int, unsigned long, kbd_repeat*)=0;
-  virtual int tcgetattr(int, struct termios *)=0;
-  virtual int tcsetattr(int, int, const struct termios *)=0;
-  virtual sig_t signal(int sig, sig_t func)=0;
-  virtual int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)=0;
-  virtual ssize_t read(int fd, void *buf, size_t count)=0;
+  virtual int ioctl(int, unsigned long, unsigned long) const=0;
+  virtual int ioctl(int, unsigned long, kbd_repeat*) const=0;
+  virtual int tcgetattr(int, struct termios *) const=0;
+  virtual int tcsetattr(int, int, const struct termios *) const=0;
+  virtual sig_t signal(int sig, sig_t func) const=0;
+  virtual int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout) const=0;
+  virtual ssize_t read(int fd, void *buf, size_t count) const=0;
 
 
 };

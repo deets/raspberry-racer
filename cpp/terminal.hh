@@ -10,7 +10,7 @@
 #include <boost/bind.hpp>
 
 #include "posix-adapter.hh"
-#include "non-copyable.hh"
+#include "common/non-copyable.hh"
 
 using namespace std;
 

@@ -1,6 +1,10 @@
-#include <gmock/gmock.h>
+
 #include <stdio.h>
 #include <linux/kd.h>
+
+#include <boost/filesystem.hpp>
+
+#include <gmock/gmock.h>
 
 // include mocks
 #include "tests/test-posix-adapter.hh"
@@ -9,6 +13,7 @@
 
 // include objects under test
 #include "world/world.hh"
+#include "assets/assets.hh"
 #include "terminal.hh"
 
 using ::testing::InitGoogleTest;
@@ -19,6 +24,7 @@ using ::testing::An;
 using ::testing::Return;
 using ::testing::TypedEq;
 
+namespace fs = boost::filesystem;
 
 TEST(TerminalTest, TestNormalSetup) {
   TestPosixAdapter adapter;
@@ -56,6 +62,21 @@ TEST(WorldTests, TestWorldLifeCycle) {
   world.end();
 }
 
+
+
+
+TEST(AssetTests, TestImageManagement) {
+  TestOpenvgAdaptper ovg_adapter;
+
+  fs::path image_path("amiga-ball.png");
+  ASSERT_TRUE(fs::exists(image_path));
+  
+  AssetManager am(&ovg_adapter);
+  VGImage img = am.image(image_path);
+  VGImage img2 = am.image(image_path);
+
+  ASSERT_EQ(img, img2);
+}
 
 int main(int argc, char** argv) {
   InitGoogleTest(&argc, argv);

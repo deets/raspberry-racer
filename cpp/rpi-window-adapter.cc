@@ -144,3 +144,26 @@ void RPiWindowAdapter::vgLoadMatrix(VGfloat *m) const {
 void RPiWindowAdapter::vgMultMatrix(VGfloat *m) const {
   ::vgMultMatrix(m);
 }
+
+
+void RPiWindowAdapter::vgAppendPathData(VGPath dstPath,
+					VGint numSegments,
+					const VGubyte * pathSegments,
+					const void * pathData)  const {
+  ::vgAppendPathData(dstPath, numSegments, pathSegments, pathData);
+}
+
+
+VGImage RPiWindowAdapter::vgCreateImage(VGImageFormat format,
+					VGint width, VGint height,
+					VGbitfield allowedQuality) const {
+  return ::vgCreateImage(format, width, height, allowedQuality);
+}
+
+
+void RPiWindowAdapter::vgImageSubData(VGImage image,
+				      const void * data, VGint dataStride,
+				      VGImageFormat dataFormat,
+				      VGint x, VGint y, VGint width, VGint height) const {
+  ::vgImageSubData(image, data, dataStride, dataFormat, x, y, width, height);
+}

@@ -6,7 +6,7 @@
 #include "EGL/egl.h"
 #include "window-adapter.hh"
 #include "openvg-adapter.hh"
-#include "non-copyable.hh"
+#include "common/non-copyable.hh"
 #include "eglstate.h"
 
 using namespace std;
@@ -70,6 +70,21 @@ public:
   virtual void vgGetMatrix(VGfloat * m) const;
   virtual void vgLoadMatrix(VGfloat *m) const;
   virtual void vgMultMatrix(VGfloat *m) const;
+
+  virtual void vgAppendPathData(VGPath dstPath,
+				VGint numSegments,
+				const VGubyte * pathSegments,
+				const void * pathData)  const;
+
+  virtual VGImage vgCreateImage(VGImageFormat format,
+				VGint width, VGint height,
+				VGbitfield allowedQuality) const;
+
+
+  virtual void vgImageSubData(VGImage image,
+			      const void * data, VGint dataStride,
+			      VGImageFormat dataFormat,
+			      VGint x, VGint y, VGint width, VGint height) const;
 
 };
 
