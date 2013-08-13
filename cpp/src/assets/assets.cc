@@ -114,10 +114,24 @@ void AssetManager::drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int point
 
 VGImage AssetManager::image(const fs::path &file) {
   png::image< png::rgba_pixel > image(file.c_str());
-  VGImage img _vg->vgCreateImage(
+
+  size_t width = image.get_width();
+  size_t height = image.get_height();
+
+  std::vector< png::rgba_pixel > raw(width * height);
+  for (size_t i = 0; i < height; ++i) {
+    std::copy(
+	image.get_row(i).begin(), image.get_row(i).end(),
+	raw.begin() + i*width);
+  }
+
+  VGImage img = _vg->vgCreateImage(
       VG_sRGBA_8888, 
-      (VGint)image.get_width(), 
-      (VGint)image.get_height(), 
+      (VGint)width,
+      (VGint)height,
       VG_IMAGE_QUALITY_BETTER);
+
+
+  _vg->vgImageSubData(img, &(raw[0]), width * 4, VG_sRGBA_8888, 0, 0, width, height);
   return img;
 }
