@@ -3,7 +3,7 @@ if [ `uname` == "Darwin" ]; then
     PROJECT_DIR=`dirname $0`
 else
     GYP=gyp
-    PROJECT_DIR=/home/deets/projects/raspberry-racer
+    PROJECT_DIR=/home/deets/projects/raspberry-racer/cpp
 fi
 
 echo "project-dir: $PROJECT_DIR"

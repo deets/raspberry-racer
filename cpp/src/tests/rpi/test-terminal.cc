@@ -1,12 +1,21 @@
 #include <stdio.h>
 #include <linux/kd.h>
 
+#include <gmock/gmock.h>
+
 // include mocks
 #include "tests/test-posix-adapter.hh"
 
 // include objects under test
 #include "terminal.hh"
 
+using ::testing::InitGoogleTest;
+using ::testing::_;
+using ::testing::Eq;
+using ::testing::IsNull;
+using ::testing::An;
+using ::testing::Return;
+using ::testing::TypedEq;
 
 TEST(TerminalTest, TestNormalSetup) {
   TestPosixAdapter adapter;

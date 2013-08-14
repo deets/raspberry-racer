@@ -21,7 +21,7 @@
                   {
                       'sources' : [
                           'terminal.cc',
-                          'src/test/rpi/test-terminal.cc',
+                          'src/tests/rpi/test-terminal.cc',
                           ],
                       'include_dirs' : [
                           '/opt/vc/include',
@@ -39,8 +39,8 @@
                           '-lpng12',
                           ],
                       'ldflags': [
-                          '-L/home/deets/projects/raspberry-racer/cpp/gmock-1.6.0/gtest',
-                          '-L/home/deets/projects/raspberry-racer/cpp/gmock-1.6.0',
+                          '-L/home/deets/projects/raspberry-racer/cpp/rpi-gmock-1.6.0/gtest',
+                          '-L/home/deets/projects/raspberry-racer/cpp/rpi-gmock-1.6.0',
                           ],
                       },
                   ],
