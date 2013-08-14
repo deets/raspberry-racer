@@ -34,6 +34,10 @@ int main(int argc, char **argv) {
     window_adapter.setFillColor(black);
     window_adapter.drawCircle(100, 100, 100.0);
     am.drawText(500, 500, "Hallo!", am.get_font(), 30);
+    
+    fs::path image_path("amiga-ball.png");
+    ImageInfo img = am.image(image_path);
+    window_adapter.vgSetPixels(200, 200, img.image, 0, 0, img.width, img.height);
     window_adapter.end();
   }
 }

@@ -112,7 +112,7 @@ void AssetManager::drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int point
 
 
 
-VGImage AssetManager::image(const fs::path &file) {
+ImageInfo AssetManager::image(const fs::path &file) {
   png::image< png::rgba_pixel > image(file.c_str());
 
   size_t width = image.get_width();
@@ -133,5 +133,6 @@ VGImage AssetManager::image(const fs::path &file) {
 
 
   _vg->vgImageSubData(img, &(raw[0]), width * 4, VG_sRGBA_8888, 0, 0, width, height);
-  return img;
+  ImageInfo res = { img, width, height };
+  return res;
 }

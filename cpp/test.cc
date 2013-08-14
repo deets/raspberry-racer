@@ -72,10 +72,10 @@ TEST(AssetTests, TestImageManagement) {
   ASSERT_TRUE(fs::exists(image_path));
   
   AssetManager am(&ovg_adapter);
-  VGImage img = am.image(image_path);
-  VGImage img2 = am.image(image_path);
+  ImageInfo img = am.image(image_path);
+  ImageInfo img2 = am.image(image_path);
 
-  ASSERT_EQ(img, img2);
+  ASSERT_EQ(img.image, img2.image);
 }
 
 int main(int argc, char** argv) {

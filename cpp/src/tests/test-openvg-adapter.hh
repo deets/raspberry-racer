@@ -34,5 +34,8 @@ class TestOpenvgAdaptper : public OpenVGAdapter {
   MOCK_CONST_METHOD8(vgImageSubData, void(VGImage, const void *, VGint, VGImageFormat,
 					  VGint, VGint, VGint, VGint));
 
+
+  MOCK_CONST_METHOD7(vgSetPixels, void(VGint dx, VGint dy, VGImage src, VGint sx, VGint sy, VGint width, VGint height));
+
 };
 #endif

@@ -22,6 +22,13 @@ typedef struct {
 } Fontinfo;
 
 
+typedef struct {
+  const VGImage image;
+  size_t width;
+  size_t height;
+} ImageInfo;
+
+
 class AssetManager : public NonCopyAble {
 
   const OpenVGAdapter* _vg;
@@ -41,7 +48,7 @@ public:
   void drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int pointsize) const;
   VGfloat textWidth(char *s, Fontinfo f, int pointsize) const;
 
-  VGImage image(const fs::path&);
+  ImageInfo image(const fs::path&);
 
 private:
 
