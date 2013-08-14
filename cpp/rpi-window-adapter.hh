@@ -86,6 +86,11 @@ public:
 			      VGImageFormat dataFormat,
 			      VGint x, VGint y, VGint width, VGint height) const;
 
+
+  virtual void vgSetPixels(VGint dx, VGint dy,
+			   VGImage src, VGint sx, VGint sy,
+			   VGint width, VGint height) const;
+
 };
 
 #endif

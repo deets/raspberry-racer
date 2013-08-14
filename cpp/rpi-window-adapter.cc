@@ -167,3 +167,10 @@ void RPiWindowAdapter::vgImageSubData(VGImage image,
 				      VGint x, VGint y, VGint width, VGint height) const {
   ::vgImageSubData(image, data, dataStride, dataFormat, x, y, width, height);
 }
+
+
+void RPiWindowAdapter::vgSetPixels(VGint dx, VGint dy,
+				   VGImage src, VGint sx, VGint sy,
+				   VGint width, VGint height) const {
+  ::vgSetPixels(dx, dy, src, sx, sy, width, height);
+}

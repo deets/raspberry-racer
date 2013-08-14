@@ -77,5 +77,11 @@ public:
 			      const void * data, VGint dataStride,
 			      VGImageFormat dataFormat,
 			      VGint x, VGint y, VGint width, VGint height) const=0;
+
+
+  virtual void vgSetPixels(VGint dx, VGint dy,
+			   VGImage src, VGint sx, VGint sy,
+			   VGint width, VGint height) const=0;
+
 };
 #endif

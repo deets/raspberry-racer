@@ -30,12 +30,13 @@ public:
 
 
   MOCK_CONST_METHOD4(vgCreateImage, VGImage(VGImageFormat, VGint, VGint, VGbitfield));
+  MOCK_CONST_METHOD1(vgDestroyImage, void(VGImage));
 
   MOCK_CONST_METHOD8(vgImageSubData, void(VGImage, const void *, VGint, VGImageFormat,
 					  VGint, VGint, VGint, VGint));
 
+  MOCK_CONST_METHOD7(vgSetPixels, void(VGint dx, VGint dy, VGImage src, VGint sx, VGint sy, VGint width, VGint height));
 
-  MOCK_CONST_METHOD1(vgDestroyImage, void(VGImage));
 
 };
 #endif
