@@ -71,6 +71,8 @@ public:
 				VGbitfield allowedQuality) const=0;
 
 
+  virtual void vgDestroyImage(VGImage) const=0;
+
   virtual void vgImageSubData(VGImage image,
 			      const void * data, VGint dataStride,
 			      VGImageFormat dataFormat,

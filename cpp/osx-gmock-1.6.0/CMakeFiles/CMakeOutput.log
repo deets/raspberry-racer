@@ -1,0 +1,232 @@
+The system is: Darwin - 12.4.0 - i386
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: /usr/bin/c++ 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+
+The CXX compiler identification is Clang, found in "/Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/2.8.11.2/CompilerIdCXX/a.out"
+
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: /usr/bin/cc 
+Build flags: 
+Id flags: 
+
+The output was:
+0
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+
+The C compiler identification is Clang, found in "/Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/2.8.11.2/CompilerIdC/a.out"
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec52008460/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec52008460.dir/build.make CMakeFiles/cmTryCompileExec52008460.dir/build
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec52008460.dir/testCXXCompiler.cxx.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec52008460.dir/testCXXCompiler.cxx.o -c /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTryCompileExec52008460
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec52008460.dir/link.txt --verbose=1
+/usr/bin/c++       -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec52008460.dir/testCXXCompiler.cxx.o  -o cmTryCompileExec52008460  
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1815610160/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1815610160.dir/build.make CMakeFiles/cmTryCompileExec1815610160.dir/build
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++     -o CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/Cellar/cmake/2.8.11.2/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTryCompileExec1815610160
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1815610160.dir/link.txt --verbose=1
+/usr/bin/c++       -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec1815610160   
+Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
+Target: x86_64-apple-darwin12.4.0
+Thread model: posix
+ "/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.8.0 -o cmTryCompileExec1815610160 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lSystem /usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a
+@(#)PROGRAM:ld  PROJECT:ld64-136
+configured to support archs: armv6 armv7 armv7s i386 x86_64
+Library search paths:
+	/usr/lib
+	/usr/local/lib
+Framework search paths:
+	/Library/Frameworks/
+	/System/Library/Frameworks/
+
+
+Parsed CXX implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:/usr/bin/make "cmTryCompileExec1815610160/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTryCompileExec1815610160.dir/build.make CMakeFiles/cmTryCompileExec1815610160.dir/build]
+  ignore line: [/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1]
+  ignore line: [Building CXX object CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++     -o CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/Cellar/cmake/2.8.11.2/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTryCompileExec1815610160]
+  ignore line: [/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1815610160.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++       -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o  -o cmTryCompileExec1815610160   ]
+  ignore line: [Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)]
+  ignore line: [Target: x86_64-apple-darwin12.4.0]
+  ignore line: [Thread model: posix]
+  link line: [ "/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.8.0 -o cmTryCompileExec1815610160 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lSystem /usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+    arg [/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [x86_64] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.8.0] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec1815610160] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-v] ==> ignore
+    arg [CMakeFiles/cmTryCompileExec1815610160.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [-lstdc++] ==> lib [stdc++]
+    arg [-lSystem] ==> lib [System]
+    arg [/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a] ==> lib [/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/usr/lib;/usr/local/lib]
+  Framework search paths: [;/Library/Frameworks/;/System/Library/Frameworks/]
+  remove lib [System]
+  collapse lib [/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a] ==> [/usr/lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+  collapse framework dir [/Library/Frameworks/] ==> [/Library/Frameworks]
+  collapse framework dir [/System/Library/Frameworks/] ==> [/System/Library/Frameworks]
+  implicit libs: [stdc++;/usr/lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  implicit dirs: [/usr/lib;/usr/local/lib]
+  implicit fwks: [/Library/Frameworks;/System/Library/Frameworks]
+
+
+Determining if the C compiler works passed with the following output:
+Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec1226781923/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec1226781923.dir/build.make CMakeFiles/cmTryCompileExec1226781923.dir/build
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec1226781923.dir/testCCompiler.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec1226781923.dir/testCCompiler.c.o   -c /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTryCompileExec1226781923
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec1226781923.dir/link.txt --verbose=1
+/usr/bin/cc      -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec1226781923.dir/testCCompiler.c.o  -o cmTryCompileExec1226781923  
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec664526716/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec664526716.dir/build.make CMakeFiles/cmTryCompileExec664526716.dir/build
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o   -c /usr/local/Cellar/cmake/2.8.11.2/share/cmake/Modules/CMakeCCompilerABI.c
+Linking C executable cmTryCompileExec664526716
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec664526716.dir/link.txt --verbose=1
+/usr/bin/cc      -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec664526716   
+Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)
+Target: x86_64-apple-darwin12.4.0
+Thread model: posix
+ "/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.8.0 -o cmTryCompileExec664526716 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o -lSystem /usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a
+@(#)PROGRAM:ld  PROJECT:ld64-136
+configured to support archs: armv6 armv7 armv7s i386 x86_64
+Library search paths:
+	/usr/lib
+	/usr/local/lib
+Framework search paths:
+	/Library/Frameworks/
+	/System/Library/Frameworks/
+
+
+Parsed C implicit link information from above output:
+  link line regex: [^( *|.*[/\])(ld|ld|collect2)[^/\]*( |$)]
+  ignore line: [Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp]
+  ignore line: []
+  ignore line: [Run Build Command:/usr/bin/make "cmTryCompileExec664526716/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTryCompileExec664526716.dir/build.make CMakeFiles/cmTryCompileExec664526716.dir/build]
+  ignore line: [/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1]
+  ignore line: [Building C object CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc    -o CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o   -c /usr/local/Cellar/cmake/2.8.11.2/share/cmake/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTryCompileExec664526716]
+  ignore line: [/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec664526716.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc      -Wl,-search_paths_first -Wl,-headerpad_max_install_names -v -Wl,-v CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o  -o cmTryCompileExec664526716   ]
+  ignore line: [Apple LLVM version 4.2 (clang-425.0.28) (based on LLVM 3.2svn)]
+  ignore line: [Target: x86_64-apple-darwin12.4.0]
+  ignore line: [Thread model: posix]
+  link line: [ "/usr/bin/ld" -demangle -dynamic -arch x86_64 -macosx_version_min 10.8.0 -o cmTryCompileExec664526716 -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o -lSystem /usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+    arg [/usr/bin/ld] ==> ignore
+    arg [-demangle] ==> ignore
+    arg [-dynamic] ==> ignore
+    arg [-arch] ==> ignore
+    arg [x86_64] ==> ignore
+    arg [-macosx_version_min] ==> ignore
+    arg [10.8.0] ==> ignore
+    arg [-o] ==> ignore
+    arg [cmTryCompileExec664526716] ==> ignore
+    arg [-search_paths_first] ==> ignore
+    arg [-headerpad_max_install_names] ==> ignore
+    arg [-v] ==> ignore
+    arg [CMakeFiles/cmTryCompileExec664526716.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [-lSystem] ==> lib [System]
+    arg [/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a] ==> lib [/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  Library search paths: [;/usr/lib;/usr/local/lib]
+  Framework search paths: [;/Library/Frameworks/;/System/Library/Frameworks/]
+  remove lib [System]
+  collapse lib [/usr/bin/../lib/clang/4.2/lib/darwin/libclang_rt.osx.a] ==> [/usr/lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  collapse library dir [/usr/lib] ==> [/usr/lib]
+  collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+  collapse framework dir [/Library/Frameworks/] ==> [/Library/Frameworks]
+  collapse framework dir [/System/Library/Frameworks/] ==> [/System/Library/Frameworks]
+  implicit libs: [/usr/lib/clang/4.2/lib/darwin/libclang_rt.osx.a]
+  implicit dirs: [/usr/lib;/usr/local/lib]
+  implicit fwks: [/Library/Frameworks;/System/Library/Frameworks]
+
+
+Determining if files pthread.h exist passed with the following output:
+Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2811082978/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2811082978.dir/build.make CMakeFiles/cmTryCompileExec2811082978.dir/build
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2811082978.dir/CheckIncludeFiles.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2811082978.dir/CheckIncludeFiles.c.o   -c /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+Linking C executable cmTryCompileExec2811082978
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2811082978.dir/link.txt --verbose=1
+/usr/bin/cc      -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec2811082978.dir/CheckIncludeFiles.c.o  -o cmTryCompileExec2811082978  
+
+
+Determining if the pthread_create exist passed with the following output:
+Change Dir: /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3670609134/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3670609134.dir/build.make CMakeFiles/cmTryCompileExec3670609134.dir/build
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_progress_report /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3670609134.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3670609134.dir/CheckSymbolExists.c.o   -c /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec3670609134
+/usr/local/Cellar/cmake/2.8.11.2/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3670609134.dir/link.txt --verbose=1
+/usr/bin/cc      -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/cmTryCompileExec3670609134.dir/CheckSymbolExists.c.o  -o cmTryCompileExec3670609134  
+
+File /Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+

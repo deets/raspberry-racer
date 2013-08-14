@@ -1,20 +1,15 @@
-
-#include <stdio.h>
-#include <linux/kd.h>
-
+#include <iostream>
 #include <boost/filesystem.hpp>
 
 #include <gmock/gmock.h>
 
 // include mocks
-#include "tests/test-posix-adapter.hh"
 #include "tests/test-window-adapter.hh"
 #include "tests/test-openvg-adapter.hh"
 
 // include objects under test
 #include "world/world.hh"
 #include "assets/assets.hh"
-#include "terminal.hh"
 
 using ::testing::InitGoogleTest;
 using ::testing::_;
@@ -24,31 +19,9 @@ using ::testing::An;
 using ::testing::Return;
 using ::testing::TypedEq;
 
+using namespace std;
+
 namespace fs = boost::filesystem;
-
-TEST(TerminalTest, TestNormalSetup) {
-  TestPosixAdapter adapter;
-  // setup 
-  EXPECT_CALL(adapter, tcgetattr(Eq(0), _));
-  EXPECT_CALL(adapter, tcsetattr(Eq(0), Eq(0), _)).Times(2);
-  EXPECT_CALL(adapter, ioctl(Eq(0), Eq(KDSKBMODE), TypedEq<unsigned long>(K_RAW))).WillOnce(Return(0));
-  EXPECT_CALL(adapter, ioctl(Eq(0), Eq(KDKBDREP), An<kbd_repeat*>())).WillRepeatedly(Return(0));
-  EXPECT_CALL(adapter, signal(Eq(SIGTERM), Eq(Terminal::reset_terminal))).Times(1);
-
-  // get character
-  EXPECT_CALL(adapter, select(Eq(1), An<fd_set*>(), IsNull(), IsNull(), _)).WillOnce(Return(0));
-
-  // teardown
-  //  EXPECT_CALL(adapter, ioctl(Eq(0), Eq(KDKBDREP), An<kbd_repeat*>())).WillOnce(Return(0));
-  EXPECT_CALL(adapter, ioctl(Eq(0), Eq(KDSKBMODE),  TypedEq<unsigned long>(K_XLATE))).WillOnce(Return(0));
-
-  {
-    Terminal t(adapter);
-    t.install_signal_handler();
-    int c = t.read_character();
-    ASSERT_EQ(-1, c);
-  }
-}
 
 
 TEST(WorldTests, TestWorldLifeCycle) {
@@ -63,10 +36,15 @@ TEST(WorldTests, TestWorldLifeCycle) {
 }
 
 
-
-
 TEST(AssetTests, TestImageManagement) {
   TestOpenvgAdaptper ovg_adapter;
+  EXPECT_CALL(ovg_adapter, vgCreateImage(
+		  TypedEq<VGImageFormat>(VG_sRGBA_8888), 
+		  TypedEq<VGint>(264), 
+		  TypedEq<VGint>(258), 
+		  TypedEq<VGbitfield>(VG_IMAGE_QUALITY_BETTER))
+  ).Times(1);
+
 
   fs::path image_path("amiga-ball.png");
   ASSERT_TRUE(fs::exists(image_path));
@@ -75,8 +53,12 @@ TEST(AssetTests, TestImageManagement) {
   VGImage img = am.image(image_path);
   VGImage img2 = am.image(image_path);
 
+  cout << "img" << img << endl;
+  cout << "img2" << img2 << endl;
+
   ASSERT_EQ(img, img2);
 }
+
 
 int main(int argc, char** argv) {
   InitGoogleTest(&argc, argv);

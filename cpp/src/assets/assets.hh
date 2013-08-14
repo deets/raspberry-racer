@@ -7,7 +7,6 @@
 
 #include <VG/openvg.h>
 #include "openvg-adapter.hh"
-#include "posix-adapter.hh"
 #include "common/non-copyable.hh"
 
 namespace fs = boost::filesystem;

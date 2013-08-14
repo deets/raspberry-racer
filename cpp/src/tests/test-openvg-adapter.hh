@@ -7,7 +7,7 @@
 
 
 class TestOpenvgAdaptper : public OpenVGAdapter {
-
+public:
   MOCK_CONST_METHOD2(vgSetf, void(VGParamType, VGfloat));
   MOCK_CONST_METHOD4(vgClear, void(VGint, VGint, VGint, VGint));
   MOCK_CONST_METHOD0(vgLoadIdentity, void());
@@ -33,6 +33,9 @@ class TestOpenvgAdaptper : public OpenVGAdapter {
 
   MOCK_CONST_METHOD8(vgImageSubData, void(VGImage, const void *, VGint, VGImageFormat,
 					  VGint, VGint, VGint, VGint));
+
+
+  MOCK_CONST_METHOD1(vgDestroyImage, void(VGImage));
 
 };
 #endif

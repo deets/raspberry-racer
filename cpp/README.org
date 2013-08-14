@@ -1,0 +1,12 @@
+
+
+* OSX
+** building gtest/gmock 
+
+Use 
+
+#+begin_src shell
+cmake .
+#+end_src
+
+inside the google-mock directory. The linker should pick the resulting libs up.

@@ -7,7 +7,6 @@
             'target_name': 'test',
             'type': 'executable',
             'sources': [
-                'terminal.cc',
                 'test.cc',
                 'src/world/world.cc',
                 'src/assets/assets.cc',
@@ -16,68 +15,63 @@
             'include_dirs': [
                 '.',
                 'src',
-                'gmock-1.6.0/include',
-                'gmock-1.6.0/gtest/include',
-                '/opt/vc/include',
-                '/opt/vc/include/interface/vcos/pthreads',
-                '/usr/include/eigen3',
-                ],
-            'libraries' : [
-                '-lgmock',
-                '-lgtest',
-                '-lpthread',
-                '-lboost_filesystem',
-                '-lboost_system',
-                '-lpng12',
                 ],
             'conditions' : [
                  ['OS=="linux"',
                   {
+                      'sources' : [
+                          'terminal.cc',
+                          'src/test/rpi/test-terminal.cc',
+                          ],
+                      'include_dirs' : [
+                          '/opt/vc/include',
+                          '/opt/vc/include/interface/vcos/pthreads',
+                          '/usr/include/eigen3',
+                          'rpi-gmock-1.6.0/include',
+                          'rpi-gmock-1.6.0/gtest/include',
+                          ],
+                      'libraries' : [
+                          '-lgmock',
+                          '-lgtest',
+                          '-lpthread',
+                          '-lboost_filesystem',
+                          '-lboost_system',
+                          '-lpng12',
+                          ],
                       'ldflags': [
                           '-L/home/deets/projects/raspberry-racer/cpp/gmock-1.6.0/gtest',
                           '-L/home/deets/projects/raspberry-racer/cpp/gmock-1.6.0',
                           ],
-                      }
+                      },
                   ],
+                 ['OS=="mac"',
+                  {
+                      'xcode_settings': {
+                          'ARCHS': [ 'x86_64' ],
+                          },
+                      'include_dirs' : [
+                          '/usr/local/include',
+                          # this required a link in MonkVG -> VG
+                          "/Users/deets/software/vc/MonkVG/include",
+                          'osx-gmock-1.6.0/include',
+                          'osx-gmock-1.6.0/gtest/include',
+                          ],
+                      'libraries' : [
+                          '-L/usr/local/lib',
+                          '-L/Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0',
+                          '-L/Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/gtest',
+
+                          '-lgmock',
+                          '-lgtest',
+                          '-lpthread',
+                          '-lboost_filesystem-mt',
+                          '-lboost_system-mt',
+                          '-lpng15',
+                          ],
+                      },
+                  ],
+
                 ],
             },
-        {
-            'target_name': 'rracer',
-            'type': 'executable',
-            'cflags' : ["-g"],
-            'sources': [
-                'linux-event-pump.cc',
-                'main.cc',
-                'posix-adapter-impl.cc',
-                'terminal.cc',
-                'rpi-window-adapter.cc',
-                'oglinit.cc',
-                'openvg-adapter.cc',
-                'src/assets/assets.cc',
-                ],
-            'include_dirs': [
-                '.',
-                'src',
-                '/opt/vc/include',
-                '/opt/vc/include/interface/vcos/pthreads',
-                '/usr/include/eigen3',
-                ],
-            'libraries' : [
-                '-lbcm_host',
-                '-lGLESv2',
-                '-lboost_filesystem',
-                '-lboost_system',
-                '-lpng12',
-                ],
-            'conditions' : [
-                 ['OS=="linux"',
-                  {
-                      'ldflags': [
-                          '-L/opt/vc/lib',
-                          ],
-                      }
-                  ],
-                ],
-            }
         ],
     }
