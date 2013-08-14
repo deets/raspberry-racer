@@ -38,13 +38,58 @@ TEST(WorldTests, TestWorldLifeCycle) {
 
 TEST(AssetTests, TestImageManagement) {
   TestOpenvgAdaptper ovg_adapter;
+
+  // we don't care about the font-setup
+  EXPECT_CALL(ovg_adapter, 
+	      vgAppendPathData(
+		  An<VGPath>(),
+		  An<VGint>(),
+		  An<const VGubyte*>(),
+		  An<const void*>()
+	      )
+  ).WillRepeatedly(Return());
+
+  EXPECT_CALL(ovg_adapter,
+	      vgCreatePath(
+		  An<VGint>(),
+		  An<VGPathDatatype>(),
+		  An<VGfloat>(),
+		  An<VGfloat>(),
+		  An<VGint>(),
+		  An<VGint>(),
+		  An<VGbitfield>()
+	      )
+  ).WillRepeatedly(Return(1));
+
+
+  // the real calls we're interested in
+
+  VGImage img_handle = 1234;
   EXPECT_CALL(ovg_adapter, vgCreateImage(
 		  TypedEq<VGImageFormat>(VG_sRGBA_8888), 
 		  TypedEq<VGint>(264), 
 		  TypedEq<VGint>(258), 
 		  TypedEq<VGbitfield>(VG_IMAGE_QUALITY_BETTER))
+  ).WillOnce(Return(img_handle)).Times(1);
+
+  EXPECT_CALL(ovg_adapter,
+	      vgImageSubData(
+		  Eq(img_handle),
+		  An<const void *>(),
+		  Eq(264*4),
+		  Eq(VG_sRGBA_8888),
+		  TypedEq<VGint>(0), 
+		  TypedEq<VGint>(0), 
+		  TypedEq<VGint>(264), 
+		  TypedEq<VGint>(258)
+	      )
   ).Times(1);
 
+  EXPECT_CALL(ovg_adapter,
+	      vgDestroyImage(
+		  Eq(img_handle)
+	      )
+  ).Times(1);
 
   fs::path image_path("amiga-ball.png");
   ASSERT_TRUE(fs::exists(image_path));
