@@ -113,26 +113,42 @@ void AssetManager::drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int point
 
 
 ImageInfo AssetManager::image(const fs::path &file) {
-  png::image< png::rgba_pixel > image(file.c_str());
+  if(_images.find(file) != _images.end()) {
+    png::image< png::rgba_pixel > image(file.c_str());
+    
+    size_t width = image.get_width();
+    size_t height = image.get_height();
+    
+    std::vector< png::rgba_pixel > raw(width * height);
+    for (size_t i = 0; i < height; ++i) {
+      std::copy(
+	  image.get_row(i).begin(), image.get_row(i).end(),
+	  raw.begin() + i*width);
+    }
+    
+    VGImage img = _vg->vgCreateImage(
+	VG_sRGBA_8888, 
+	(VGint)width,
+	(VGint)height,
+	VG_IMAGE_QUALITY_BETTER);
+    
 
-  size_t width = image.get_width();
-  size_t height = image.get_height();
-
-  std::vector< png::rgba_pixel > raw(width * height);
-  for (size_t i = 0; i < height; ++i) {
-    std::copy(
-	image.get_row(i).begin(), image.get_row(i).end(),
-	raw.begin() + i*width);
+    _vg->vgImageSubData(img, &(raw[0]), width * 4, VG_sRGBA_8888, 0, 0, width, height);
+    _images.insert(make_pair(file, ImageInfo(_vg, img, width, height)));
   }
-
-  VGImage img = _vg->vgCreateImage(
-      VG_sRGBA_8888, 
-      (VGint)width,
-      (VGint)height,
-      VG_IMAGE_QUALITY_BETTER);
+  return (*_images.find(file)).second;
+}
 
 
-  _vg->vgImageSubData(img, &(raw[0]), width * 4, VG_sRGBA_8888, 0, 0, width, height);
-  ImageInfo res = { img, width, height };
-  return res;
+ImageInfo::ImageInfo(const OpenVGAdapter* vg, VGImage img, size_t width, size_t height) :
+    _vg(vg),
+    image(img),
+    width(width),
+    height(height)
+{
+
+}
+
+ImageInfo::~ImageInfo() {
+    _vg->vgDestroyImage(image);
 }

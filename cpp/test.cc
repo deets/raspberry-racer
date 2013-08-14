@@ -70,7 +70,7 @@ TEST(AssetTests, TestImageManagement) {
 		  TypedEq<VGint>(264), 
 		  TypedEq<VGint>(258), 
 		  TypedEq<VGbitfield>(VG_IMAGE_QUALITY_BETTER))
-  ).WillOnce(Return(img_handle)).Times(1);
+  ).WillOnce(Return(img_handle));
 
   EXPECT_CALL(ovg_adapter,
 	      vgImageSubData(
@@ -94,11 +94,12 @@ TEST(AssetTests, TestImageManagement) {
   fs::path image_path("amiga-ball.png");
   ASSERT_TRUE(fs::exists(image_path));
   
-  AssetManager am(&ovg_adapter);
-  ImageInfo img = am.image(image_path);
-  ImageInfo img2 = am.image(image_path);
-
-  ASSERT_EQ(img.image, img2.image);
+  {
+    AssetManager am(&ovg_adapter);
+    ImageInfo img = am.image(image_path);
+    ImageInfo img2 = am.image(image_path);
+    ASSERT_EQ(img.image, img2.image);
+  }
 }
 
 

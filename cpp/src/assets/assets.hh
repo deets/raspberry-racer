@@ -21,11 +21,18 @@ typedef struct {
 } Fontinfo;
 
 
-typedef struct {
+class ImageInfo {
+  const OpenVGAdapter* _vg;
+
+public:
+  ImageInfo(const OpenVGAdapter* vg, VGImage img, size_t width, size_t height);
+  virtual ~ImageInfo();
+
   const VGImage image;
   size_t width;
   size_t height;
-} ImageInfo;
+
+};
 
 
 class AssetManager : public NonCopyAble {
@@ -51,7 +58,7 @@ public:
 
 private:
 
-  map<fs::path, VGImage> _images;
+  map<fs::path, ImageInfo> _images;
 };
 
 
