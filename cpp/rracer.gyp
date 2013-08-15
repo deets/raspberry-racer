@@ -78,14 +78,9 @@
             'type': 'executable',
             'cflags' : ["-g"],
             'sources': [
-                'linux-event-pump.cc',
                 'main.cc',
-                'posix-adapter-impl.cc',
-                'rpi-window-adapter.cc',
-                'oglinit.cc',
-                'openvg-adapter.cc',
                 'src/assets/assets.cc',
-                'terminal.cc',
+                'openvg-adapter.cc',
                 ],
             'include_dirs': [
                 '.',
@@ -95,6 +90,11 @@
                  ['OS=="linux"',
                   {
                       'sources' : [
+                          'src/rpi/linux-event-pump.cc',
+                          'src/rpi/posix-adapter-impl.cc',
+                          'src/rpi/rpi-window-adapter.cc',
+                          'src/rpi/oglinit.cc',
+                          'src/rpi/terminal.cc',
                           ],
                       'include_dirs' : [
                           '/opt/vc/include',
@@ -113,7 +113,25 @@
                           ],
                       },
                   ],
+                 ['OS=="mac"',
+                  {
+                      'xcode_settings': {
+                          'ARCHS': [ 'x86_64' ],
+                          },
+                      'include_dirs' : [
+                          '/usr/local/include',
+                          # this required a link in MonkVG -> VG
+                          "/Users/deets/software/vc/MonkVG/include",
+                          ],
+                      'libraries' : [
+                          '-L/usr/local/lib',
+                          '-lboost_filesystem-mt',
+                          '-lboost_system-mt',
+                          '-lpng15',
+                          ],
+                      },
+                  ],
                 ],
             },
-        ],
+        ], # targets
     }
