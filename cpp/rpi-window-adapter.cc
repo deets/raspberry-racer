@@ -174,3 +174,9 @@ void RPiWindowAdapter::vgSetPixels(VGint dx, VGint dy,
 				   VGint width, VGint height) const {
   ::vgSetPixels(dx, dy, src, sx, sy, width, height);
 }
+
+
+
+void RPiWindowAdapter::vgDestroyImage(VGImage img) const {
+  ::vgDestroyImage(img);
+}

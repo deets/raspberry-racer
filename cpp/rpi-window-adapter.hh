@@ -91,6 +91,8 @@ public:
 			   VGImage src, VGint sx, VGint sy,
 			   VGint width, VGint height) const;
 
+
+  virtual void vgDestroyImage(VGImage) const;
 };
 
 #endif

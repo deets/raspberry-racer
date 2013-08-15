@@ -73,5 +73,47 @@
 
                 ],
             },
+        {
+            'target_name': 'rracer',
+            'type': 'executable',
+            'cflags' : ["-g"],
+            'sources': [
+                'linux-event-pump.cc',
+                'main.cc',
+                'posix-adapter-impl.cc',
+                'rpi-window-adapter.cc',
+                'oglinit.cc',
+                'openvg-adapter.cc',
+                'src/assets/assets.cc',
+                'terminal.cc',
+                ],
+            'include_dirs': [
+                '.',
+                'src',
+                ],
+            'conditions' : [
+                 ['OS=="linux"',
+                  {
+                      'sources' : [
+                          ],
+                      'include_dirs' : [
+                          '/opt/vc/include',
+                          '/opt/vc/include/interface/vcos/pthreads',
+                          '/usr/include/eigen3',
+                          ],
+                      'libraries' : [
+                          '-lbcm_host',
+                          '-lGLESv2',
+                          '-lboost_filesystem',
+                          '-lboost_system',
+                          '-lpng12',
+                          ],
+                      'ldflags': [
+                          '-L/opt/vc/lib',
+                          ],
+                      },
+                  ],
+                ],
+            },
         ],
     }

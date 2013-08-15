@@ -19,11 +19,13 @@ int main(int argc, char **argv) {
 
   RPiWindowAdapter window_adapter;
 
-  AssetManager am(&window_adapter);
   
   bool running = true;
   while(running) {
     window_adapter.start();
+
+    AssetManager am(&window_adapter);
+
     BOOST_FOREACH(const Event event, event_pump.pump_events()) {
       cout << "scancode: " << event.scancode << endl;
       if(event.key == K_ESC) {
