@@ -64,17 +64,16 @@ TEST(AssetTests, TestImageManagement) {
 
   // the real calls we're interested in
 
-  VGImage img_handle = 1234;
   EXPECT_CALL(ovg_adapter, vgCreateImage(
 		  TypedEq<VGImageFormat>(VG_sRGBA_8888), 
 		  TypedEq<VGint>(264), 
 		  TypedEq<VGint>(258), 
 		  TypedEq<VGbitfield>(VG_IMAGE_QUALITY_BETTER))
-  ).WillOnce(Return(img_handle));
+  ).WillOnce(Return(1)).WillOnce(Return(1));
 
   EXPECT_CALL(ovg_adapter,
 	      vgImageSubData(
-		  Eq(img_handle),
+		  Eq(1),
 		  An<const void *>(),
 		  Eq(264*4),
 		  Eq(VG_sRGBA_8888),
@@ -83,14 +82,14 @@ TEST(AssetTests, TestImageManagement) {
 		  TypedEq<VGint>(264), 
 		  TypedEq<VGint>(258)
 	      )
-  ).Times(1);
+  ).Times(2);
 
-  EXPECT_CALL(ovg_adapter,
-	      vgDestroyImage(
-		  Eq(img_handle)
-	      )
-  ).Times(1);
-
+  // EXPECT_CALL(ovg_adapter,
+  // 	      vgDestroyImage(
+  // 		  Eq(img_handle)
+  // 	      )
+  // ).Times(1);
+  
   fs::path image_path("amiga-ball.png");
   ASSERT_TRUE(fs::exists(image_path));
   

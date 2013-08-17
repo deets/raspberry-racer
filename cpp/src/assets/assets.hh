@@ -6,6 +6,8 @@
 #include <boost/filesystem.hpp>
 
 #include <VG/openvg.h>
+#include <png++/png.hpp>
+
 #include "openvg-adapter.hh"
 #include "common/non-copyable.hh"
 
@@ -21,17 +23,30 @@ typedef struct {
 } Fontinfo;
 
 
-class ImageInfo {
-  const OpenVGAdapter* _vg;
-
-public:
-  ImageInfo(const OpenVGAdapter* vg, VGImage img, size_t width, size_t height);
-  virtual ~ImageInfo();
-
+struct ImageInfo {
   const VGImage image;
   size_t width;
   size_t height;
+};
 
+
+class PNGImageData {
+  size_t _width, _height;
+  std::vector< png::rgba_pixel > *_raw;
+
+public:
+  PNGImageData();
+  PNGImageData(const PNGImageData &original) {
+  }
+
+  virtual ~PNGImageData();
+
+  void load(const fs::path &file);
+
+  VGint width() const { return _width; }
+  VGint height() const { return _height; }
+  VGint stride() const { return _width * 4; /* sizeof rgba-pixel */ }
+  void *data() const { return (void*)&(*_raw)[0]; }
 };
 
 
@@ -58,7 +73,7 @@ public:
 
 private:
 
-  map<fs::path, ImageInfo> _images;
+  map<fs::path, PNGImageData> _image_data;
 };
 
 

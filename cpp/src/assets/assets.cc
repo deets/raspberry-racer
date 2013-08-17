@@ -1,5 +1,4 @@
 #include <string.h>
-#include <png++/png.hpp>
 
 #include "fonts/visitor1.c"
 #include "assets/assets.hh"
@@ -113,42 +112,46 @@ void AssetManager::drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int point
 
 
 ImageInfo AssetManager::image(const fs::path &file) {
-  if(_images.find(file) != _images.end()) {
-    png::image< png::rgba_pixel > image(file.c_str());
-    
-    size_t width = image.get_width();
-    size_t height = image.get_height();
-    
-    std::vector< png::rgba_pixel > raw(width * height);
-    for (size_t i = 0; i < height; ++i) {
-      std::copy(
-	  image.get_row(i).begin(), image.get_row(i).end(),
-	  raw.begin() + i*width);
-    }
-    
-    VGImage img = _vg->vgCreateImage(
-	VG_sRGBA_8888, 
-	(VGint)width,
-	(VGint)height,
-	VG_IMAGE_QUALITY_BETTER);
-    
-
-    _vg->vgImageSubData(img, &(raw[0]), width * 4, VG_sRGBA_8888, 0, 0, width, height);
-    _images.insert(make_pair(file, ImageInfo(_vg, img, width, height)));
+  if(_image_data.find(file) == _image_data.end()) {
+    PNGImageData &image_data = _image_data[file];
+    image_data.load(file);
   }
-  return (*_images.find(file)).second;
+  const PNGImageData &image_data = _image_data[file];
+  VGint width = image_data.width();
+  VGint height = image_data.height();
+
+  VGImage img = _vg->vgCreateImage(
+      VG_sRGBA_8888, 
+      width, height,
+      VG_IMAGE_QUALITY_BETTER);
+
+  _vg->vgImageSubData(img, image_data.data(), image_data.stride(), VG_sRGBA_8888, 0, 0, width, height);
+  ImageInfo res = { img, width, height };
+  return res;
 }
 
 
-ImageInfo::ImageInfo(const OpenVGAdapter* vg, VGImage img, size_t width, size_t height) :
-    _vg(vg),
-    image(img),
-    width(width),
-    height(height)
+PNGImageData::PNGImageData() 
+  : _raw(0)
+  , _width(0)
+  , _height(0)
 {
-
 }
 
-ImageInfo::~ImageInfo() {
-    _vg->vgDestroyImage(image);
+void PNGImageData::load(const fs::path &file) {
+  png::image< png::rgba_pixel > image(file.c_str());
+  _width = image.get_width();
+  _height = image.get_height();
+  _raw = new std::vector< png::rgba_pixel >(_width * _height);
+  
+  for (size_t i = 0; i < _height; ++i) {
+    std::copy(
+	image.get_row(i).begin(), image.get_row(i).end(),
+	_raw->begin() + i*_width);
+  }
+}
+
+
+PNGImageData::~PNGImageData() {
+  delete _raw;
 }
