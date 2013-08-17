@@ -37,6 +37,13 @@ class PNGImageData {
 public:
   PNGImageData();
   PNGImageData(const PNGImageData &original) {
+    _width = original._width;
+    _height = original._height;
+    if(original._raw) {
+      _raw = new std::vector<png::rgba_pixel>(*original._raw);
+    } else {
+      _raw = 0;
+    }
   }
 
   virtual ~PNGImageData();

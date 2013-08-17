@@ -20,7 +20,7 @@
                  ['OS=="linux"',
                   {
                       'sources' : [
-                          'terminal.cc',
+                          'src/rpi/terminal.cc',
                           'src/tests/rpi/test-terminal.cc',
                           ],
                       'include_dirs' : [

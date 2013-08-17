@@ -7,7 +7,7 @@
 #include "tests/test-posix-adapter.hh"
 
 // include objects under test
-#include "terminal.hh"
+#include "rpi/terminal.hh"
 
 using ::testing::InitGoogleTest;
 using ::testing::_;
