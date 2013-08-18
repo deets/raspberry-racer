@@ -106,7 +106,7 @@ void PNGImageData::load(const fs::path &file) {
   
   for (size_t i = 0; i < _height; ++i) {
     std::copy(
-	image.get_row(i).begin(), image.get_row(i).end(),
+	image.get_row(_height - i - 1).begin(), image.get_row(_height - i - 1).end(),
 	_raw->begin() + i*_width);
   }
 }
