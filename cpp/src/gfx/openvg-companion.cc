@@ -43,3 +43,43 @@ void OpenVGCompanion::drawImage(const PNGImageData& image_data, VGint x, VGint y
   _vg.vgSetPixels(x, y, img, 0, 0, width, height);
   _vg.vgDestroyImage(img);
 }
+
+
+VGfloat OpenVGCompanion::textWidth(const Fontinfo& fi, char *s, int pointsize) const {
+  int i;
+  VGfloat tw = 0.0;
+  VGfloat size = (VGfloat) pointsize;
+  for (i = 0; i < (int)strlen(s); i++) {
+    unsigned int character = (unsigned int)s[i];
+    int glyph = fi.CharacterMap[character];
+    if (glyph == -1) {
+      continue;	//glyph is undefined
+    }
+    tw += size * fi.GlyphAdvances[glyph] / 65536.0f;
+  }
+  return tw;
+}
+
+void OpenVGCompanion::drawText(const Fontinfo& fi, VGfloat x, VGfloat y, char *s, int pointsize) const {
+  VGfloat size = (VGfloat) pointsize, xx = x, mm[9];
+  int i;
+  
+  _vg.vgGetMatrix(mm);
+  for (i = 0; i < (int)strlen(s); i++) {
+    unsigned int character = (unsigned int)s[i];
+    int glyph = fi.CharacterMap[character];
+    if (glyph == -1) {
+      continue;	//glyph is undefined
+    }
+    VGfloat mat[9] = {
+      size, 0.0f, 0.0f,
+      0.0f, size, 0.0f,
+      xx, y, 1.0f
+    };
+    _vg.vgLoadMatrix(mm);
+    _vg.vgMultMatrix(mat);
+    _vg.vgDrawPath(fi.Glyphs[glyph], VG_FILL_PATH);
+    xx += size * fi.GlyphAdvances[glyph] / 65536.0f;
+  }
+  _vg.vgLoadMatrix(mm);
+}

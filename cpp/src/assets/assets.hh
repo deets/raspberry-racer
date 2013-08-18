@@ -23,6 +23,7 @@ typedef struct {
 } Fontinfo;
 
 
+
 class PNGImageData {
   size_t _width, _height;
   std::vector< png::rgba_pixel > *_raw;
@@ -55,11 +56,7 @@ public:
 
   AssetManager(const OpenVGAdapter* vg);
   // TODO: naming convention
-  Fontinfo get_font() const;
-
-  void drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int pointsize) const;
-  VGfloat textWidth(char *s, Fontinfo f, int pointsize) const;
-
+  const Fontinfo &get_font() const;
   const PNGImageData& image(const fs::path&);
 
 private:
