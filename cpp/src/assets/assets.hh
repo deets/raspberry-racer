@@ -8,7 +8,7 @@
 #include <VG/openvg.h>
 #include <png++/png.hpp>
 
-#include "openvg-adapter.hh"
+#include "gfx/openvg-adapter.hh"
 #include "common/non-copyable.hh"
 
 namespace fs = boost::filesystem;
@@ -36,16 +36,7 @@ class PNGImageData {
 
 public:
   PNGImageData();
-  PNGImageData(const PNGImageData &original) {
-    _width = original._width;
-    _height = original._height;
-    if(original._raw) {
-      _raw = new std::vector<png::rgba_pixel>(*original._raw);
-    } else {
-      _raw = 0;
-    }
-  }
-
+  PNGImageData(const PNGImageData &original);
   virtual ~PNGImageData();
 
   void load(const fs::path &file);

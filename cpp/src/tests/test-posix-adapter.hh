@@ -3,7 +3,7 @@
 
 #include <gmock/gmock.h>
 
-#include "posix-adapter.hh"
+#include "rpi/posix-adapter.hh"
 
 class TestPosixAdapter : public PosixAdapter {
 public:

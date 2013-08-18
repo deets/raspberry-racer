@@ -9,8 +9,8 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-#include "posix-adapter.hh"
 #include "common/non-copyable.hh"
+#include "rpi/posix-adapter.hh"
 
 using namespace std;
 

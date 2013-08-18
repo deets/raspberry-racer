@@ -3,7 +3,7 @@
 
 #include <gmock/gmock.h>
 
-#include "openvg-adapter.hh"
+#include "gfx/openvg-adapter.hh"
 
 
 class TestOpenvgAdaptper : public OpenVGAdapter {

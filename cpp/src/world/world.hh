@@ -2,9 +2,9 @@
 #define WORLD_HH
 
 #include "common/common.hh"
-#include "window-adapter.hh"
-#include "openvg-adapter.hh"
-#include "event-pump.hh"
+#include "gfx/window-adapter.hh"
+#include "gfx/openvg-adapter.hh"
+#include "events/event-pump.hh"
 
 class WorldObject {
 

@@ -3,7 +3,7 @@
 
 #include <boost/function.hpp>
 
-#include "event-pump.hh"
+#include "events/event-pump.hh"
 
 using namespace boost;
 

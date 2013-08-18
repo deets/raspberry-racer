@@ -8,13 +8,6 @@
 class OpenVGAdapter {
 
 public:
-  // utility functions
-  VGPath newPath() const;
-  void setFillColor(VGfloat color[4]) const;
-  void drawEllipse(VGfloat x, VGfloat y, VGfloat w, VGfloat h) const;
-  void drawCircle(VGfloat x, VGfloat y, VGfloat r) const {
-    drawEllipse(x, y, r, r);
-  }
 
   // passing through of OpenVG calls
   virtual void vgSetf(VGParamType type, VGfloat value) const=0;

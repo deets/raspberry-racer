@@ -7,9 +7,12 @@
             'target_name': 'test',
             'type': 'executable',
             'sources': [
-                'test.cc',
-                'src/world/world.cc',
                 'src/assets/assets.cc',
+                'src/tests/main.cc',
+                'src/world/world.cc',
+		'src/gfx/openvg-companion.cc',
+		'src/tests/test-assets.cc',
+		'src/tests/test-world.cc',
                 ],
             'cflags' : ["-g"],
             'include_dirs': [
@@ -80,7 +83,7 @@
             'sources': [
                 'main.cc',
                 'src/assets/assets.cc',
-                'openvg-adapter.cc',
+                'src/gfx/openvg-adapter.cc',
                 ],
             'include_dirs': [
                 '.',

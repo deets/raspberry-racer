@@ -4,8 +4,8 @@
 #include <utility>
 #include "GLES/gl.h"
 #include "EGL/egl.h"
-#include "window-adapter.hh"
-#include "openvg-adapter.hh"
+#include "gfx/window-adapter.hh"
+#include "gfx/openvg-adapter.hh"
 #include "common/non-copyable.hh"
 #include "eglstate.h"
 

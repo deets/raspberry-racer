@@ -138,6 +138,18 @@ PNGImageData::PNGImageData()
 {
 }
 
+
+PNGImageData::PNGImageData(const PNGImageData &original) {
+  _width = original._width;
+  _height = original._height;
+  if(original._raw) {
+    _raw = new std::vector<png::rgba_pixel>(*original._raw);
+  } else {
+    _raw = 0;
+  }
+}
+
+
 void PNGImageData::load(const fs::path &file) {
   png::image< png::rgba_pixel > image(file.c_str());
   _width = image.get_width();

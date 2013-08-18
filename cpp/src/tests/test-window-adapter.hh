@@ -3,7 +3,7 @@
 
 #include <gmock/gmock.h>
 
-#include "window-adapter.hh"
+#include "gfx/window-adapter.hh"
 
 using namespace std;
 
