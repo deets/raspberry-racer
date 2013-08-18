@@ -23,13 +23,6 @@ typedef struct {
 } Fontinfo;
 
 
-struct ImageInfo {
-  const VGImage image;
-  size_t width;
-  size_t height;
-};
-
-
 class PNGImageData {
   size_t _width, _height;
   std::vector< png::rgba_pixel > *_raw;
@@ -67,7 +60,7 @@ public:
   void drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int pointsize) const;
   VGfloat textWidth(char *s, Fontinfo f, int pointsize) const;
 
-  ImageInfo image(const fs::path&);
+  const PNGImageData& image(const fs::path&);
 
 private:
 

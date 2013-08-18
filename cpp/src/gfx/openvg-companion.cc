@@ -29,3 +29,17 @@ void OpenVGCompanion::drawEllipse(VGfloat x, VGfloat y, VGfloat w, VGfloat h) co
 VGPath OpenVGCompanion::newPath() const {
   return _vg.vgCreatePath(VG_PATH_FORMAT_STANDARD, VG_PATH_DATATYPE_F, 1.0f, 0.0f, 0, 0, VG_PATH_CAPABILITY_ALL);
 }
+
+
+void OpenVGCompanion::drawImage(const PNGImageData& image_data, VGint x, VGint y) const {
+  VGint width = image_data.width();
+  VGint height = image_data.height();
+  VGImage img = _vg.vgCreateImage(
+      VG_sRGBA_8888, 
+      width, height,
+      VG_IMAGE_QUALITY_BETTER);
+
+  _vg.vgImageSubData(img, image_data.data(), image_data.stride(), VG_sRGBA_8888, 0, 0, width, height);
+  _vg.vgSetPixels(x, y, img, 0, 0, width, height);
+  _vg.vgDestroyImage(img);
+}

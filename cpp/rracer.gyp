@@ -13,6 +13,7 @@
 		'src/gfx/openvg-companion.cc',
 		'src/tests/test-assets.cc',
 		'src/tests/test-world.cc',
+		'src/tests/test-openvg-companion.cc',
                 ],
             'cflags' : ["-g"],
             'include_dirs': [

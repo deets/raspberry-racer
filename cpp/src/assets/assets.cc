@@ -111,23 +111,12 @@ void AssetManager::drawText(VGfloat x, VGfloat y, char *s, Fontinfo f, int point
 
 
 
-ImageInfo AssetManager::image(const fs::path &file) {
+const PNGImageData& AssetManager::image(const fs::path &file) {
   if(_image_data.find(file) == _image_data.end()) {
     PNGImageData &image_data = _image_data[file];
     image_data.load(file);
   }
-  const PNGImageData &image_data = _image_data[file];
-  VGint width = image_data.width();
-  VGint height = image_data.height();
-
-  VGImage img = _vg->vgCreateImage(
-      VG_sRGBA_8888, 
-      width, height,
-      VG_IMAGE_QUALITY_BETTER);
-
-  _vg->vgImageSubData(img, image_data.data(), image_data.stride(), VG_sRGBA_8888, 0, 0, width, height);
-  ImageInfo res = { img, width, height };
-  return res;
+  return _image_data[file];
 }
 
 

@@ -2,6 +2,7 @@
 #define OPENVG_COMPANION_HH
 
 #include "common/non-copyable.hh"
+#include "assets/assets.hh"
 #include "gfx/openvg-adapter.hh"
 
 class OpenVGCompanion : public NonCopyAble {
@@ -11,8 +12,9 @@ class OpenVGCompanion : public NonCopyAble {
 public:
   OpenVGCompanion(const OpenVGAdapter &vg);
   virtual ~OpenVGCompanion();
+  const OpenVGAdapter &vg() const { return _vg; }
 
-  // utility functions
+  // the utility functions
   VGPath newPath() const;
   void setFillColor(VGfloat color[4]) const;
   void drawEllipse(VGfloat x, VGfloat y, VGfloat w, VGfloat h) const;
@@ -20,7 +22,7 @@ public:
     drawEllipse(x, y, r, r);
   }
 
-
+  void drawImage(const PNGImageData& image_data, VGint x, VGint y) const;
 
 };
 
