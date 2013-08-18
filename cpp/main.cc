@@ -2,6 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 
+#include "gfx/openvg-companion.hh"
 #include "assets/assets.hh"
 #include "rpi/posix-adapter-impl.hh"
 #include "rpi/terminal.hh"
@@ -19,7 +20,8 @@ int main(int argc, char **argv) {
 
   RPiWindowAdapter window_adapter;
   AssetManager am(&window_adapter);
-  
+  OpenVGCompanion vgc(window_adapter);
+
   bool running = true;
   while(running) {
     window_adapter.start();
@@ -32,12 +34,12 @@ int main(int argc, char **argv) {
       }
     }
     VGfloat black[4] = {.0, .0, .0, .1};
-    window_adapter.setFillColor(black);
-    window_adapter.drawCircle(100, 100, 100.0);
+    vgc.setFillColor(black);
+    vgc.drawCircle(100, 100, 100.0);
     am.drawText(500, 500, "Hallo!", am.get_font(), 30);
     
     fs::path image_path("amiga-ball.png");
-    ImageInfo img = am.image(image_path);
+    vgc.drawImage(am.image(image_path), 200, 200);
     window_adapter.end();
   }
 }

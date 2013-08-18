@@ -84,7 +84,7 @@
             'sources': [
                 'main.cc',
                 'src/assets/assets.cc',
-                'src/gfx/openvg-adapter.cc',
+                'src/gfx/openvg-companion.cc',
                 ],
             'include_dirs': [
                 '.',
