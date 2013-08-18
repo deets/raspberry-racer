@@ -26,10 +26,10 @@ pair<int, int> RPiWindowAdapter::window_dimensions() {
 }
 
 void RPiWindowAdapter::start() {
-  VGfloat color[4] = { 255, 255, 255, 1 };
+  VGfloat color[4] = { 255, 255, 255, 255 };
   ::vgSetfv(VG_CLEAR_COLOR, 4, color);
   ::vgClear(0, 0, _width, _height);
-  color[0] = 0, color[1] = 0, color[2] = 0;
+  //color[0] = 0, color[1] = 0, color[2] = 0;
   //setfill(color);
   //setstroke(color);
   //StrokeWidth(0);

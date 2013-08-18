@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
     VGfloat black[4] = {.0, .0, .0, .1};
     vgc.setFillColor(black);
     vgc.drawCircle(100, 100, 100.0);
-    vgc.drawText(500, 500, "Hallo!", am.get_font(), 30);
+    vgc.drawText(am.get_font(), 500, 500, "Hallo!", 30);
     
     fs::path image_path("amiga-ball.png");
     vgc.drawImage(am.image(image_path), 200, 200);

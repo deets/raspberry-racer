@@ -92,4 +92,5 @@ void Terminal::reset_terminal(int s) {
 void Terminal::install_signal_handler() {
   s_signal_handler_terminal = this;
   _p.signal(SIGTERM, reset_terminal);
+  _p.signal(SIGSEGV, reset_terminal);
 }
