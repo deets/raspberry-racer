@@ -137,5 +137,36 @@
                   ],
                 ],
             },
+        {
+            'target_name': 'mac_rracer',
+            'product_name': 'MacRaspberryRacer',
+            'type': 'executable',
+            'mac_bundle': 1,
+            'sources': [
+                'src/mac/main.m',
+                'src/mac/RaspRacerAppDelegate.h',
+                'src/mac/RaspRacerAppDelegate.m',
+                'src/mac/RaspRacerView.h',
+                'src/mac/RaspRacerView.m',
+                ],
+            'mac_bundle_resources': [
+                'src/mac/Resources/InfoPlist.strings',
+                'src/mac/Resources/MainMenu.xib',
+                ],
+            'link_settings': {
+                'libraries': [
+                    '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+                    '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
+                    "/opt/ShivaVG/lib/libOpenVG.a",
+                    ],
+                },
+            'include_dirs' : [
+                "/opt/ShivaVG/include",
+                ],
+            'xcode_settings': {
+                'ARCHS': [ 'x86_64' ],
+                'INFOPLIST_FILE': 'src/mac/RaspRacer-Info.plist',
+                },
+            },
         ], # targets
     }
