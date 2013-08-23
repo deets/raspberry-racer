@@ -54,17 +54,17 @@
                           'ARCHS': [ 'x86_64' ],
                           },
                       'include_dirs' : [
+                          '/usr/local/opt/libpng/include',
                           '/usr/local/include',
-                          # this required a link in MonkVG -> VG
-                          "/Users/deets/software/vc/MonkVG/include",
+                          "/opt/ShivaVG/include",
                           'osx-gmock-1.6.0/include',
                           'osx-gmock-1.6.0/gtest/include',
                           ],
                       'libraries' : [
+                          '-L/usr/local/opt/libpng/lib',
                           '-L/usr/local/lib',
                           '-L/Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0',
                           '-L/Users/deets/projects/private/raspberry-racer/cpp/osx-gmock-1.6.0/gtest',
-
                           '-lgmock',
                           '-lgtest',
                           '-lpthread',
@@ -125,7 +125,7 @@
                       'include_dirs' : [
                           '/usr/local/include',
                           # this required a link in MonkVG -> VG
-                          "/Users/deets/software/vc/MonkVG/include",
+                          "/opt/ShivaVG/include",
                           ],
                       'libraries' : [
                           '-L/usr/local/lib',

@@ -44,7 +44,7 @@ TEST(AssetTests, TestImageManagement) {
 		  An<VGint>(),
 		  An<VGbitfield>()
 	      )
-  ).WillRepeatedly(Return(1));
+  ).WillRepeatedly(Return((VGPath)1));
 
   fs::path image_path("amiga-ball.png");
   ASSERT_TRUE(fs::exists(image_path));

@@ -1,12 +1,19 @@
 
 
 * OSX
+** Requirements
+
+brew install of 
+
+ - libpng
+ - png++
+ - boost
 
 ** gyp
 
 Use from within the working-copy, setup.py is broken
 *** Version
-http:////gyp.googlecode.com/svn 
+http://gyp.googlecode.com/svn 
 
 Last Changed Rev: 1682
 
@@ -34,11 +41,20 @@ inside the google-mock directory. The linker should pick the resulting libs up.
 
 http://github.com/ileben/ShivaVG.git 6122ccb3c4b86f69a326f1a65b0f86bc79f69c50
 
+*** Requirements
+
+With brew installed:
+
+ - autoconf
+ - automake
+ - libjpeg
+ - libtool
+
 *** Building
- - run 
+
 
 #begin_src shell
-  $ autoreconf --install
+  $ autoreconf --install # possibly several times??!
   $ ./configure --prefix=/opt/ShivaVG
   $ make
   $ make install

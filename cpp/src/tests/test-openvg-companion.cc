@@ -24,7 +24,9 @@ namespace fs = boost::filesystem;
 
 TEST(OpenVGCompanionTests, TestImageDrawing) {
   TestOpenvgAdaptper ovg_adapter;
-  
+
+  VGImage img_handle((void*)1245);
+  VGPath path_handle((void*)4444);
   // we don't care about the font-setup
   EXPECT_CALL(ovg_adapter, 
 	      vgAppendPathData(
@@ -45,7 +47,7 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 		  An<VGint>(),
 		  An<VGbitfield>()
 	      )
-  ).WillRepeatedly(Return(1));
+  ).WillRepeatedly(Return(path_handle));
 
 
   // the real calls we're interested in
@@ -55,11 +57,11 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 		  TypedEq<VGint>(264), 
 		  TypedEq<VGint>(258), 
 		  TypedEq<VGbitfield>(VG_IMAGE_QUALITY_BETTER))
-  ).WillOnce(Return(1));
+  ).WillOnce(Return(img_handle));
 
   EXPECT_CALL(ovg_adapter,
 	      vgImageSubData(
-		  Eq(1),
+		  Eq(img_handle),
 		  An<const void *>(),
 		  Eq(264*4),
 		  Eq(VG_sRGBA_8888),
@@ -75,7 +77,7 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 	      vgSetPixels(
 		  Eq(100), // x
 		  Eq(200), // y
-		  Eq(1), // img_handle
+		  Eq(img_handle), // img_handle
 		  Eq(0), // src_x
 		  Eq(0), // src_y
 		  Eq(264), // width
@@ -86,7 +88,7 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 
   EXPECT_CALL(ovg_adapter,
    	      vgDestroyImage(
-  		  Eq(1)
+  		  Eq(img_handle)
  	      )
   ).Times(1);
   
