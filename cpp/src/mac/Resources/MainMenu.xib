@@ -1294,7 +1294,7 @@
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{335, 390}, {804, 435}}</string>
+				<string key="NSWindowRect">{{335, 390}, {960, 540}}</string>
 				<int key="NSWTFlags">1685585920</int>
 				<string key="NSWindowTitle">Mac Rasbperry Racer</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -1307,7 +1307,7 @@
 						<object class="NSOpenGLView" id="353924578">
 							<reference key="NSNextResponder" ref="439893737"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrameSize">{804, 435}</string>
+							<string key="NSFrameSize">{960, 540}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView"/>
@@ -1319,7 +1319,7 @@
 							</object>
 						</object>
 					</array>
-					<string key="NSFrameSize">{804, 435}</string>
+					<string key="NSFrameSize">{960, 540}</string>
 					<reference key="NSSuperview"/>
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="353924578"/>

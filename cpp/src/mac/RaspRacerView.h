@@ -3,9 +3,11 @@
 #include <vg/openvg.h>
 
 @interface RaspRacerView : NSOpenGLView {
-
-
-  VGPaint _paint;
+  id _renderCallback;
 }
 
+@property (nonatomic, retain) id renderCallback;  
+
 @end
+
+

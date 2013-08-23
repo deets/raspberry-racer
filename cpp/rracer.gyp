@@ -143,12 +143,25 @@
             'type': 'executable',
             'mac_bundle': 1,
             'sources': [
-                'src/mac/main.m',
+		'src/gfx/openvg-companion.cc',
+		'src/mac/mac-window-adapter.cc',
+                'src/assets/assets.cc',
                 'src/mac/RaspRacerAppDelegate.h',
-                'src/mac/RaspRacerAppDelegate.m',
+                'src/mac/RaspRacerAppDelegate.mm',
                 'src/mac/RaspRacerView.h',
-                'src/mac/RaspRacerView.m',
+                'src/mac/RaspRacerView.mm',
+                'src/mac/main.m',
+                'src/world/world.cc',
                 ],
+            'libraries' : [
+                '-L/usr/local/opt/libpng/lib',
+                '-lpng15',
+                '-L/usr/local/lib',
+                '-lboost_filesystem-mt',
+                '-lboost_system-mt',
+                '-lpng15',
+                ],
+            
             'mac_bundle_resources': [
                 'src/mac/Resources/InfoPlist.strings',
                 'src/mac/Resources/MainMenu.xib',
@@ -162,6 +175,9 @@
                 },
             'include_dirs' : [
                 "/opt/ShivaVG/include",
+                '/usr/local/opt/libpng/include',
+                '/usr/local/include',                
+                "src",
                 ],
             'xcode_settings': {
                 'ARCHS': [ 'x86_64' ],
