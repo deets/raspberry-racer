@@ -150,6 +150,7 @@
                 'src/mac/RaspRacerAppDelegate.mm',
                 'src/mac/RaspRacerView.h',
                 'src/mac/RaspRacerView.mm',
+                'src/mac/RRApplication.mm',                
                 'src/mac/main.m',
                 'src/world/world.cc',
                 ],
