@@ -1,6 +1,16 @@
 
 
 * OSX
+
+** gyp
+
+Use from within the working-copy, setup.py is broken
+*** Version
+http:////gyp.googlecode.com/svn 
+
+Last Changed Rev: 1682
+
+
 ** building gtest/gmock 
 
 Use 
@@ -18,8 +28,13 @@ inside the google-mock directory. The linker should pick the resulting libs up.
  - adapt project settings to install after build
 
 
-** Building ShivaVG
+** ShivaVG
 
+*** Version
+
+http://github.com/ileben/ShivaVG.git 6122ccb3c4b86f69a326f1a65b0f86bc79f69c50
+
+*** Building
  - run 
 
 #begin_src shell
