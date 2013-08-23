@@ -8,7 +8,11 @@
 - (void) prepareOpenGL {
   NSLog(@"prepareOpenGL");
   NSRect frame = [self frame];
-  vgCreateContextSH((VGint)frame.size.width, (VGint)frame.size.height);
+  VGint width, height;
+  width = (VGint)frame.size.width;
+  height = (VGint)frame.size.height;
+  NSLog(@"width: %i height: %i", width, height);
+  vgCreateContextSH(width, height);
 
   _paint = vgCreatePaint();
   vgSetPaint(_paint, VG_FILL_PATH );
@@ -33,7 +37,7 @@
   vgLoadIdentity();
   GLErrorCheck;
 
-  vgTranslate(frame.size.width / 2.0, frame.size.height / 2.0 );
+  //  vgTranslate(frame.size.width / 2.0, frame.size.height / 2.0 );
   GLErrorCheck;
 
   
@@ -58,7 +62,7 @@
   vgAppendPathData(path, 6, pathSegs, pathData);
   GLErrorCheck;
 
-  // vguEllipse(path, 0, 0, 100.0, 100.0);
+  vguEllipse(path, 0, 0, 100.0, 100.0);
   // GLErrorCheck;
   vgSetPaint( _paint, VG_FILL_PATH );
 
