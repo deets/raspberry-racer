@@ -86,6 +86,7 @@
                 'main.cc',
                 'src/assets/assets.cc',
                 'src/gfx/openvg-companion.cc',
+		'src/gfx/openvg-adapter-impl.cc',
                 ],
             'include_dirs': [
                 '.',
@@ -142,9 +143,11 @@
             'target_name': 'mac_rracer',
             'product_name': 'MacRaspberryRacer',
             'type': 'executable',
+            'cflags' : ["-g"],
             'mac_bundle': 1,
             'sources': [
 		'src/gfx/openvg-companion.cc',
+		'src/gfx/openvg-adapter-impl.cc',
 		'src/mac/mac-window-adapter.cc',
                 'src/assets/assets.cc',
                 'src/mac/RaspRacerAppDelegate.h',

@@ -66,8 +66,12 @@ namespace fs = boost::filesystem;
   _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
 
   _world = new World(*_window_adapter, *_window_adapter);
+  Translator* t = new Translator(size.width / 2.0, size.height / 2.0);
+  LissajouAnimator* la = new LissajouAnimator(size.width / 4, size.height / 4, .15, .30);
   Image *image = new Image(*_asset_manager, "tests/amiga-ball.png");
-  _world->add_object(image);
+  la->add_object(image);
+  t->add_object(la);
+  _world->add_object(t);
 
   [_glview setRenderCallback: self];
   _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / 30.0 target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
@@ -82,7 +86,9 @@ namespace fs = boost::filesystem;
 -(void)render {
   clock_t now = clock();
   if(_world) {
-    _world->begin(*_events, difftime(_then, now));
+    double elapsed = difftime(now, _then) / 1000.0;
+    //    NSLog(@"elapsed: %f", elapsed);
+    _world->begin(*_events, elapsed);
     _world->end();
     if(_world->has_ended()) {
       [[NSApplication sharedApplication] terminate: self];

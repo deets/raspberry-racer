@@ -1,3 +1,4 @@
+#include <utility>
 #include <gmock/gmock.h>
 
 // include mocks
@@ -6,6 +7,8 @@
 
 // include objects under test
 #include "world/world.hh"
+
+using ::testing::Return;
 
 TEST(WorldTests, TestWorldLifeCycle) {
   TestWindowAdaptper window_adapter;
@@ -45,8 +48,11 @@ TEST(WorldTests, TestWorldEventDispatchToChildren) {
   InputEvent event = { false, K_ESC, 1 };
   events.push_back(event);
 
+  pair<int, int> dims = make_pair(1920, 1080);
+
   EXPECT_CALL(window_adapter, start()).Times(1);
   EXPECT_CALL(window_adapter, end()).Times(1);
+  EXPECT_CALL(window_adapter, window_dimensions()).WillRepeatedly(Return(dims));
 
   TestChild* parent = new TestChild();
   TestChild* child = new TestChild();

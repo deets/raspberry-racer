@@ -60,8 +60,8 @@ TEST_F(AssetTests, TestImageManagement) {
   {
     AssetManager am(*ovg_adapter);
     const PNGImageData& img = am.image(image_path);
-    ASSERT_EQ(264, img.width());
-    ASSERT_EQ(258, img.height());
+    ASSERT_EQ(300, img.width());
+    ASSERT_EQ(300, img.height());
   }
 }
 
@@ -72,8 +72,8 @@ TEST_F(AssetTests, TestRelativeResourcePaths) {
   {
     AssetManager am(*ovg_adapter, resources_path);
     const PNGImageData& img = am.image(image_path);
-    ASSERT_EQ(264, img.width());
-    ASSERT_EQ(258, img.height());
+    ASSERT_EQ(300, img.width());
+    ASSERT_EQ(300, img.height());
   }
 }
 

@@ -10,7 +10,9 @@ class OpenVGAdapter {
 public:
 
   // passing through of OpenVG calls
+  virtual void vgSeti(VGParamType type, VGint value) const=0;
   virtual void vgSetf(VGParamType type, VGfloat value) const=0;
+  virtual void vgSetfv(VGParamType type, VGint count, VGfloat* values) const=0;
   virtual void vgClear(VGint x, VGint y, VGint width, VGint height) const=0;
   virtual void vgLoadIdentity() const=0;
   virtual VGPaint vgCreatePaint() const=0;
@@ -63,7 +65,7 @@ public:
 				VGint width, VGint height,
 				VGbitfield allowedQuality) const=0;
 
-
+  virtual void vgDrawImage(VGImage) const=0;
   virtual void vgDestroyImage(VGImage) const=0;
 
   virtual void vgImageSubData(VGImage image,
@@ -76,5 +78,10 @@ public:
 			   VGImage src, VGint sx, VGint sy,
 			   VGint width, VGint height) const=0;
 
+
+  virtual void vgTranslate(VGfloat x, VGfloat y) const=0;
+  virtual void vgRotate(VGfloat deg) const=0;
 };
+
+
 #endif

@@ -1,4 +1,5 @@
 #include <boost/foreach.hpp>
+#include <math.h>
 
 #include "world-object.hh"
 
@@ -45,5 +46,44 @@ Image::Image(AssetManager& am, string asset_name)
 
 void Image::render(const OpenVGCompanion& vgc) const {
   const PNGImageData& img_data = _am.image(_asset_name);
-  vgc.drawImage(img_data, 0, 0);
+  VGfloat w = (VGfloat)img_data.width();
+  VGfloat h = (VGfloat)img_data.height();
+  vgc.vg().vgRotate(10);
+  vgc.vg().vgTranslate(-w / 2.0, -h / 2.0);
+  vgc.drawImage(img_data);
+}
+
+
+Translator::Translator(float x, float y) 
+  : _x(x)
+  , _y(y)
+{
+
+}
+
+void Translator::render(const OpenVGCompanion& vgc) const {
+  vgc.vg().vgTranslate(_x, _y);
+}
+
+
+LissajouAnimator::LissajouAnimator(float width, float height, float alpha, float beta)
+  : _width(width)
+  , _height(height)
+  , _alpha(alpha)
+  , _beta(beta)
+  , _phase(.0)
+{
+
+}
+
+
+void LissajouAnimator::process_input_events(const InputEventVector& events, double elapsed) {
+  _phase += elapsed;
+}
+
+
+void LissajouAnimator::render(const OpenVGCompanion& vgc) const {
+  float w = sin(_phase * _alpha) * _width / 2.0;
+  float h = sin(_phase * _beta) * _height / 2.0;
+  vgc.vg().vgTranslate(w, h);
 }

@@ -49,4 +49,26 @@ public:
 
 };
 
+
+class Translator : public WorldObject {
+
+  float _x, _y;
+public:
+  Translator(float x, float y);
+  virtual void render(const OpenVGCompanion& vgc) const;
+};
+
+
+class LissajouAnimator : public WorldObject {
+
+  float _width, _height, _alpha, _beta, _phase;
+public:
+  LissajouAnimator(float width, float height, float alpha, float _beta);
+
+  virtual void process_input_events(const InputEventVector& events, double elapsed);
+  virtual void render(const OpenVGCompanion& vgc) const;
+
+};
+
+
 #endif

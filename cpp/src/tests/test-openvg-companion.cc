@@ -54,8 +54,8 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 
   EXPECT_CALL(ovg_adapter, vgCreateImage(
 		  TypedEq<VGImageFormat>(VG_sRGBA_8888), 
-		  TypedEq<VGint>(264), 
-		  TypedEq<VGint>(258), 
+		  TypedEq<VGint>(300), 
+		  TypedEq<VGint>(300), 
 		  TypedEq<VGbitfield>(VG_IMAGE_QUALITY_BETTER))
   ).WillOnce(Return(img_handle));
 
@@ -63,12 +63,12 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 	      vgImageSubData(
 		  Eq(img_handle),
 		  An<const void *>(),
-		  Eq(264*4),
+		  Eq(300*4),
 		  Eq(VG_sRGBA_8888),
 		  TypedEq<VGint>(0), 
 		  TypedEq<VGint>(0), 
-		  TypedEq<VGint>(264), 
-		  TypedEq<VGint>(258)
+		  TypedEq<VGint>(300), 
+		  TypedEq<VGint>(300)
 	      )
   ).Times(1);
 
@@ -80,8 +80,8 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
 		  Eq(img_handle), // img_handle
 		  Eq(0), // src_x
 		  Eq(0), // src_y
-		  Eq(264), // width
-		  Eq(258) // height
+		  Eq(300), // width
+		  Eq(300) // height
 	      )
   ).Times(1);
 
@@ -99,7 +99,7 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
   OpenVGCompanion vgc(ovg_adapter);
   const PNGImageData &image_data = am.image(image_path);
   
-  vgc.drawImage(image_data, 100, 200);
+  vgc.drawImage(image_data);
   
 }
 

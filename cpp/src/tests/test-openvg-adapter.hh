@@ -9,6 +9,8 @@
 class TestOpenvgAdaptper : public OpenVGAdapter {
 public:
   MOCK_CONST_METHOD2(vgSetf, void(VGParamType, VGfloat));
+  MOCK_CONST_METHOD3(vgSetfv, void(VGParamType, VGint, VGfloat*));
+  MOCK_CONST_METHOD2(vgSeti, void(VGParamType, VGint));
   MOCK_CONST_METHOD4(vgClear, void(VGint, VGint, VGint, VGint));
   MOCK_CONST_METHOD0(vgLoadIdentity, void());
   MOCK_CONST_METHOD0(vgCreatePaint, VGPaint());
@@ -30,6 +32,7 @@ public:
 
 
   MOCK_CONST_METHOD4(vgCreateImage, VGImage(VGImageFormat, VGint, VGint, VGbitfield));
+  MOCK_CONST_METHOD1(vgDrawImage, void(VGImage));
   MOCK_CONST_METHOD1(vgDestroyImage, void(VGImage));
 
   MOCK_CONST_METHOD8(vgImageSubData, void(VGImage, const void *, VGint, VGImageFormat,
@@ -37,6 +40,8 @@ public:
 
   MOCK_CONST_METHOD7(vgSetPixels, void(VGint dx, VGint dy, VGImage src, VGint sx, VGint sy, VGint width, VGint height));
 
+  MOCK_CONST_METHOD2(vgTranslate, void(VGfloat x, VGfloat y));
+  MOCK_CONST_METHOD1(vgRotate, void(VGfloat deg));
 
 };
 #endif

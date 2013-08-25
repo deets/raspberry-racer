@@ -28,6 +28,16 @@ void World::begin(const InputEventVector& events, float elapsed) {
   }
 
   OpenVGCompanion vgc(_ovg_adapter);
+  
+  VGint ww = _window_adapter.window_dimensions().first;
+  VGint wh = _window_adapter.window_dimensions().second;
+  VGfloat black[] = {0,0,0,1.0};
+  _ovg_adapter.vgSetfv(VG_CLEAR_COLOR, 4, black);
+  _ovg_adapter.vgClear(0, 0, ww, wh);
+
+  _ovg_adapter.vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
+  _ovg_adapter.vgLoadIdentity();
+
   BOOST_FOREACH(WorldObject& obj, _world_objects) {
     obj.dispatch_render(vgc);
   }
