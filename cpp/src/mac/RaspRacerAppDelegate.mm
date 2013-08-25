@@ -56,10 +56,10 @@
   NSLog(@"glview: %@", _glview);
 
   NSSize size = [_glview frame].size;
-  
+
   _window_adapter = new MacWindowAdapter(size.width, size.height);
 
-  _asset_manager = new AssetManager(_window_adapter);
+  _asset_manager = new AssetManager(*_window_adapter);
 
   _world = new World(*_window_adapter, *_window_adapter);
 

@@ -1,8 +1,9 @@
 #include "EGL/egl.h"
 #include "GLES/gl.h"
-#include "eglstate.h"
 #include "bcm_host.h"
 #include <assert.h>
+
+#include "rpi/eglstate.h"
 
 // oglinit sets the display, OpenGL|ES context and screen information
 // state holds the OGLES model information

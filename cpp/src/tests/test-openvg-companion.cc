@@ -93,9 +93,9 @@ TEST(OpenVGCompanionTests, TestImageDrawing) {
   ).Times(1);
   
   // TEST
-  fs::path image_path("amiga-ball.png");
+  fs::path image_path("resources/tests/amiga-ball.png");
   ASSERT_TRUE(fs::exists(image_path));
-  AssetManager am(&ovg_adapter);
+  AssetManager am(ovg_adapter);
   OpenVGCompanion vgc(ovg_adapter);
   const PNGImageData &image_data = am.image(image_path);
   

@@ -5,14 +5,14 @@
 #include "mac/RRRenderCallback.h"
 #include "events/events.hh"
 #include "world/world.hh"
-
+#include "RaspRacerView.h"
 
 
 @interface RaspRacerAppDelegate : NSObject <NSApplicationDelegate, RRRenderCallback> {
-  NSOpenGLView *_glview;
+  RaspRacerView *_glview;
   NSWindow *_window;
   NSTimer* _timer;
-  
+
   MacWindowAdapter* _window_adapter;
   AssetManager* _asset_manager;
 
@@ -24,8 +24,8 @@
 -(void) render;
 -(void) convertEvent:(NSEvent*) event;
 
-@property (assign) IBOutlet NSWindow *window;
-@property (assign) IBOutlet NSOpenGLView *glview;
+@property (assign) IBOutlet NSWindow* window;
+@property (assign) IBOutlet RaspRacerView* glview;
 
 
 @end

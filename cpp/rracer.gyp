@@ -10,6 +10,7 @@
                 'src/assets/assets.cc',
                 'src/tests/main.cc',
                 'src/world/world.cc',
+                'src/world/world-object.cc',
 		'src/gfx/openvg-companion.cc',
 		'src/tests/test-assets.cc',
 		'src/tests/test-world.cc',
@@ -153,6 +154,7 @@
                 'src/mac/RRApplication.mm',                
                 'src/mac/main.m',
                 'src/world/world.cc',
+                'src/world/world-object.cc',
                 ],
             'libraries' : [
                 '-L/usr/local/opt/libpng/lib',
@@ -166,6 +168,7 @@
             'mac_bundle_resources': [
                 'src/mac/Resources/InfoPlist.strings',
                 'src/mac/Resources/MainMenu.xib',
+		'resources',
                 ],
             'link_settings': {
                 'libraries': [

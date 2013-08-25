@@ -12,14 +12,33 @@ brew install of
 ** gyp
 
 Use from within the working-copy, setup.py is broken
+
 *** Version
+
 http://gyp.googlecode.com/svn 
 
 Last Changed Rev: 1682
 
 
-** building gtest/gmock 
+** gtest/gmock 
 
+*** running
+
+Run
+
+#begin_src shell
+(working-copy) $ out/Default/test
+#end_src
+
+To run specific tests, use
+
+#begin_src shell
+(working-copy) $ out/Default/test --gtest_filter=OpenVGCompanionTests.TestImageDrawing 
+#end_src
+
+http://stackoverflow.com/questions/12076072/how-to-run-specific-test-cases-in-googletest
+
+*** building
 Use 
 
 #+begin_src shell
@@ -33,7 +52,6 @@ inside the google-mock directory. The linker should pick the resulting libs up.
 
  - create link in include dir from MonkVG to VG 
  - adapt project settings to install after build
-
 
 ** ShivaVG
 
@@ -68,3 +86,10 @@ doesn't exist. Copy over src/GL into the include directory.
 
 
 
+
+
+* RPI
+
+** NOTES
+
+http://www.deadalnix.me/2012/03/24/get-an-exception-from-a-segfault-on-linux-x86-and-x86_64-using-some-black-magic/

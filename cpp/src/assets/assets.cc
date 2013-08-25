@@ -28,12 +28,12 @@ Fontinfo AssetManager::loadfont(const int *Points,
 		const int *p = &Points[PointIndices[i] * 2];
 		const unsigned char *instructions = &Instructions[InstructionIndices[i]];
 		int ic = InstructionCounts[i];
-		VGPath path = _vg->vgCreatePath(VG_PATH_FORMAT_STANDARD, VG_PATH_DATATYPE_S_32,
+		VGPath path = _vg.vgCreatePath(VG_PATH_FORMAT_STANDARD, VG_PATH_DATATYPE_S_32,
 					   1.0f / 65536.0f, 0.0f, 0, 0,
 					   VG_PATH_CAPABILITY_ALL);
 		f.Glyphs[i] = path;
 		if (ic) {
-			_vg->vgAppendPathData(path, ic, instructions, p);
+			_vg.vgAppendPathData(path, ic, instructions, p);
 		}
 	}
 	f.CharacterMap = cmap;
@@ -58,12 +58,28 @@ void AssetManager::fonts_init() {
 
 
 
-AssetManager::AssetManager(const OpenVGAdapter* vg) 
+AssetManager::AssetManager(const OpenVGAdapter& vg) 
   : _vg(vg)
 {
   fonts_init();
 }
 
+
+AssetManager::AssetManager(const OpenVGAdapter& vg, const fs::path base) 
+  : _vg(vg)
+  , _base(base)
+{
+  fonts_init();
+}
+
+
+const fs::path AssetManager::resolve_path(const fs::path p) {
+  if(_base.empty()) {
+    return p;
+  } else {
+    return _base / p;
+  }
+}
 
 const Fontinfo& AssetManager::get_font() const {
   return VisitorTypeface;
@@ -71,11 +87,12 @@ const Fontinfo& AssetManager::get_font() const {
 
 
 const PNGImageData& AssetManager::image(const fs::path &file) {
-  if(_image_data.find(file) == _image_data.end()) {
-    PNGImageData &image_data = _image_data[file];
-    image_data.load(file);
+  const fs::path rfile = resolve_path(file);
+  if(_image_data.find(rfile) == _image_data.end()) {
+    PNGImageData &image_data = _image_data[rfile];
+    image_data.load(rfile);
   }
-  return _image_data[file];
+  return _image_data[rfile];
 }
 
 

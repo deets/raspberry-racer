@@ -8,30 +8,7 @@
 #include "gfx/window-adapter.hh"
 #include "gfx/openvg-adapter.hh"
 #include "events/events.hh"
-
-namespace bi = boost::intrusive;
-
-
-class World;
-
-class WorldObject : public bi::list_base_hook<> {
-
-public:
-  typedef bi::list<WorldObject> WorldObjectList;
-
-  virtual ~WorldObject() {}
-
-  virtual void process_input_events(const InputEventVector&)=0;
-  void add_object(WorldObject *obj);
-
-  friend class World;
-
-private:
-  
-  void dispatch_input_events(const InputEventVector&);
-
-  WorldObjectList _children;
-};
+#include "world/world-object.hh"
 
 
 

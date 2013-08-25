@@ -23,14 +23,17 @@ class TestChild : public WorldObject {
   
 public:
   int event_count;
-  
+  double elapsed;
+
   TestChild() 
     : event_count(0)
+    , elapsed(.0)
   {
   }
 
-  virtual void process_input_events(const InputEventVector& events) {
+  virtual void process_input_events(const InputEventVector& events, double elapsed) {
     event_count += events.size();
+    this->elapsed += elapsed;
   }
 
 };
@@ -56,6 +59,8 @@ TEST(WorldTests, TestWorldEventDispatchToChildren) {
   
     ASSERT_TRUE(parent->event_count > 0);
     ASSERT_TRUE(child->event_count > 0);
+    ASSERT_FLOAT_EQ(1.0/ 30.0, parent->elapsed);
+    ASSERT_FLOAT_EQ(1.0/ 30.0, child->elapsed);
   }
 }
 

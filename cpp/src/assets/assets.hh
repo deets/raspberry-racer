@@ -44,7 +44,8 @@ public:
 
 class AssetManager : public NonCopyAble {
 
-  const OpenVGAdapter* _vg;
+  const fs::path _base;
+  const OpenVGAdapter& _vg;
 
   Fontinfo loadfont(const int *Points,
 		    const int *PointIndices,
@@ -52,9 +53,12 @@ class AssetManager : public NonCopyAble {
 		    const int *InstructionIndices, const int *InstructionCounts, const int *adv, const short *cmap, int ng) const;
   void fonts_init();
 
+  const fs::path resolve_path(const fs::path p);
+
 public:
 
-  AssetManager(const OpenVGAdapter* vg);
+  AssetManager(const OpenVGAdapter& vg);
+  AssetManager(const OpenVGAdapter& vg, const fs::path base);
   // TODO: naming convention
   const Fontinfo &get_font() const;
   const PNGImageData& image(const fs::path&);

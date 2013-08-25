@@ -7,7 +7,7 @@
 #include "gfx/window-adapter.hh"
 #include "gfx/openvg-adapter.hh"
 #include "common/non-copyable.hh"
-#include "eglstate.h"
+#include "rpi/eglstate.h"
 
 using namespace std;
 
