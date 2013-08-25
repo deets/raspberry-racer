@@ -1,5 +1,6 @@
 #include <boost/foreach.hpp>
 
+#include "gfx/openvg-companion.hh"
 #include "world.hh"
 
 
@@ -24,6 +25,11 @@ void World::begin(const InputEventVector& events, float elapsed) {
 
   BOOST_FOREACH(WorldObject& obj, _world_objects) {
     obj.dispatch_input_events(events, elapsed);
+  }
+
+  OpenVGCompanion vgc(_ovg_adapter);
+  BOOST_FOREACH(WorldObject& obj, _world_objects) {
+    obj.dispatch_render(vgc);
   }
 }
 

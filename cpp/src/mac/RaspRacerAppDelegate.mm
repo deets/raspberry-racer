@@ -1,4 +1,4 @@
-//
+
 //  AppDelegate.m
 //  Mac Rasbperry Racer
 //
@@ -9,10 +9,13 @@
 #include <OpenGL/gl.h>
 #include <vg/openvg.h>
 
+#include <boost/filesystem.hpp>
+
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
 #import "RaspRacerAppDelegate.h"
 
+namespace fs = boost::filesystem;
 
 @implementation RaspRacerAppDelegate
 
@@ -59,9 +62,12 @@
 
   _window_adapter = new MacWindowAdapter(size.width, size.height);
 
-  _asset_manager = new AssetManager(*_window_adapter);
+  fs::path bundle_resources([[[NSBundle mainBundle] resourcePath] UTF8String]);
+  _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
 
   _world = new World(*_window_adapter, *_window_adapter);
+  Image *image = new Image(*_asset_manager, "tests/amiga-ball.png");
+  _world->add_object(image);
 
   [_glview setRenderCallback: self];
   _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / 30.0 target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];

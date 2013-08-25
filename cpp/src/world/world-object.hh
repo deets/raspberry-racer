@@ -31,6 +31,7 @@ public:
 private:
 
   void dispatch_input_events(const InputEventVector& events, double elapsed);
+  void dispatch_render(const OpenVGCompanion&);
 
   WorldObjectList _children;
 };
