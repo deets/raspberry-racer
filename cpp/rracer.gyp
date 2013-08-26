@@ -15,11 +15,13 @@
 		'src/tests/test-assets.cc',
 		'src/tests/test-world.cc',
 		'src/tests/test-openvg-companion.cc',
+		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'cflags' : ["-g"],
             'include_dirs': [
                 '.',
                 'src',
+		'third-party/jsoncpp',
                 ],
             'conditions' : [
                  ['OS=="linux"',
@@ -91,6 +93,7 @@
             'include_dirs': [
                 '.',
                 'src',
+		'third-party/jsoncpp',
                 ],
             'conditions' : [
                  ['OS=="linux"',
@@ -158,6 +161,7 @@
                 'src/mac/main.m',
                 'src/world/world.cc',
                 'src/world/world-object.cc',
+		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'libraries' : [
                 '-L/usr/local/opt/libpng/lib',
@@ -184,6 +188,7 @@
                 "/opt/ShivaVG/include",
                 '/usr/local/opt/libpng/include',
                 '/usr/local/include',                
+		'third-party/jsoncpp',
                 "src",
                 ],
             'xcode_settings': {

@@ -1,0 +1,6 @@
+{
+    "string-key" : "string-value",
+    "int-key" : 10,
+    "array-value" : [10, "foo"],
+    "object-value" : { "subkey" : "subvalue" }
+    }

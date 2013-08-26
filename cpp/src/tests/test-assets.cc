@@ -3,6 +3,8 @@
 
 #include <gmock/gmock.h>
 
+#include "json/json.h"
+
 // include mocks
 #include "tests/test-openvg-adapter.hh"
 
@@ -79,3 +81,9 @@ TEST_F(AssetTests, TestRelativeResourcePaths) {
 
 
 
+TEST_F(AssetTests, TestJsonParsing) {
+  fs::path json_path("resources/tests/test.json");
+  ASSERT_TRUE(fs::exists(json_path));
+  AssetManager am(*ovg_adapter);
+  Json::Value root = am.json(json_path);
+}

@@ -1,4 +1,9 @@
 #include <string.h>
+#include <sstream>
+
+#include <boost/filesystem/fstream.hpp>
+
+#include "json/json.h"
 
 #include "fonts/visitor1.c"
 #include "assets/assets.hh"
@@ -75,16 +80,29 @@ AssetManager::AssetManager(const OpenVGAdapter& vg, const fs::path base)
 
 const fs::path AssetManager::resolve_path(const fs::path p) {
   if(_base.empty()) {
-    return p;
+    return fs::absolute(p);
   } else {
-    return _base / p;
+    return fs::absolute(_base / p);
   }
 }
 
-const Fontinfo& AssetManager::get_font() const {
+const Fontinfo& AssetManager::font() const {
   return VisitorTypeface;
 }
 
+
+Json::Value AssetManager::json(const fs::path& json_in_file) {
+  Json::Reader reader;
+  Json::Value root;
+  const fs::path json_file = resolve_path(json_in_file);
+  fs::ifstream in(json_file);
+  if(!reader.parse(in, root)) {
+    stringstream em;
+    em << "Couldn't open JSON-file " << json_file;
+    throw runtime_error(em.str());
+  }
+  return root;
+}
 
 const PNGImageData& AssetManager::image(const fs::path &file) {
   const fs::path rfile = resolve_path(file);

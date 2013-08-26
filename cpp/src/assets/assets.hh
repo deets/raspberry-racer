@@ -8,6 +8,8 @@
 #include <VG/openvg.h>
 #include <png++/png.hpp>
 
+#include "json/json-forwards.h"
+
 #include "gfx/openvg-adapter.hh"
 #include "common/non-copyable.hh"
 
@@ -60,9 +62,9 @@ public:
   AssetManager(const OpenVGAdapter& vg);
   AssetManager(const OpenVGAdapter& vg, const fs::path base);
   // TODO: naming convention
-  const Fontinfo &get_font() const;
+  const Fontinfo& font() const;
   const PNGImageData& image(const fs::path&);
-
+  Json::Value json(const fs::path&);
 private:
 
   map<fs::path, PNGImageData> _image_data;
