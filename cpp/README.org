@@ -19,6 +19,7 @@ http://pastie.org/1574516
  - jsoncpp http://sourceforge.net/projects/jsoncpp/
  - ShivaVG http://ivanleben.blogspot.de/2007/07/shivavg-open-source-ansi-c-openvg.html
  - go openvg https://github.com/ajstarks/openvg/blob/master/openvg.go
+ - Eigen3
 
 * OSX
 ** Requirements

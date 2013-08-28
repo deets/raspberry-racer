@@ -28,6 +28,7 @@
 		'src/tests/test-world.cc',
 		'src/tests/test-openvg-companion.cc',
 		'src/tests/test-tracks.cc',
+		'src/tests/test-system-time.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'cflags' : ["-g"],

@@ -5,6 +5,7 @@
 #include "mac/RRRenderCallback.h"
 #include "events/events.hh"
 #include "world/world.hh"
+#include "common/time.hh"
 #include "RaspRacerView.h"
 
 
@@ -18,7 +19,7 @@
 
   InputEventVector* _events;
   World* _world;
-  clock_t _then;
+  Timer* _world_timer;
 }
 -(void) timerCallback:(NSTimer*)timer;
 -(void) render;

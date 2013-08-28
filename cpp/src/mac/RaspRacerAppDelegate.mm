@@ -28,7 +28,7 @@ namespace fs = boost::filesystem;
   _asset_manager = 0;
   _world = 0;
   _events = new InputEventVector();
-  _then = clock();
+  _world_timer = new Timer();
   return self;
 }
 
@@ -50,6 +50,10 @@ namespace fs = boost::filesystem;
     delete _world;
   }
 
+  if(_world_timer) {
+    delete _world_timer;
+  }
+
   [super dealloc];
 }
 
@@ -67,7 +71,7 @@ namespace fs = boost::filesystem;
 
   _world = new World(*_window_adapter, *_window_adapter);
   Translator* t = new Translator(size.width / 2.0, size.height / 2.0);
-  LissajouAnimator* la = new LissajouAnimator(size.width / 4, size.height / 4, .15, .30);
+  LissajouAnimator* la = new LissajouAnimator(size.width / 4, size.height / 4, 5.5, 15.0);
   Image *image = new Image(*_asset_manager, "tests/amiga-ball.png");
   la->add_object(image);
   t->add_object(la);
@@ -84,18 +88,17 @@ namespace fs = boost::filesystem;
 
 
 -(void)render {
-  clock_t now = clock();
   if(_world) {
-    double elapsed = difftime(now, _then) / 1000.0;
-    //    NSLog(@"elapsed: %f", elapsed);
-    _world->begin(*_events, elapsed);
-    _world->end();
-    if(_world->has_ended()) {
-      [[NSApplication sharedApplication] terminate: self];
+    double elapsed = _world_timer->elapsed();
+    if(elapsed > 0.0) {
+      _world->begin(*_events, elapsed);
+      _world->end();
+      if(_world->has_ended()) {
+	[[NSApplication sharedApplication] terminate: self];
+      }
     }
   }
   _events->clear();
-  _then = now;
 }
 
 
