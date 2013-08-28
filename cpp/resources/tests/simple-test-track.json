@@ -1,0 +1,11 @@
+{
+    "type" : "simple",
+    "name" : "Hockenheim",
+    "lanes" : 2,
+    "tiles" : [
+        {
+            "type" : "startinggrid",
+            "length" : 20.0
+        }
+    ]
+}

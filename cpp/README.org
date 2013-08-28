@@ -7,6 +7,13 @@
 for know I think that should happen when the world has ended.
 
 
+** TODO implement logging
+
+This could be a candidate:
+
+http://pastie.org/1574516
+
+
 ** Add credits 
 
  - jsoncpp http://sourceforge.net/projects/jsoncpp/
@@ -106,3 +113,6 @@ doesn't exist. Copy over src/GL into the include directory.
 ** NOTES
 
 http://www.deadalnix.me/2012/03/24/get-an-exception-from-a-segfault-on-linux-x86-and-x86_64-using-some-black-magic/
+
+
+http://www.schwabenslot.de/cms/Holz

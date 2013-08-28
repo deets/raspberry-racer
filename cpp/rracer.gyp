@@ -2,6 +2,17 @@
 # mode: python
 # End:
 {
+    'target_defaults' : {
+        'default_configuration': 'Debug',
+        'configurations': {
+            'Debug': {
+                'xcode_settings': {
+                    'OTHER_CFLAGS' : ['-g', '-fno-eliminate-unused-debug-symbols',],
+#                    'GCC_DEBUGGING_SYMBOLS': 'full',
+                    },
+                },
+            },
+        },
     'targets': [
       {
             'target_name': 'test',
@@ -10,11 +21,13 @@
                 'src/assets/assets.cc',
                 'src/tests/main.cc',
                 'src/world/world.cc',
+                'src/world/track.cc',
                 'src/world/world-object.cc',
 		'src/gfx/openvg-companion.cc',
 		'src/tests/test-assets.cc',
 		'src/tests/test-world.cc',
 		'src/tests/test-openvg-companion.cc',
+		'src/tests/test-tracks.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'cflags' : ["-g"],
@@ -22,6 +35,7 @@
                 '.',
                 'src',
 		'third-party/jsoncpp',
+		'third-party/eigen',
                 ],
             'conditions' : [
                  ['OS=="linux"',
@@ -157,7 +171,7 @@
                 'src/mac/RaspRacerAppDelegate.mm',
                 'src/mac/RaspRacerView.h',
                 'src/mac/RaspRacerView.mm',
-                'src/mac/RRApplication.mm',                
+                'src/mac/RRApplication.mm',
                 'src/mac/main.m',
                 'src/world/world.cc',
                 'src/world/world-object.cc',
@@ -171,7 +185,7 @@
                 '-lboost_system-mt',
                 '-lpng15',
                 ],
-            
+
             'mac_bundle_resources': [
                 'src/mac/Resources/InfoPlist.strings',
                 'src/mac/Resources/MainMenu.xib',
@@ -187,8 +201,9 @@
             'include_dirs' : [
                 "/opt/ShivaVG/include",
                 '/usr/local/opt/libpng/include',
-                '/usr/local/include',                
+                '/usr/local/include',
 		'third-party/jsoncpp',
+		'third-party/eigen',
                 "src",
                 ],
             'xcode_settings': {

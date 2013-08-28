@@ -49,6 +49,9 @@ Fontinfo AssetManager::loadfont(const int *Points,
 
 
 void AssetManager::fonts_init() {
+  if(_fonts_initialized) {
+    return;
+  }
   VisitorTypeface = loadfont(
       Visitor_glyphPoints,
       Visitor_glyphPointIndices,
@@ -59,14 +62,15 @@ void AssetManager::fonts_init() {
       Visitor_characterMap, 
       Visitor_glyphCount
   );
+  _fonts_initialized = true;
 }  
 
 
 
 AssetManager::AssetManager(const OpenVGAdapter& vg) 
   : _vg(vg)
+  , _fonts_initialized(false)
 {
-  fonts_init();
 }
 
 
@@ -74,7 +78,6 @@ AssetManager::AssetManager(const OpenVGAdapter& vg, const fs::path base)
   : _vg(vg)
   , _base(base)
 {
-  fonts_init();
 }
 
 
@@ -86,7 +89,8 @@ const fs::path AssetManager::resolve_path(const fs::path p) {
   }
 }
 
-const Fontinfo& AssetManager::font() const {
+const Fontinfo& AssetManager::font() {
+  fonts_init();
   return VisitorTypeface;
 }
 

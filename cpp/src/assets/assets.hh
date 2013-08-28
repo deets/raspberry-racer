@@ -62,11 +62,12 @@ public:
   AssetManager(const OpenVGAdapter& vg);
   AssetManager(const OpenVGAdapter& vg, const fs::path base);
   // TODO: naming convention
-  const Fontinfo& font() const;
+  const Fontinfo& font();
   const PNGImageData& image(const fs::path&);
   Json::Value json(const fs::path&);
 private:
 
+  bool _fonts_initialized;
   map<fs::path, PNGImageData> _image_data;
 };
 
