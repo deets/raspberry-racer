@@ -22,6 +22,7 @@ using ::testing::Return;
 using ::testing::TypedEq;
 
 using namespace std;
+using namespace rracer;
 
 namespace fs = boost::filesystem;
 

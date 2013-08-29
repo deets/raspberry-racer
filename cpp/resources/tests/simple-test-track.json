@@ -1,7 +1,17 @@
 {
     "type" : "simple",
     "name" : "Hockenheim",
-    "lanes" : 2,
+    "tile-info" : {
+        "width" : 20.0,
+        "lanes" : [
+            {
+                "center-offset" : -8.5
+            },
+            {
+                "center-offset" : 8.5          
+            }
+        ]
+    },
     "tiles" : [
         {
             "type" : "startinggrid",

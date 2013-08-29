@@ -18,7 +18,7 @@
   AssetManager* _asset_manager;
 
   InputEventVector* _events;
-  World* _world;
+  rracer::World* _world;
   Timer* _world_timer;
 }
 -(void) timerCallback:(NSTimer*)timer;

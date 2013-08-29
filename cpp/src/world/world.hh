@@ -11,24 +11,27 @@
 #include "world/world-object.hh"
 
 
+namespace rracer {
 
-class World {
-  bool _has_ended;
 
-  WindowAdapter &_window_adapter;
-  OpenVGAdapter &_ovg_adapter;
+  class World {
+    bool _has_ended;
 
-  WorldObject::WorldObjectList _world_objects;
+    WindowAdapter &_window_adapter;
+    OpenVGAdapter &_ovg_adapter;
 
-public:
-  World(WindowAdapter &, OpenVGAdapter &);
+    WorldObject::WorldObjectList _world_objects;
 
-  void begin(const InputEventVector &events, float elapsed);
-  void end();
-  bool has_ended() { return _has_ended; };
+  public:
+    World(WindowAdapter &, OpenVGAdapter &);
 
-  void add_object(WorldObject* child);
+    void begin(const InputEventVector &events, float elapsed);
+    void end();
+    bool has_ended() { return _has_ended; };
+
+    void add_object(WorldObject* child);
+  };
+
 };
-
 
 #endif

@@ -13,6 +13,8 @@
 
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
+#include "world/track.hh"
+
 #import "RaspRacerAppDelegate.h"
 
 namespace fs = boost::filesystem;
@@ -69,12 +71,18 @@ namespace fs = boost::filesystem;
   fs::path bundle_resources([[[NSBundle mainBundle] resourcePath] UTF8String]);
   _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
 
-  _world = new World(*_window_adapter, *_window_adapter);
-  Translator* t = new Translator(size.width / 2.0, size.height / 2.0);
-  LissajouAnimator* la = new LissajouAnimator(size.width / 4, size.height / 4, 5.5, 15.0);
-  Image *image = new Image(*_asset_manager, "tests/amiga-ball.png");
-  la->add_object(image);
-  t->add_object(la);
+  _world = new rracer::World(*_window_adapter, *_window_adapter);
+
+  // we want all drawing at (0,0) centered around the middle of the screen
+
+  rracer::Translator* t = new rracer::Translator(size.width / 2.0, size.height / 2.0);
+  // LissajouAnimator* la = new LissajouAnimator(size.width / 4, size.height / 4, 5.5, 15.0);
+  // Image *image = new Image(*_asset_manager, "tests/amiga-ball.png");
+  // la->add_object(image);
+  // t->add_object(la);
+
+  rracer::Track* track = new rracer::Track(*_asset_manager, "tests/simple-test-track.json");
+  t->add_object(track);
   _world->add_object(t);
 
   [_glview setRenderCallback: self];

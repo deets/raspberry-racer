@@ -176,6 +176,7 @@
                 'src/mac/main.m',
                 'src/world/world.cc',
                 'src/world/world-object.cc',
+                'src/world/track.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'libraries' : [

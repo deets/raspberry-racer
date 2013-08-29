@@ -11,6 +11,7 @@
 using ::testing::Return;
 using ::testing::Eq;
 using ::testing::An;
+using namespace rracer;
 
 class TestChild : public WorldObject {
   
