@@ -11,6 +11,7 @@
 using ::testing::Return;
 using ::testing::Eq;
 using ::testing::An;
+using ::testing::NiceMock;
 using namespace rracer;
 
 class TestChild : public WorldObject {
@@ -37,39 +38,14 @@ public:
 class WorldTests : public ::testing::Test {
 public:
   TestWindowAdaptper* window_adapter;
-  TestOpenvgAdaptper* ovg_adapter;
+  NiceMock<TestOpenvgAdaptper>* ovg_adapter;
 
   virtual void SetUp() {
-    ovg_adapter = new TestOpenvgAdaptper();
+    ovg_adapter = new NiceMock<TestOpenvgAdaptper>();
     window_adapter = new TestWindowAdaptper();
     EXPECT_CALL(*window_adapter, start()).Times(1);
     EXPECT_CALL(*window_adapter, end()).Times(1);
     EXPECT_CALL(*window_adapter, window_dimensions()).WillRepeatedly(Return(make_pair(1920, 1080)));
-    // setting up the vg system
-    EXPECT_CALL(*ovg_adapter, 
-		vgSetfv(
-		    Eq(VG_CLEAR_COLOR),
-		    Eq(4),
-		    An<VGfloat*>()
-		)
-    ).Times(1);
-    EXPECT_CALL(*ovg_adapter,
-		vgClear(
-		    Eq(0),
-		    Eq(0),
-		    Eq(1920),
-		    Eq(1080)
-		)
-    );
-    EXPECT_CALL(*ovg_adapter,
-		vgSeti(
-		    Eq(VG_MATRIX_MODE),
-		    Eq(VG_MATRIX_IMAGE_USER_TO_SURFACE)
-		)
-    ).Times(1);
-    EXPECT_CALL(*ovg_adapter,
-		vgLoadIdentity()
-    ).Times(1);
   }
 
   virtual void TearDown() {

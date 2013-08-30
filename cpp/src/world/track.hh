@@ -38,12 +38,16 @@ public:
 };
 
 class TrackTile {
-
 public:
+  TrackTile(const TileInfo&);
   static shared_ptr<TrackTile> create_tile(const Json::Value&, const ConnectionPoint&, const TileInfo&);
-  virtual ConnectionPoint start() const=0;
-  virtual ConnectionPoint end() const=0;
+  virtual ConnectionPoint start() const;
+  virtual ConnectionPoint end() const;
   virtual void append_to_ground_path(const OpenVGCompanion&, VGPath ground_path) const=0;
+protected:
+  const TileInfo& _ti;
+  ConnectionPoint _start;
+  ConnectionPoint _end;
 };
 
 

@@ -1,4 +1,5 @@
 #include <boost/foreach.hpp>
+#include <math.h>
 #include "json/json.h"
 #include "world/track.hh"
 
@@ -19,38 +20,41 @@ namespace rracer {
 	 
   }
 
+  TrackTile::TrackTile(const TileInfo& ti)
+    : _ti(ti)
+  {
+  }
+
+
+  ConnectionPoint TrackTile::start() const {
+      return _start;
+  }
+
+  ConnectionPoint TrackTile::end() const {
+      return _end;
+  }
 
   class StartingGrid : public TrackTile {
-    ConnectionPoint _start;
-    ConnectionPoint _end;
-    const TileInfo& _ti;
   public:
     StartingGrid(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
-      : _start(start)
-      , _ti(ti)
+      : TrackTile(ti)
     {
       assert(tile.isMember("length") && tile["length"].isDouble());
       Real length = tile["length"].asDouble();
-      AffineTransform t = AffineTransform::Identity();
-      t = t.rotate(_start.direction);
+      AffineTransform t = rotation(_start.direction);
       Vector l;
       l << length, 0;
       l = t * l;
+      _start = start;
       _end.point = _start.point + l;
       _end.direction = _start.direction;
     }
 
-    virtual ConnectionPoint start() const {
-      return _start;
-    }
-
-    virtual ConnectionPoint end() const {
-      return _end;
-    }
-
     virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
       Real whalf = _ti.width() / 2.0;
-      const Vector offset(0, whalf);
+      Vector offset(0, whalf);
+      AffineTransform t = rotation(start().direction);
+      offset = t * offset;
       const Vector start = this->start().point;
       const Vector end =  this->end().point;
 
@@ -62,12 +66,62 @@ namespace rracer {
     }
   };
 
+  class Curve : public TrackTile {
+    Real _radius;
+    Real _degrees;
+  public:
+
+    static Vector center_point(ConnectionPoint start, Real radius, Real tile_width) {
+      Real sign = SIGN(radius); // left turning == positive sign
+      Vector center_point(0, sign);
+      center_point *= tile_width / 2.0 + fabs(radius);
+      AffineTransform r = rotation(start.direction);
+      return (r * center_point) + start.point;
+    }
+
+    Curve(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
+      : TrackTile(ti)
+    {
+      assert(tile.isMember("radius") && tile["radius"].isDouble());
+      assert(tile.isMember("degrees") && tile["degrees"].isDouble());
+      _start = start;
+      _radius = tile["radius"].asDouble();
+      _degrees = tile["degrees"].asDouble();
+      Vector center_point = Curve::center_point(start, _radius, _ti.width());
+      Vector swipe = start.point - center_point;
+      _end.point = (rotation(_degrees) * swipe) + center_point;
+      _end.direction = start.direction + _degrees;
+    }
+
+    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
+      Real whalf = _ti.width() / 2.0;
+      Vector offset(0, whalf);
+      AffineTransform t = rotation(_start.direction);
+      Vector start_offset = t * offset;
+      t = rotation(_end.direction);
+      Vector end_offset = t * offset;
+      Vector p1 = _start.point + start_offset;
+      Vector p2 = _end.point + end_offset;
+      Vector p3 = _end.point - end_offset;
+      Vector p4 = _start.point - start_offset;
+      vgc.move_to(ground_path, p1, VG_ABSOLUTE);
+      vgc.line_to(ground_path, p2, VG_ABSOLUTE);
+      vgc.line_to(ground_path, p3, VG_ABSOLUTE);
+      vgc.line_to(ground_path, p4, VG_ABSOLUTE);
+      vgc.close(ground_path);
+    }
+
+  };
 
   shared_ptr<TrackTile> TrackTile::create_tile(const Json::Value& tile, const ConnectionPoint& start, const TileInfo &ti) {
-    assert(tile.isMember("type") && tile["type"].asString() == "startinggrid");
+    assert(tile.isMember("type"));
     string type = tile["type"].asString();
     if(type == "startinggrid") {
       return shared_ptr<TrackTile>(new StartingGrid(tile, start, ti));
+    } else if(type == "curve") {
+      return shared_ptr<TrackTile>(new Curve(tile, start, ti));
+    } else {
+      assert(false);
     }
   }
 
@@ -92,6 +146,7 @@ namespace rracer {
       Json::Value tile_json = json["tiles"][i];
       assert(tile_json.isObject());
       shared_ptr<TrackTile> tile = TrackTile::create_tile(tile_json, connection_point, *_tile_info);
+      connection_point = tile->end();
       _tiles.push_back(tile);
     }
   

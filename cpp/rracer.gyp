@@ -7,7 +7,7 @@
         'configurations': {
             'Debug': {
                 'xcode_settings': {
-                    'OTHER_CFLAGS' : ['-g', '-fno-eliminate-unused-debug-symbols',],
+                    'OTHER_CFLAGS' : ['-g', '-fno-eliminate-unused-debug-symbols', "-O0"],
 #                    'GCC_DEBUGGING_SYMBOLS': 'full',
                     },
                 },
@@ -25,10 +25,12 @@
                 'src/world/world-object.cc',
 		'src/gfx/openvg-companion.cc',
 		'src/tests/test-assets.cc',
+		'src/tests/test-common.cc',
 		'src/tests/test-world.cc',
 		'src/tests/test-openvg-companion.cc',
 		'src/tests/test-tracks.cc',
 		'src/tests/test-system-time.cc',
+                'src/common/common.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'cflags' : ["-g"],
@@ -177,6 +179,7 @@
                 'src/world/world.cc',
                 'src/world/world-object.cc',
                 'src/world/track.cc',
+                'src/common/common.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'libraries' : [

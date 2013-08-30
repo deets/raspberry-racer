@@ -16,6 +16,11 @@
         {
             "type" : "startinggrid",
             "length" : 20.0
+        },
+        {
+            "type" : "curve",
+            "radius" : 10.0,
+            "degrees" : 90.0
         }
     ]
 }
