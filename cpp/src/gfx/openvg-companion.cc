@@ -113,4 +113,10 @@ namespace rracer {
     _vg.vgAppendPathData(p, 1, &cmd, NULL);
   }
 
+  void OpenVGCompanion::arc(VGPath p, VGPathSegment kind, Vector to, VGfloat rh, VGfloat rv, VGfloat rot, VGPathAbsRel absrel) const {
+    VGubyte cmd = kind | absrel;
+    VGfloat params[] = { rh,rv,rot, to[0], to[1] };
+    _vg.vgAppendPathData(p, 1, &cmd, params);
+  }
+
 }; // ns::racer

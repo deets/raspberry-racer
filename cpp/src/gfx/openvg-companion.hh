@@ -27,6 +27,7 @@ namespace rracer {
 
     void move_to(VGPath, Vector, VGPathAbsRel) const;
     void line_to(VGPath, Vector, VGPathAbsRel) const;
+    void arc(VGPath, VGPathSegment kind, Vector, VGfloat rh, VGfloat rv, VGfloat rot, VGPathAbsRel) const;
     void close(VGPath) const;
 
     void drawImage(const PNGImageData& image_data) const;

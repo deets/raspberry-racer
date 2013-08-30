@@ -94,8 +94,8 @@ namespace rracer {
     }
 
     virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
-      Real whalf = _ti.width() / 2.0;
-      Vector offset(0, whalf);
+      Real w = _ti.width();
+      Vector offset(0, w / 2.0);
       AffineTransform t = rotation(_start.direction);
       Vector start_offset = t * offset;
       t = rotation(_end.direction);
@@ -105,9 +105,11 @@ namespace rracer {
       Vector p3 = _end.point - end_offset;
       Vector p4 = _start.point - start_offset;
       vgc.move_to(ground_path, p1, VG_ABSOLUTE);
-      vgc.line_to(ground_path, p2, VG_ABSOLUTE);
+      //vgc.line_to(ground_path, p2, VG_ABSOLUTE);
+      vgc.arc(ground_path, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
       vgc.line_to(ground_path, p3, VG_ABSOLUTE);
-      vgc.line_to(ground_path, p4, VG_ABSOLUTE);
+      //vgc.line_to(ground_path, p4, VG_ABSOLUTE);
+      vgc.arc(ground_path, VG_SCWARC_TO, p4, _radius + w, _radius + w, _degrees, VG_ABSOLUTE);
       vgc.close(ground_path);
     }
 
