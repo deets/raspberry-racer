@@ -45,18 +45,15 @@ TEST_F(TrackTests, TestSimpleTrackLoading) {
   ASSERT_TRUE(fs::exists(json_path));
   AssetManager am(*ovg_adapter);
   Track test_track(am, json_path);
-  ASSERT_EQ(2, test_track.count());
-  const TrackTile& tile_one = test_track[0];
-  const TrackTile& tile_two = test_track[1];
-  Vector d = tile_one.end().point - tile_one.start().point;
-  ASSERT_FLOAT_EQ(20.0, d.norm());
-  ASSERT_FLOAT_EQ(tile_one.end().point[0], tile_two.start().point[0]);
-  ASSERT_FLOAT_EQ(tile_one.end().point[1], tile_two.start().point[1]);
-
-  ASSERT_FLOAT_EQ(40.0, tile_two.end().point[0]);
-  ASSERT_FLOAT_EQ(20.0, tile_two.end().point[1]);
-  ASSERT_FLOAT_EQ(90, tile_two.end().direction);
-
+  ASSERT_EQ(8, test_track.count());
+  for(int i = 0; i < 8; ++i) {
+    const TrackTile& tile_one = test_track[i];
+    const TrackTile& tile_two = test_track[(i+1) % 8];
+    ASSERT_NEAR(tile_one.end().point[0], tile_two.start().point[0], 0.000001);
+    ASSERT_NEAR(tile_one.end().point[1], tile_two.start().point[1], 0.000001);
+  }
+  ASSERT_FALSE(test_track.bounds().empty());
+  
 }
 
 

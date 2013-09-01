@@ -1,8 +1,11 @@
 #include <boost/foreach.hpp>
+#include <boost/lambda/lambda.hpp>
+
 #include <math.h>
 #include "json/json.h"
 #include "world/track.hh"
 
+using namespace boost::lambda;
 
 namespace rracer {
 
@@ -34,36 +37,64 @@ namespace rracer {
       return _end;
   }
 
-  class StartingGrid : public TrackTile {
+  const Rect TrackTile::bounds() const {
+    return _bounds;
+  }
+
+
+  class Straight : public TrackTile {
+
   public:
-    StartingGrid(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
+    Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
       : TrackTile(ti)
     {
       assert(tile.isMember("length") && tile["length"].isDouble());
       Real length = tile["length"].asDouble();
-      AffineTransform t = rotation(_start.direction);
+      AffineTransform t = rotation(start.direction);
       Vector l;
       l << length, 0;
       l = t * l;
       _start = start;
       _end.point = _start.point + l;
       _end.direction = _start.direction;
+
+      struct Local {
+	static bool comp_x(const Vector& a, const Vector& b) { return a[0] < b[0]; }
+	static bool comp_y(const Vector& a, const Vector& b) { return a[1] < b[1]; }
+      };
+      
+      const vector<Vector> points = corners();
+      Real left = (*min_element(points.begin(), points.end(), &Local::comp_x))[0];
+      Real right = (*max_element(points.begin(), points.end(), &Local::comp_x))[0];
+      Real bottom = (*min_element(points.begin(), points.end(), &Local::comp_y))[1];
+      Real top = (*max_element(points.begin(), points.end(), &Local::comp_y))[1];
+      _bounds = Rect::from_corners(Vector(left, bottom), Vector(right, top));
     }
 
-    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
+    const vector<Vector> corners() const {
+      vector<Vector> res(4);
       Real whalf = _ti.width() / 2.0;
       Vector offset(0, whalf);
       AffineTransform t = rotation(start().direction);
       offset = t * offset;
       const Vector start = this->start().point;
       const Vector end =  this->end().point;
+      res.push_back(start + offset);
+      res.push_back(end + offset);
+      res.push_back(end - offset);
+      res.push_back(start - offset);
+      return res;
+    }
 
-      vgc.move_to(ground_path, start + offset, VG_ABSOLUTE);
-      vgc.line_to(ground_path, end + offset, VG_ABSOLUTE);
-      vgc.line_to(ground_path, end - offset, VG_ABSOLUTE);
-      vgc.line_to(ground_path, start - offset, VG_ABSOLUTE);
+    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
+      const vector<Vector> points = corners();
+      vgc.move_to(ground_path, points[0], VG_ABSOLUTE);
+      vgc.line_to(ground_path, points[1], VG_ABSOLUTE);
+      vgc.line_to(ground_path, points[2], VG_ABSOLUTE);
+      vgc.line_to(ground_path, points[3], VG_ABSOLUTE);
       vgc.close(ground_path);
     }
+
   };
 
   class Curve : public TrackTile {
@@ -105,10 +136,8 @@ namespace rracer {
       Vector p3 = _end.point - end_offset;
       Vector p4 = _start.point - start_offset;
       vgc.move_to(ground_path, p1, VG_ABSOLUTE);
-      //vgc.line_to(ground_path, p2, VG_ABSOLUTE);
       vgc.arc(ground_path, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
       vgc.line_to(ground_path, p3, VG_ABSOLUTE);
-      //vgc.line_to(ground_path, p4, VG_ABSOLUTE);
       vgc.arc(ground_path, VG_SCWARC_TO, p4, _radius + w, _radius + w, _degrees, VG_ABSOLUTE);
       vgc.close(ground_path);
     }
@@ -119,9 +148,11 @@ namespace rracer {
     assert(tile.isMember("type"));
     string type = tile["type"].asString();
     if(type == "startinggrid") {
-      return shared_ptr<TrackTile>(new StartingGrid(tile, start, ti));
+      return shared_ptr<TrackTile>(new Straight(tile, start, ti));
     } else if(type == "curve") {
       return shared_ptr<TrackTile>(new Curve(tile, start, ti));
+    } else if(type == "straight") {
+      return shared_ptr<TrackTile>(new Straight(tile, start, ti));
     } else {
       assert(false);
     }
@@ -143,19 +174,26 @@ namespace rracer {
     ConnectionPoint connection_point;
     connection_point.point << 0.0, 0.0;
     connection_point.direction = 0.0;
-
+    
+    Rect bounds;
     for(int i=0; i < json["tiles"].size(); ++i) {
       Json::Value tile_json = json["tiles"][i];
       assert(tile_json.isObject());
       shared_ptr<TrackTile> tile = TrackTile::create_tile(tile_json, connection_point, *_tile_info);
       connection_point = tile->end();
+      bounds = bounds | tile->bounds();
       _tiles.push_back(tile);
     }
-  
+    _bounds = bounds;
+    assert(!_bounds.empty());
   }
 
   Track::~Track() {
 
+  }
+
+  const Rect Track::bounds() const {
+    return _bounds;
   }
 
   const string& Track::name() const {

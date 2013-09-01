@@ -1,11 +1,18 @@
 * TODOs
 
-** TODO check out difftime, it looks fishy
+** DONE check out difftime, it looks fishy
 
 ** TODO deletion of world-objects
 
 for know I think that should happen when the world has ended.
 
+
+I should move to shared_ptr
+** TODO direction should become modulo-type
+
+It currently goes to 360
+
+** TODO assert track is closed
 
 ** TODO implement logging
 
@@ -18,8 +25,9 @@ http://pastie.org/1574516
 
  - jsoncpp http://sourceforge.net/projects/jsoncpp/
  - ShivaVG http://ivanleben.blogspot.de/2007/07/shivavg-open-source-ansi-c-openvg.html
- - go openvg https://github.com/ajstarks/openvg/blob/master/openvg.go
+ - GO openvg https://github.com/ajstarks/openvg/blob/master/openvg.go
  - Eigen3
+
 
 * OSX
 ** Requirements

@@ -16,60 +16,68 @@ using namespace std;
 using namespace boost;;
 
 namespace rracer {
-typedef struct {
-  Vector point;
-  Real direction;
-} ConnectionPoint;
+  typedef struct {
+    Vector point;
+    Real direction;
+  } ConnectionPoint;
 
 
-class TileInfo {
-  vector<Real> _lane_offsets;
-  Real _width;
-public:
-  TileInfo(const Json::Value tile_info);
+  class TileInfo {
+    vector<Real> _lane_offsets;
+    Real _width;
+  public:
+    TileInfo(const Json::Value tile_info);
 
-  Real width() const {
-    return _width;
-  }
-  Real operator[](const size_t index) const {
-    assert(index < _lane_offsets.size());
-    return _lane_offsets[index];
-  }
-};
+    Real width() const {
+      return _width;
+    }
+    Real operator[](const size_t index) const {
+      assert(index < _lane_offsets.size());
+      return _lane_offsets[index];
+    }
+  };
 
-class TrackTile {
-public:
-  TrackTile(const TileInfo&);
-  static shared_ptr<TrackTile> create_tile(const Json::Value&, const ConnectionPoint&, const TileInfo&);
-  virtual ConnectionPoint start() const;
-  virtual ConnectionPoint end() const;
-  virtual void append_to_ground_path(const OpenVGCompanion&, VGPath ground_path) const=0;
-protected:
-  const TileInfo& _ti;
-  ConnectionPoint _start;
-  ConnectionPoint _end;
-};
+  class TrackTile {
 
 
-class Track : public WorldObject {
+  public:
+    TrackTile(const TileInfo&);
+    static shared_ptr<TrackTile> create_tile(const Json::Value&, const ConnectionPoint&, const TileInfo&);
+    virtual ConnectionPoint start() const;
+    virtual ConnectionPoint end() const;
+    virtual void append_to_ground_path(const OpenVGCompanion&, VGPath ground_path) const=0;
+    virtual const Rect bounds() const;
 
-  AssetManager& _am;
-  shared_ptr<TileInfo> _tile_info;
+  protected:
+    Rect _bounds;
+    const TileInfo& _ti;
+    ConnectionPoint _start;
+    ConnectionPoint _end;
+  };
 
-public:
-  Track(AssetManager& am, fs::path data);
-  virtual ~Track();
 
-  const string& name() const;
-  size_t count() const;
-  TrackTile& operator[](size_t index) const;
+  class Track : public WorldObject {
 
-  virtual void render(const OpenVGCompanion& vgc) const;
+    AssetManager& _am;
+    shared_ptr<TileInfo> _tile_info;
 
-private:
-  string _name;
-  vector<shared_ptr<TrackTile> > _tiles;
-};
+  public:
+    Track(AssetManager& am, fs::path data);
+    virtual ~Track();
+
+    const string& name() const;
+    size_t count() const;
+    TrackTile& operator[](size_t index) const;
+
+    virtual void render(const OpenVGCompanion& vgc) const;
+
+    const Rect bounds() const;
+
+  private:
+    string _name;
+    Rect _bounds;
+    vector<shared_ptr<TrackTile> > _tiles;
+  };
 
 }
 #endif

@@ -15,10 +15,30 @@ namespace rracer {
   typedef Eigen::Vector2f Vector;
   typedef float Real;
 
-  typedef struct {
+  class Rect {
+
+  public:
     Vector origin;
     Vector size;
-  } Rect;
+
+    Rect();
+    Rect(const Vector& origin, const Vector& size);
+    Rect(Real x, Real y, Real width, Real height);
+    static Rect from_corners(const Vector& bottom_left, const Vector& top_right);
+
+    virtual ~Rect();
+
+    Real left() const;
+    Real right() const;
+    Real top() const;
+    Real bottom() const;
+
+    bool empty() const;
+
+    bool operator==(const Rect&) const;
+    Rect operator|(const Rect&) const;
+
+  };
 
   AffineTransform rotation(int degree);
 
