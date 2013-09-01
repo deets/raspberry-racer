@@ -32,3 +32,31 @@ TEST(CommonTests, TestRectOperations) {
   ASSERT_EQ(a, a | c);
   ASSERT_EQ(a, c | a);
 }
+
+
+TEST(CommonTests, TestQuarterClassification) {
+  Real x = 0;
+  Real y = 0;
+  Vector cp(x, y);
+  ASSERT_EQ(rracer::EQ, classify_point(cp, cp));
+  ASSERT_EQ(rracer::A0, classify_point(cp, Vector(x + 10, y)));
+  ASSERT_EQ(rracer::Q0, classify_point(cp, Vector(x + 10, y + 10)));
+  ASSERT_EQ(rracer::A1, classify_point(cp, Vector(x, y + 10)));
+  ASSERT_EQ(rracer::Q1, classify_point(cp, Vector(x - 10, y + 10)));
+  ASSERT_EQ(rracer::A2, classify_point(cp, Vector(x - 10, y)));
+  ASSERT_EQ(rracer::Q2, classify_point(cp, Vector(x - 10, y - 10)));
+  ASSERT_EQ(rracer::A3, classify_point(cp, Vector(x, y - 10)));
+  ASSERT_EQ(rracer::Q3, classify_point(cp, Vector(x + 10, y - 10)));
+}
+
+
+TEST(CommonTests, TestAxisPointGeneration) {
+  Real x = 0;
+  Real y = 0;
+  Real radius = 10.0;
+  Vector cp(x, y);
+  ASSERT_EQ(Vector(x + radius, y), axis_point(cp, radius, A0));
+  ASSERT_EQ(Vector(x, y + radius), axis_point(cp, radius, A1));
+  ASSERT_EQ(Vector(x - radius, y), axis_point(cp, radius, A2));
+  ASSERT_EQ(Vector(x, y - radius), axis_point(cp, radius, A3));
+}

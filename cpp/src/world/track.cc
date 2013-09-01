@@ -1,11 +1,8 @@
 #include <boost/foreach.hpp>
-#include <boost/lambda/lambda.hpp>
 
 #include <math.h>
 #include "json/json.h"
 #include "world/track.hh"
-
-using namespace boost::lambda;
 
 namespace rracer {
 
@@ -58,21 +55,12 @@ namespace rracer {
       _end.point = _start.point + l;
       _end.direction = _start.direction;
 
-      struct Local {
-	static bool comp_x(const Vector& a, const Vector& b) { return a[0] < b[0]; }
-	static bool comp_y(const Vector& a, const Vector& b) { return a[1] < b[1]; }
-      };
-      
-      const vector<Vector> points = corners();
-      Real left = (*min_element(points.begin(), points.end(), &Local::comp_x))[0];
-      Real right = (*max_element(points.begin(), points.end(), &Local::comp_x))[0];
-      Real bottom = (*min_element(points.begin(), points.end(), &Local::comp_y))[1];
-      Real top = (*max_element(points.begin(), points.end(), &Local::comp_y))[1];
-      _bounds = Rect::from_corners(Vector(left, bottom), Vector(right, top));
+      _bounds = Rect::from_points(corners());
+
     }
 
     const vector<Vector> corners() const {
-      vector<Vector> res(4);
+      vector<Vector> res;
       Real whalf = _ti.width() / 2.0;
       Vector offset(0, whalf);
       AffineTransform t = rotation(start().direction);
@@ -122,6 +110,16 @@ namespace rracer {
       Vector swipe = start.point - center_point;
       _end.point = (rotation(_degrees) * swipe) + center_point;
       _end.direction = start.direction + _degrees;
+
+      vector<Vector> points(4);
+      AffineTransform t = rotation(_end.direction);
+      Vector full_swipe = swipe / swipe.norm() * (_ti.width() + _radius);
+      const Vector p1 = center_point + full_swipe;
+      const Vector p2 = center_point + t * full_swipe;
+      points.push_back(center_point);
+      points.push_back(p1);
+      points.push_back(p2);
+      _bounds = Rect::from_points(points);
     }
 
     virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
@@ -228,6 +226,15 @@ namespace rracer {
     vg.vgDrawPath(ground_path, VG_FILL_PATH);
     vg.vgDestroyPath(ground_path);
     vg.vgDestroyPaint(ground_paint);
+    VGfloat debug_color[] = {1.0, 1.0, 0, 1.0};
+    VGPaint debug_paint = vg.vgCreatePaint();
+    vg.vgSetParameteri(debug_paint, VG_PAINT_TYPE, VG_PAINT_TYPE_COLOR);
+    vg.vgSetParameterfv(debug_paint, VG_PAINT_COLOR, 4, debug_color);
+    vg.vgSetPaint(debug_paint, VG_FILL_PATH|VG_STROKE_PATH);
+
+    vgc.draw_rect(bounds());
+
+    vg.vgDestroyPaint(debug_paint);
   }
 
 } // namespace rracer

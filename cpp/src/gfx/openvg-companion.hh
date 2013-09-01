@@ -35,6 +35,7 @@ namespace rracer {
     void drawText(const Fontinfo& fi, VGfloat x, VGfloat y, char *s, int pointsize) const;
     VGfloat textWidth(const Fontinfo& fi, char *s, int pointsize) const;
 
+    void draw_rect(const Rect&) const;
 
   };
 

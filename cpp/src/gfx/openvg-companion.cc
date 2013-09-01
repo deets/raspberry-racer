@@ -119,4 +119,17 @@ namespace rracer {
     _vg.vgAppendPathData(p, 1, &cmd, params);
   }
 
+
+  void OpenVGCompanion::draw_rect(const Rect& r) const {
+    VGPath p = newPath();
+    move_to(p, Vector(r.left(), r.bottom()), VG_ABSOLUTE);
+    line_to(p, Vector(r.right(), r.bottom()), VG_ABSOLUTE);
+    line_to(p, Vector(r.right(), r.top()), VG_ABSOLUTE);
+    line_to(p, Vector(r.left(), r.top()), VG_ABSOLUTE);
+    line_to(p, Vector(r.left(), r.bottom()), VG_ABSOLUTE);
+    close(p);
+    _vg.vgDrawPath(p, VG_STROKE_PATH);
+    _vg.vgDestroyPath(p);
+  }
+
 }; // ns::racer
