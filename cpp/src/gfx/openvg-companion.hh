@@ -39,6 +39,15 @@ namespace rracer {
 
   };
 
+
+  class MatrixStacker {
+    VGfloat _m[9];
+    const OpenVGCompanion& _vgc;
+  public:
+    MatrixStacker(const OpenVGCompanion&);
+    virtual ~MatrixStacker();
+  };
+
 }; // ns::rracer
 
 

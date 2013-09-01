@@ -1,13 +1,27 @@
 #include <stdexcept>
+#include <map>
 #include <algorithm>
 #include "common/common.hh"
+#include <boost/assign/list_of.hpp>
 
+using namespace boost::assign;
 using namespace std;
 
 namespace rracer {
+
   AffineTransform rotation(int degree) {
     AffineTransform t = AffineTransform::Identity();
     return t.rotate(DEG2RAD(degree));
+  }
+
+  AffineTransform scale(Real f) {
+    AffineTransform t = AffineTransform::Identity();
+    return t.scale(f);
+  }
+
+  AffineTransform translate(const Vector& v) {
+    AffineTransform t = AffineTransform::Identity();
+    return t.translate(v);
   }
 
 
@@ -72,12 +86,52 @@ namespace rracer {
   }
 
 
+  // Rect Rect::operator=(const Rect& other) const {
+  //   return Rect(other.origin, other.size);
+  // }
+
   Real Rect::left() const { return origin[0]; }
   Real Rect::right() const { return origin[0] + size[0];}
+
+  Real Rect::width() const { return size[0]; }
+  Real Rect::height() const { return size[1]; }
+  Real Rect::ratio() const { return size[1] / size[0]; }
+  
+
   // we have a bottom-left origin
   Real Rect::top() const { return origin[1] + size[1]; }
   Real Rect::bottom() const { return origin[1]; }
 
+  Vector Rect::center() const {
+    return Vector((right() + left()) / 2, (top() + bottom()) / 2);
+  }
+
+  Rect Rect::operator*(Real f) const {
+    return Rect::from_center_and_size(center(), size * 2.);
+  }
+
+  Rect Rect::from_center_and_size(const Vector& center, const Vector& size) {
+    const Vector sh = size / 2.0;
+    return Rect(center - sh, size);
+  }
+
+
+  bool Rect::contains(const Vector& p) const {
+    return left() <= p[0] && right() > p[0] && bottom() <= p[1] && top() > p[1];
+  }
+
+  AffineTransform Rect::fit(const Rect& rect) const {
+    Real sf;
+    // when we have a larger ration than
+    // our fittling, we are "slimmer" - so
+    // the scaling operates on the width
+    if(ratio() >= rect.ratio()) {
+      sf = width() / rect.width();
+    } else {
+      sf = height() / rect.height();
+    }
+    return scale(sf) * translate(center() - rect.center());
+  }
 
   EQuarterClass classify_point(const Vector& cp, const Vector& point) {
     if(cp == point) {
@@ -123,5 +177,39 @@ namespace rracer {
     default:
       throw runtime_error("No axis passed!");
     }
+  }
+
+
+  vector<EQuarterClass> spanning_quadrants(EQuarterClass q1, EQuarterClass q2) {
+    static vector<EQuarterClass> s_ccw_quarters = list_of(Q0)(Q1)(Q2)(Q3)(Q0)(Q1)(Q2)(Q3);
+    static vector<EQuarterClass> s_ccw_axis =     list_of(A1)(A2)(A3)(A0)(A1)(A2)(A3)(A0);
+    static map<EQuarterClass, EQuarterClass> s_q1_axis_to_quarter = map_list_of(A0, Q0)(A1, Q1)(A2, Q2)(A3, Q3);
+    static map<EQuarterClass, EQuarterClass> s_q2_axis_to_quarter = map_list_of(A0, Q3)(A1, Q0)(A2, Q1)(A3, Q2);
+    vector<EQuarterClass> res;
+
+    if(s_q1_axis_to_quarter.find(q1) != s_q1_axis_to_quarter.end()) {
+      q1 = s_q1_axis_to_quarter[q1];
+    }
+    if(s_q2_axis_to_quarter.find(q2) != s_q2_axis_to_quarter.end()) {
+      q2 = s_q2_axis_to_quarter[q2];
+    }
+    
+    bool found = false;
+    for(int i = 0; i < 8; i++) {
+      if(!found) {
+	if(s_ccw_quarters[i] == q1) {
+	  found = true;
+	  res.push_back(s_ccw_axis[i]);
+	}
+      } else {
+	if(s_ccw_quarters[i] == q2) {
+	  break;
+	} else {
+	  res.push_back(s_ccw_axis[i]);
+	}
+      }
+    }
+    
+    return res;
   }
 }; //ns::rracer

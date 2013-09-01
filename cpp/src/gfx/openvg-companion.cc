@@ -132,4 +132,14 @@ namespace rracer {
     _vg.vgDestroyPath(p);
   }
 
+
+  MatrixStacker::MatrixStacker(const OpenVGCompanion& vgc)
+    : _vgc(vgc)
+  {
+    _vgc.vg().vgGetMatrix(_m);
+  }
+  MatrixStacker::~MatrixStacker() {
+    _vgc.vg().vgLoadMatrix(_m);
+  }
+
 }; // ns::racer

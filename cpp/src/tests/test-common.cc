@@ -1,6 +1,9 @@
 #include <gmock/gmock.h>
+#include <boost/assign/list_of.hpp>
 
 #include "common/common.hh"
+
+using namespace boost::assign;
 
 using namespace rracer;
 
@@ -31,6 +34,18 @@ TEST(CommonTests, TestRectOperations) {
   ASSERT_TRUE(c.empty());
   ASSERT_EQ(a, a | c);
   ASSERT_EQ(a, c | a);
+
+  Rect d = Rect::from_center_and_size(Vector(10, 10), Vector(20, 20));
+  ASSERT_EQ(Rect(0, 0, 20, 20), d);
+  ASSERT_EQ(Vector(10, 10), d.center());
+  Rect e = d * 2.0;
+
+  ASSERT_EQ(d.center(), e.center());
+  ASSERT_FLOAT_EQ(d.size[0] * 2.0, (d * 2.0).size[0]);
+  ASSERT_FLOAT_EQ(d.size[1] * 2.0, (d * 2.0).size[1]);
+
+  ASSERT_TRUE(a.contains(Vector(10, 20)));
+
 }
 
 
@@ -59,4 +74,46 @@ TEST(CommonTests, TestAxisPointGeneration) {
   ASSERT_EQ(Vector(x, y + radius), axis_point(cp, radius, A1));
   ASSERT_EQ(Vector(x - radius, y), axis_point(cp, radius, A2));
   ASSERT_EQ(Vector(x, y - radius), axis_point(cp, radius, A3));
+}
+
+
+TEST(CommonTests, TestSpanningQuadrants) {
+  ASSERT_EQ(list_of(A1), spanning_quadrants(Q0, Q1));
+  ASSERT_EQ(list_of(A2), spanning_quadrants(Q1, Q2));
+  ASSERT_EQ(list_of(A3), spanning_quadrants(Q2, Q3));
+  ASSERT_EQ(list_of(A0), spanning_quadrants(Q3, Q0));
+
+  ASSERT_EQ(list_of(A1)(A2), spanning_quadrants(Q0, Q2));
+  ASSERT_EQ(list_of(A2)(A3), spanning_quadrants(Q1, Q3));
+  ASSERT_EQ(list_of(A3)(A0), spanning_quadrants(Q2, Q0));
+  ASSERT_EQ(list_of(A0)(A1), spanning_quadrants(Q3, Q1));
+
+  ASSERT_EQ(list_of(A1)(A2)(A3), spanning_quadrants(Q0, Q3));
+  ASSERT_EQ(list_of(A2)(A3)(A0), spanning_quadrants(Q1, Q0));
+  ASSERT_EQ(list_of(A3)(A0)(A1), spanning_quadrants(Q2, Q1));
+  ASSERT_EQ(list_of(A0)(A1)(A2), spanning_quadrants(Q3, Q2));
+
+  ASSERT_EQ(list_of(A1)(A2)(A3)(A0), spanning_quadrants(Q0, Q0));
+  ASSERT_EQ(list_of(A2)(A3)(A0)(A1), spanning_quadrants(Q1, Q1));
+  ASSERT_EQ(list_of(A3)(A0)(A1)(A2), spanning_quadrants(Q2, Q2));
+  ASSERT_EQ(list_of(A0)(A1)(A2)(A3), spanning_quadrants(Q3, Q3));
+
+  ASSERT_EQ(list_of(A1), spanning_quadrants(A0, A2));
+  ASSERT_EQ(list_of(A1)(A2)(A3), spanning_quadrants(A0, A0));
+}
+
+
+TEST(CommonTests, TestRectFitting) {
+  Rect a = Rect::from_center_and_size(Vector(0, 0), Vector(10, 10));
+  Rect b = Rect::from_center_and_size(Vector(0, 0), Vector(20, 20));
+  AffineTransform t = b.fit(a);
+  ASSERT_FLOAT_EQ(2.0, t(0, 0));
+  ASSERT_FLOAT_EQ(2.0, t(1, 1));
+
+  Rect c = Rect::from_center_and_size(Vector(0, 0), Vector(10, 10));
+  Rect d = Rect::from_center_and_size(Vector(10, 20), Vector(10, 10));
+  AffineTransform t2 = d.fit(c);
+  ASSERT_FLOAT_EQ(10, t2(0, 2));
+  ASSERT_FLOAT_EQ(20, t2(1, 2));
+
 }

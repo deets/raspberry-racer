@@ -75,13 +75,11 @@ namespace fs = boost::filesystem;
 
   // we want all drawing at (0,0) centered around the middle of the screen
 
-  rracer::Translator* t = new rracer::Translator(size.width / 2.0, size.height / 2.0);
-  // LissajouAnimator* la = new LissajouAnimator(size.width / 4, size.height / 4, 5.5, 15.0);
-  // Image *image = new Image(*_asset_manager, "tests/amiga-ball.png");
-  // la->add_object(image);
-  // t->add_object(la);
-
+  rracer::Rect screen_rect(0, 0, size.width, size.height);
   rracer::Track* track = new rracer::Track(*_asset_manager, "tests/simple-test-track.json");
+
+  rracer::AffineTransformator* t = new rracer::AffineTransformator(screen_rect.fit(track->bounds() * 1.1));
+
   t->add_object(track);
   _world->add_object(t);
 

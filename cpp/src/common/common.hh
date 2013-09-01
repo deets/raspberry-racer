@@ -19,6 +19,10 @@ namespace rracer {
   typedef Eigen::Vector2f Vector;
   typedef float Real;
 
+  AffineTransform rotation(int degree);
+  AffineTransform scale(Real f);
+  AffineTransform translate(const Vector&);
+
   class Rect {
 
   public:
@@ -30,21 +34,34 @@ namespace rracer {
     Rect(Real x, Real y, Real width, Real height);
     static Rect from_corners(const Vector& bottom_left, const Vector& top_right);
     static Rect from_points(const vector<Vector>&);
+    static Rect from_center_and_size(const Vector& center, const Vector& size);
     virtual ~Rect();
 
     Real left() const;
     Real right() const;
     Real top() const;
     Real bottom() const;
-
+    Real width() const;
+    Real height() const;
+    Real ratio() const;
+    Vector center() const;
     bool empty() const;
+    bool contains(const Vector&) const;
 
     bool operator==(const Rect&) const;
     Rect operator|(const Rect&) const;
+    Rect operator*(Real) const;
+    //    Rect operator=(const Rect&) const;
+
+    /**
+     * Returns a transformation so that
+     * the passed rect is scaled and
+     * translated to fit "this"
+     */
+    AffineTransform fit(const Rect& rect) const;
 
   };
 
-  AffineTransform rotation(int degree);
 
   /**
    * Used to classify points
@@ -82,6 +99,13 @@ namespace rracer {
    * also given axis.
    */
   Vector axis_point(const Vector& cp, const Real& radius, const EQuarterClass& axis);
+
+
+  /**
+   * For two quadrants, enumerate all axis spanned by them.
+   * The function assumes always counter clockwise traversal
+   */
+  vector<EQuarterClass> spanning_quadrants(EQuarterClass q1, EQuarterClass q2);
 }
 
 #endif

@@ -90,4 +90,18 @@ namespace rracer {
   }
 
 
+
+  AffineTransformator::AffineTransformator(const AffineTransform& t)
+    : _t(t)
+  {
+  }
+
+  void AffineTransformator::dispatch_render(const OpenVGCompanion& vgc) {
+    MatrixStacker ms(vgc);
+    //  { sx, shy, w0, shx, sy, w1, tx, ty, w2 }
+    VGfloat m[] = { _t(0, 0), _t(1, 0), _t(2, 0), _t(0, 1), _t(1, 1), _t(2, 1), _t(0, 2), _t(1, 2), _t(2, 2)};
+    vgc.vg().vgLoadMatrix(m);
+    WorldObject::dispatch_render(vgc);
+  }
+  
 }; // ns::rracer

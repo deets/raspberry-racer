@@ -1,10 +1,20 @@
 #include <boost/foreach.hpp>
-
 #include <math.h>
 #include "json/json.h"
 #include "world/track.hh"
 
 namespace rracer {
+
+/*		     */
+/* Q1   A1   Q0	     */
+/*      |	     */
+/*      |	     */
+/* A2---+ ---A0	     */
+/*      |	     */
+/*      |	     */
+/* Q2   A3   Q3	     */
+/*		     */
+
 
   TileInfo::TileInfo(const Json::Value tile_info) {
     assert(tile_info.isMember("width") && tile_info["width"].isDouble());
@@ -17,7 +27,7 @@ namespace rracer {
       assert(lane.isMember("center-offset") && lane["center-offset"].isDouble());
       _lane_offsets.push_back(lane["center-offset"].asDouble());
     }
-	 
+
   }
 
   TrackTile::TrackTile(const TileInfo& ti)
@@ -42,7 +52,7 @@ namespace rracer {
   class Straight : public TrackTile {
 
   public:
-    Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
+    Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti)
       : TrackTile(ti)
     {
       assert(tile.isMember("length") && tile["length"].isDouble());
@@ -98,7 +108,7 @@ namespace rracer {
       return (r * center_point) + start.point;
     }
 
-    Curve(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
+    Curve(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti)
       : TrackTile(ti)
     {
       assert(tile.isMember("radius") && tile["radius"].isDouble());
@@ -111,7 +121,7 @@ namespace rracer {
       _end.point = (rotation(_degrees) * swipe) + center_point;
       _end.direction = start.direction + _degrees;
 
-      vector<Vector> points(4);
+      vector<Vector> points;
       AffineTransform t = rotation(_end.direction);
       Vector full_swipe = swipe / swipe.norm() * (_ti.width() + _radius);
       const Vector p1 = center_point + full_swipe;
@@ -119,6 +129,18 @@ namespace rracer {
       points.push_back(center_point);
       points.push_back(p1);
       points.push_back(p2);
+      EQuarterClass p1class = classify_point(center_point, p1);
+      EQuarterClass p2class = classify_point(center_point, p2);
+      // when we are either in different quadrants
+      // or span all four
+      if(p1class != p2class || fabs(_degrees) > 90) {
+	if(SIGN(_degrees) == -1) { // clockwise, so we must swap
+	  swap(p1class, p2class);
+	}
+	BOOST_FOREACH(const EQuarterClass &axis, spanning_quadrants(p1class, p2class)) {
+	  points.push_back(axis_point(center_point, _radius, axis));
+	}
+      }
       _bounds = Rect::from_points(points);
     }
 
@@ -156,7 +178,7 @@ namespace rracer {
     }
   }
 
-  Track::Track(AssetManager& am, fs::path data) 
+  Track::Track(AssetManager& am, fs::path data)
     : _am(am)
   {
     Json::Value json = am.json(data);
@@ -164,15 +186,15 @@ namespace rracer {
     assert(json.isMember("name") && json["name"].isString());
     assert(json.isMember("tile-info") && json["tile-info"].isObject());
     assert(json.isMember("tiles") && json["tiles"].isArray());
-  
+
     _name = json["name"].asString();
 
     _tile_info = shared_ptr<TileInfo>(new TileInfo(json["tile-info"]));
-  
+
     ConnectionPoint connection_point;
     connection_point.point << 0.0, 0.0;
     connection_point.direction = 0.0;
-    
+
     Rect bounds;
     for(int i=0; i < json["tiles"].size(); ++i) {
       Json::Value tile_json = json["tiles"][i];

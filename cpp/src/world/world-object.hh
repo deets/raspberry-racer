@@ -29,10 +29,10 @@ namespace rracer {
 
     friend class World;
 
-  private:
+  protected:
 
-    void dispatch_input_events(const InputEventVector& events, double elapsed);
-    void dispatch_render(const OpenVGCompanion&);
+    virtual void dispatch_input_events(const InputEventVector& events, double elapsed);
+    virtual void dispatch_render(const OpenVGCompanion&);
 
     WorldObjectList _children;
   };
@@ -71,6 +71,14 @@ namespace rracer {
 
   };
 
+
+  class AffineTransformator : public WorldObject {
+    AffineTransform _t;
+  public:
+    AffineTransformator(const AffineTransform& t);
+
+    virtual void dispatch_render(const OpenVGCompanion&);
+  };
 
 }; //ns::rracer
 
