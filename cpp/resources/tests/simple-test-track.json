@@ -24,7 +24,7 @@
         },
         {
             "type" : "straight",
-            "length" : 1000
+            "length" : 100
         },
         {
             "type" : "curve",
@@ -42,7 +42,7 @@
         },
         {
             "type" : "straight",
-            "length" : 1000
+            "length" : 100
         },
         {
             "type" : "curve",

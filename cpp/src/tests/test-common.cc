@@ -39,13 +39,22 @@ TEST(CommonTests, TestRectOperations) {
   ASSERT_EQ(Rect(0, 0, 20, 20), d);
   ASSERT_EQ(Vector(10, 10), d.center());
   Rect e = d * 2.0;
+}
 
-  ASSERT_EQ(d.center(), e.center());
-  ASSERT_FLOAT_EQ(d.size[0] * 2.0, (d * 2.0).size[0]);
-  ASSERT_FLOAT_EQ(d.size[1] * 2.0, (d * 2.0).size[1]);
-
-  ASSERT_TRUE(a.contains(Vector(10, 20)));
-
+TEST(CommonTests, TestRectMultiplication) {
+  {
+    Rect a = Rect(-5, -5, 10, 10);
+    Rect b = a * 2.0;
+    ASSERT_EQ(a.size * 2.0, b.size);
+    ASSERT_EQ(a.center(), b.center());
+  }
+  {
+    Rect a = Rect(0, 0, 10, 10);
+    Rect b = a * 1.1;
+    Vector h = a.size * 1.1;
+    ASSERT_EQ(h, b.size);
+    ASSERT_EQ(a.center(), b.center());
+  }
 }
 
 
@@ -103,17 +112,43 @@ TEST(CommonTests, TestSpanningQuadrants) {
 }
 
 
-TEST(CommonTests, TestRectFitting) {
+TEST(CommonTests, TestRectFittingScale) {
   Rect a = Rect::from_center_and_size(Vector(0, 0), Vector(10, 10));
   Rect b = Rect::from_center_and_size(Vector(0, 0), Vector(20, 20));
   AffineTransform t = b.fit(a);
   ASSERT_FLOAT_EQ(2.0, t(0, 0));
   ASSERT_FLOAT_EQ(2.0, t(1, 1));
+  Vector v(-5, -5);
+  ASSERT_TRUE(a.contains(v));
+  Vector v_ = t * v;
+  ASSERT_FLOAT_EQ(-10, v_[0]);
+  ASSERT_FLOAT_EQ(-10, v_[1]);
+}
 
+
+TEST(CommonTests, TestRectFittingTranslation) {
   Rect c = Rect::from_center_and_size(Vector(0, 0), Vector(10, 10));
-  Rect d = Rect::from_center_and_size(Vector(10, 20), Vector(10, 10));
+  Rect d = Rect::from_center_and_size(Vector(10, 10), Vector(10, 10));
   AffineTransform t2 = d.fit(c);
   ASSERT_FLOAT_EQ(10, t2(0, 2));
-  ASSERT_FLOAT_EQ(20, t2(1, 2));
+  ASSERT_FLOAT_EQ(10, t2(1, 2));
+  Vector v(-5, -5);
+  Vector v_ = t2 * v;
+  ASSERT_FLOAT_EQ(5, v_[0]);
+  ASSERT_FLOAT_EQ(5, v_[1]);
+}
 
+
+TEST(CommonTests, TestRectFittingFullGlory) {
+  Rect c = Rect::from_center_and_size(Vector(-5, -10), Vector(10, 20));
+  Rect d = Rect(0, 0, 40, 30);
+  AffineTransform t2 = d.fit(c);
+  Vector v = c.center();
+  Vector v_ = t2 * v;
+  ASSERT_FLOAT_EQ(20, v_[0]);
+  ASSERT_FLOAT_EQ(15, v_[1]);
+  Vector v2(c.left(), c.bottom());
+  Vector v2_ = t2 * v2;
+  ASSERT_FLOAT_EQ(0, v2_[1]);
+  
 }

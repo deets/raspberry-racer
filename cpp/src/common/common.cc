@@ -107,7 +107,7 @@ namespace rracer {
   }
 
   Rect Rect::operator*(Real f) const {
-    return Rect::from_center_and_size(center(), size * 2.);
+    return Rect::from_center_and_size(center(), size * f);
   }
 
   Rect Rect::from_center_and_size(const Vector& center, const Vector& size) {
@@ -130,7 +130,7 @@ namespace rracer {
     } else {
       sf = height() / rect.height();
     }
-    return scale(sf) * translate(center() - rect.center());
+    return translate(center()) * scale(sf) * translate(-rect.center());
   }
 
   EQuarterClass classify_point(const Vector& cp, const Vector& point) {
