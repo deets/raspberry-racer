@@ -31,10 +31,21 @@ namespace rracer {
     Real width() const {
       return _width;
     }
+
+    /**
+     * Returns the line-offset.
+     * Positive values are left,
+     * Negative right.
+     */
     Real operator[](const size_t index) const {
       assert(index < _lane_offsets.size());
       return _lane_offsets[index];
     }
+
+    int number_of_lanes() const {
+      return _lane_offsets.size();
+    }
+
   };
 
   class TrackTile {
@@ -47,6 +58,7 @@ namespace rracer {
     virtual ConnectionPoint end() const;
     virtual void append_to_ground_path(const OpenVGCompanion&, VGPath ground_path) const=0;
     virtual const Rect bounds() const;
+    virtual Vector position(Real offset, int lane) const=0;
 
   protected:
     Rect _bounds;

@@ -15,9 +15,9 @@ using namespace std;
 
 namespace rracer {
 
-  typedef Eigen::Affine2f AffineTransform;
-  typedef Eigen::Vector2f Vector;
-  typedef float Real;
+  typedef Eigen::Affine2d AffineTransform;
+  typedef Eigen::Vector2d Vector;
+  typedef double Real;
 
   AffineTransform rotation(int degree);
   AffineTransform scale(Real f);

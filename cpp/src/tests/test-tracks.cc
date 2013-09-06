@@ -7,12 +7,13 @@
 #include "common/common.hh"
 
 // include mocks and deps
+#include "tests/json-helper.hh"
 #include "tests/test-openvg-adapter.hh"
 #include "assets/assets.hh"
 
 // include objects under test
 #include "world/track.hh"
-
+#include "world/track-tiles.hh"
 
 using ::testing::_;
 using ::testing::Eq;
@@ -56,4 +57,50 @@ TEST_F(TrackTests, TestSimpleTrackLoading) {
   
 }
 
+void ASSERT_VECTOR_EQ(const Vector& a, const Vector& b) {
+  ASSERT_NEAR(a[0], b[0], 0.000001);
+  ASSERT_NEAR(a[1], b[1], 0.000001);
+}
 
+
+TEST_F(TrackTests, TestTilePositions) {
+  JH ti_json = jh("width", 20.0)("lanes", jh(jh("center-offset", 7.5))(jh("center-offset", -7.5)));
+  TileInfo ti(ti_json);
+  {
+    ConnectionPoint start;
+    start.point = Vector(0, 0);
+    start.direction = 0;
+    JH straight_json = jh("type", "startinggrid")("length", 20.0);
+    Straight straight(straight_json, start, ti);
+    ASSERT_EQ(start.point + Vector(0, 7.5), straight.position(0, 0));
+    ASSERT_EQ(start.point + Vector(0, -7.5), straight.position(0, 1));
+    ASSERT_VECTOR_EQ((start.point + Vector(0, 7.5) + Vector(20, 0)), straight.position(1.0, 0));
+  }
+  {
+    ConnectionPoint start;
+    start.point = Vector(0, 0);
+    start.direction = 90;
+    JH straight_json = jh("type", "startinggrid")("length", 20.0);
+    Straight straight(straight_json, start, ti);
+    ASSERT_VECTOR_EQ(start.point + Vector(-7.5, 0), straight.position(0, 0));
+    ASSERT_VECTOR_EQ(start.point + Vector(7.5, 0), straight.position(0, 1));
+    ASSERT_VECTOR_EQ((start.point + Vector(-7.5, 0) + Vector(0, 20)), straight.position(1.0, 0));
+  }
+
+  {
+    ConnectionPoint start;
+    start.point = Vector(0, 0);
+    start.direction = 0;
+    JH curve_json = jh("type", "curve")("radius", 10.0)("degrees", 90.0);
+    Curve curve(curve_json, start, ti);
+    Vector p1 = curve.position(0, 0);
+    Vector p2 = curve.position(0, 1);
+    ASSERT_VECTOR_EQ(start.point + Vector(0, 7.5), p1);
+    ASSERT_VECTOR_EQ(start.point + Vector(0, -7.5), p2);
+    p1 = curve.position(1.0, 0);
+    p2 = curve.position(1.0, 1);
+    ASSERT_VECTOR_EQ(curve.end().point + Vector(-7.5, 0), p1);
+    ASSERT_VECTOR_EQ(curve.end().point + Vector(7.5, 0), p2);
+  }
+
+}
