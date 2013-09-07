@@ -12,7 +12,7 @@ public:
   // passing through of OpenVG calls
   virtual void vgSeti(VGParamType type, VGint value) const=0;
   virtual void vgSetf(VGParamType type, VGfloat value) const=0;
-  virtual void vgSetfv(VGParamType type, VGint count, VGfloat* values) const=0;
+  virtual void vgSetfv(VGParamType type, VGint count, const VGfloat* values) const=0;
   virtual void vgClear(VGint x, VGint y, VGint width, VGint height) const=0;
   virtual void vgLoadIdentity() const=0;
   virtual VGPaint vgCreatePaint() const=0;
@@ -25,16 +25,16 @@ public:
   virtual void vgSetParameteriv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGint * values) const=0;
+				const VGint * values) const=0;
 
   virtual void vgSetParameterf(VGHandle object,
-                                 VGint paramType,
+			       VGint paramType,
 			       VGfloat value) const=0;
 
   virtual void vgSetParameterfv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGfloat * values) const=0;
+				const VGfloat * values) const=0;
 
 
   virtual void vgDrawPath(VGPath path, VGbitfield paintModes) const=0;

@@ -9,7 +9,7 @@ public:
 
   // OpenVGAdapter implementation
   virtual void vgSetf(VGParamType type, VGfloat value) const;
-  virtual void vgSetfv(VGParamType type, VGint count, VGfloat* value) const;
+  virtual void vgSetfv(VGParamType type, VGint count, const VGfloat* value) const;
   virtual void vgSeti(VGParamType type, VGint value) const;
   virtual void vgClear(VGint x, VGint y, VGint width, VGint height) const;
   virtual void vgLoadIdentity() const;
@@ -23,16 +23,16 @@ public:
   virtual void vgSetParameteriv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGint * values) const;
+				const VGint* values) const;
 
   virtual void vgSetParameterf(VGHandle object,
-                                 VGint paramType,
+			       VGint paramType,
 			       VGfloat value) const;
 
   virtual void vgSetParameterfv(VGHandle object,
 				VGint paramType,
 				VGint count,
-				VGfloat * values) const;
+				const VGfloat* values) const;
 
 
   virtual void vgDrawPath(VGPath path, VGbitfield paintModes) const;

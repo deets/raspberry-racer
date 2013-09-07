@@ -9,7 +9,7 @@
 class TestOpenvgAdaptper : public OpenVGAdapter {
 public:
   MOCK_CONST_METHOD2(vgSetf, void(VGParamType, VGfloat));
-  MOCK_CONST_METHOD3(vgSetfv, void(VGParamType, VGint, VGfloat*));
+  MOCK_CONST_METHOD3(vgSetfv, void(VGParamType, VGint, const VGfloat*));
   MOCK_CONST_METHOD2(vgSeti, void(VGParamType, VGint));
   MOCK_CONST_METHOD4(vgClear, void(VGint, VGint, VGint, VGint));
   MOCK_CONST_METHOD0(vgLoadIdentity, void());
@@ -17,8 +17,8 @@ public:
   MOCK_CONST_METHOD2(vgSetPaint, void(VGPaint, VGbitfield));
   MOCK_CONST_METHOD3(vgSetParameteri, void(VGHandle, VGint, VGint));
   MOCK_CONST_METHOD3(vgSetParameterf, void(VGHandle, VGint, VGfloat));
-  MOCK_CONST_METHOD4(vgSetParameteriv, void(VGHandle, VGint, VGint, VGint*));
-  MOCK_CONST_METHOD4(vgSetParameterfv, void(VGHandle, VGint, VGint, VGfloat*));
+  MOCK_CONST_METHOD4(vgSetParameteriv, void(VGHandle, VGint, VGint, const VGint*));
+  MOCK_CONST_METHOD4(vgSetParameterfv, void(VGHandle, VGint, VGint, const VGfloat*));
   MOCK_CONST_METHOD2(vgDrawPath, void(VGPath, VGbitfield));
   MOCK_CONST_METHOD1(vgDestroyPath, void(VGPath));
   MOCK_CONST_METHOD1(vgDestroyPaint, void(VGPaint));

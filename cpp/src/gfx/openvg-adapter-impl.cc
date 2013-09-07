@@ -8,7 +8,7 @@ void OpenVGAdapterImpl::vgSetf (VGParamType type, VGfloat value) const {
 }
 
 
-void OpenVGAdapterImpl::vgSetfv(VGParamType type, VGint count, VGfloat* value) const {
+void OpenVGAdapterImpl::vgSetfv(VGParamType type, VGint count, const VGfloat* value) const {
   ::vgSetfv(type, count, value);
 }
 
@@ -53,7 +53,7 @@ void OpenVGAdapterImpl::vgSetParameteri(VGHandle object,
 void OpenVGAdapterImpl::vgSetParameteriv(VGHandle object,
 					VGint paramType,
 					VGint count,
-					VGint * values) const {
+					const VGint * values) const {
   ::vgSetParameteriv(object, paramType, count, values);
 }
 
@@ -66,9 +66,9 @@ void OpenVGAdapterImpl::vgSetParameterf(VGHandle object,
 
 
 void OpenVGAdapterImpl::vgSetParameterfv(VGHandle object,
-				VGint paramType,
-				VGint count,
-					VGfloat * values) const {
+					 VGint paramType,
+					 VGint count,
+					 const VGfloat * values) const {
   ::vgSetParameterfv(object, paramType, count, values);
 }
 

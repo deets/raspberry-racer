@@ -40,12 +40,22 @@ namespace rracer {
   };
 
 
-  class MatrixStacker {
+  class MatrixStacker : public NonCopyAble {
     VGfloat _m[9];
     const OpenVGCompanion& _vgc;
   public:
     MatrixStacker(const OpenVGCompanion&);
     virtual ~MatrixStacker();
+  };
+
+
+  class PaintSetter : public NonCopyAble {
+    VGPaint _paint;
+    const OpenVGCompanion& _vgc;
+  public:
+    PaintSetter(const OpenVGCompanion&, const VGfloat* color, VGbitfield paint_mode);
+    virtual ~PaintSetter();
+
   };
 
 }; // ns::rracer

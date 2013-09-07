@@ -142,4 +142,18 @@ namespace rracer {
     _vgc.vg().vgLoadMatrix(_m);
   }
 
+
+  PaintSetter::PaintSetter(const OpenVGCompanion& vgc, const VGfloat* color, VGbitfield paint_mode) 
+    : _vgc(vgc)
+  {
+    _paint = _vgc.vg().vgCreatePaint();
+    _vgc.vg().vgSetParameteri(_paint, VG_PAINT_TYPE, VG_PAINT_TYPE_COLOR);
+    _vgc.vg().vgSetParameterfv(_paint, VG_PAINT_COLOR, 4, color);
+    _vgc.vg().vgSetPaint(_paint, paint_mode);
+  }
+
+  PaintSetter::~PaintSetter() {
+    _vgc.vg().vgDestroyPaint(_paint);
+  }
+
 }; // ns::racer
