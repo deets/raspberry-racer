@@ -68,6 +68,8 @@ namespace rracer {
   public:
     Color(VGfloat red, VGfloat green, VGfloat blue, VGfloat alpha=1.0);
     operator const VGfloat*() const;
+
+    static const Color black;
   };
 
   /**

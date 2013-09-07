@@ -5,10 +5,10 @@
         "width" : 20.0,
         "lanes" : [
             {
-                "center-offset" : -8.5
+                "center-offset" : -5.5
             },
             {
-                "center-offset" : 8.5          
+                "center-offset" : 5.5          
             }
         ]
     },

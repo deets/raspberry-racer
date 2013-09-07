@@ -67,7 +67,6 @@ namespace rracer {
     PathScope(const OpenVGCompanion&, VGbitfield paint_mode);
     operator VGPath() const;
     virtual ~PathScope();
-
   };
 }; // ns::rracer
 

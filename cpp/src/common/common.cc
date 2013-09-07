@@ -227,4 +227,8 @@ namespace rracer {
   Color::operator const VGfloat*() const {
     return _components;
   }
+
+  // Static color definitions
+  const Color Color::black = Color(0, 0, 0);
+
 }; //ns::rracer

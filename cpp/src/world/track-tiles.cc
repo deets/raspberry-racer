@@ -36,14 +36,26 @@ namespace rracer {
   }
 
   void Straight::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
-    PaintScope c(vgc, ground_color, VG_FILL_PATH);
-    PathScope p(vgc, VG_FILL_PATH);
-    const vector<Vector> points = corners();
-    vgc.move_to(p, points[0], VG_ABSOLUTE);
-    vgc.line_to(p, points[1], VG_ABSOLUTE);
-    vgc.line_to(p, points[2], VG_ABSOLUTE);
-    vgc.line_to(p, points[3], VG_ABSOLUTE);
-    vgc.close(p);
+    {
+      PaintScope c(vgc, ground_color, VG_FILL_PATH);
+      PathScope p(vgc, VG_FILL_PATH);
+      const vector<Vector> points = corners();
+      vgc.move_to(p, points[0], VG_ABSOLUTE);
+      vgc.line_to(p, points[1], VG_ABSOLUTE);
+      vgc.line_to(p, points[2], VG_ABSOLUTE);
+      vgc.line_to(p, points[3], VG_ABSOLUTE);
+      vgc.close(p);
+    }
+    // Render slots
+    {
+      PaintScope c(vgc, Color::black, VG_STROKE_PATH);
+      PathScope p(vgc, VG_STROKE_PATH);
+      for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
+	vgc.move_to(p, position(0, lane), VG_ABSOLUTE);
+	vgc.line_to(p, position(1.0, lane), VG_ABSOLUTE);
+      }
+    }
+
   }
 
 
@@ -113,24 +125,36 @@ namespace rracer {
 
 
   void Curve::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
-    PaintScope c(vgc, ground_color, VG_FILL_PATH);
-    PathScope p(vgc, VG_FILL_PATH);
-
     Real w = _ti.width();
-    Vector offset(0, w / 2.0);
-    AffineTransform t = rotation(_start.direction);
-    Vector start_offset = t * offset;
-    t = rotation(_end.direction);
-    Vector end_offset = t * offset;
-    Vector p1 = _start.point + start_offset;
-    Vector p2 = _end.point + end_offset;
-    Vector p3 = _end.point - end_offset;
-    Vector p4 = _start.point - start_offset;
-    vgc.move_to(p, p1, VG_ABSOLUTE);
-    vgc.arc(p, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
-    vgc.line_to(p, p3, VG_ABSOLUTE);
-    vgc.arc(p, VG_SCWARC_TO, p4, _radius + w, _radius + w, _degrees, VG_ABSOLUTE);
-    vgc.close(p);
+    {
+      PaintScope c(vgc, ground_color, VG_FILL_PATH);
+      PathScope p(vgc, VG_FILL_PATH);
+      Vector offset(0, w / 2.0);
+      AffineTransform t = rotation(_start.direction);
+      Vector start_offset = t * offset;
+      t = rotation(_end.direction);
+      Vector end_offset = t * offset;
+      Vector p1 = _start.point + start_offset;
+      Vector p2 = _end.point + end_offset;
+      Vector p3 = _end.point - end_offset;
+      Vector p4 = _start.point - start_offset;
+      vgc.move_to(p, p1, VG_ABSOLUTE);
+      vgc.arc(p, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
+      vgc.line_to(p, p3, VG_ABSOLUTE);
+      vgc.arc(p, VG_SCWARC_TO, p4, _radius + w, _radius + w, _degrees, VG_ABSOLUTE);
+      vgc.close(p);
+    }
+    // Render slots
+    {
+      PaintScope c(vgc, Color::black, VG_STROKE_PATH);
+      PathScope p(vgc, VG_STROKE_PATH);
+      for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
+	VGfloat r = _radius + w / 2.0 - _ti[lane];
+	vgc.move_to(p, position(0, lane), VG_ABSOLUTE);
+	vgc.arc(p, VG_SCCWARC_TO, position(1.0, lane), r, r, _degrees, VG_ABSOLUTE);
+	vgc.close(p);
+      }
+    }
   }
 
 
@@ -173,7 +197,6 @@ namespace rracer {
 	vgc.line_to(p, end + step_y + offset, VG_ABSOLUTE);
 	vgc.line_to(p, end + offset, VG_ABSOLUTE);
 	vgc.close(p);
-
       }
     }
   }
