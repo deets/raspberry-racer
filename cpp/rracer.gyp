@@ -22,6 +22,7 @@
             'src/tests/main.cc',
             'src/world/world.cc',
             'src/world/track.cc',
+            'src/world/car.cc',
             'src/world/track-tiles.cc',
             'src/world/world-object.cc',
             'src/gfx/openvg-companion.cc',
@@ -182,6 +183,7 @@
                 'src/world/track.cc',
                 'src/world/track-tiles.cc',
                 'src/common/common.cc',
+                'src/world/car.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'libraries' : [

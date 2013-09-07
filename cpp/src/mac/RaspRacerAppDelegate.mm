@@ -14,6 +14,7 @@
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
 #include "world/track.hh"
+#include "world/car.hh"
 
 #import "RaspRacerAppDelegate.h"
 
@@ -80,7 +81,9 @@ namespace fs = boost::filesystem;
 
   rracer::AffineTransformator* t = new rracer::AffineTransformator(screen_rect.fit(track->bounds() * 1.1));
 
+  rracer::Car* car = new rracer::Car(*_asset_manager);
   t->add_object(track);
+  t->add_object(car);
   _world->add_object(t);
 
   [_glview setRenderCallback: self];

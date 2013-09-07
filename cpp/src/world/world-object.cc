@@ -100,6 +100,9 @@ namespace rracer {
     MatrixStacker ms(vgc);
     //  { sx, shy, w0, shx, sy, w1, tx, ty, w2 }
     VGfloat m[] = { _t(0, 0), _t(1, 0), _t(2, 0), _t(0, 1), _t(1, 1), _t(2, 1), _t(0, 2), _t(1, 2), _t(2, 2)};
+    vgc.vg().vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
+    vgc.vg().vgLoadMatrix(m);
+    vgc.vg().vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
     vgc.vg().vgLoadMatrix(m);
     WorldObject::dispatch_render(vgc);
   }

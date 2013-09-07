@@ -39,8 +39,6 @@ namespace rracer {
     _ovg_adapter.vgClear(0, 0, ww, wh);
 
 
-    //_ovg_adapter.vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
-    _ovg_adapter.vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
     _ovg_adapter.vgLoadIdentity();
 
     BOOST_FOREACH(WorldObject& obj, _world_objects) {

@@ -149,6 +149,15 @@ void PNGImageData::load(const fs::path &file) {
 	image.get_row(_height - i - 1).begin(), image.get_row(_height - i - 1).end(),
 	_raw->begin() + i*_width);
   }
+  // this clears out any lingering RGB-data
+  // which lingers around in the fully transparent parts
+  // of the image - as those get rendered 
+  // by OpenVG. For whatever reason..
+  for(std::vector< png::rgba_pixel>::iterator it = _raw->begin(); it != _raw->end(); ++it) {
+    if((*it).alpha == 0) {
+      (*it).red = (*it).blue = (*it).green = 0;
+    }
+  }
 }
 
 
