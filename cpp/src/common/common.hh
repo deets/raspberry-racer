@@ -23,6 +23,11 @@ namespace rracer {
   AffineTransform scale(Real f);
   AffineTransform translate(const Vector&);
 
+  typedef struct {
+    Vector point;
+    Real direction;
+  } ConnectionPoint;
+
   class Rect {
 
   public:

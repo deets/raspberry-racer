@@ -16,10 +16,6 @@ using namespace std;
 using namespace boost;;
 
 namespace rracer {
-  typedef struct {
-    Vector point;
-    Real direction;
-  } ConnectionPoint;
 
 
   class TileInfo {

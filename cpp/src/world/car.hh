@@ -7,7 +7,9 @@ namespace rracer {
   class Car : public WorldObject {
 
     AssetManager& _am;
-
+    Real _length;
+    Real _slot_offset;
+    ConnectionPoint _position;
   public:
     Car(AssetManager&);
     virtual ~Car();

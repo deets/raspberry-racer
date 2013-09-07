@@ -6,10 +6,10 @@
         "slot-width" : 0.4,
         "lanes" : [
             {
-                "center-offset" : -5.5
+                "center-offset" : 5.5          
             },
             {
-                "center-offset" : 5.5          
+                "center-offset" : -5.5
             }
         ]
     },
