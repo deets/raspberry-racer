@@ -7,6 +7,7 @@ namespace rracer {
   OpenVGCompanion::OpenVGCompanion(const OpenVGAdapter &vg) :
     _vg(vg)
   {
+    _matrix_stack.push(AffineTransform::Identity());
   }
 
 
@@ -138,15 +139,45 @@ namespace rracer {
     _vg.vgSetf(VG_STROKE_LINE_WIDTH, width);
   }
 
+
+  const AffineTransform& OpenVGCompanion::current_matrix() const {
+    return _matrix_stack.top();
+  }
+
+
+  void OpenVGCompanion::push_matrix(const AffineTransform& t) {
+    _matrix_stack.push(t);
+  }
+
+  void OpenVGCompanion::rmultiply(const AffineTransform& t) {
+    _matrix_stack.push(current_matrix() * t);
+  }
+
+
+  void OpenVGCompanion::pop_matrix() {
+    _matrix_stack.pop();
+  }
+
+  void OpenVGCompanion::set() const {
+    const AffineTransform& t = current_matrix();
+    VGfloat m[] = { t(0, 0), t(1, 0), t(2, 0), t(0, 1), t(1, 1), t(2, 1), t(0, 2), t(1, 2), t(2, 2)};
+    _vg.vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
+    _vg.vgLoadMatrix(m);
+    _vg.vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
+    _vg.vgLoadMatrix(m);
+  }
+
+
   //===========================================
 
-  MatrixStacker::MatrixStacker(const OpenVGCompanion& vgc)
+  MatrixStacker::MatrixStacker(OpenVGCompanion& vgc, const AffineTransform& t)
     : _vgc(vgc)
   {
-    _vgc.vg().vgGetMatrix(_m);
+    _vgc.rmultiply(t);
+    _vgc.set();
   }
   MatrixStacker::~MatrixStacker() {
-    _vgc.vg().vgLoadMatrix(_m);
+    _vgc.pop_matrix();
   }
 
 

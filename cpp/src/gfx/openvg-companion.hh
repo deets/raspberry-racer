@@ -1,15 +1,21 @@
 #ifndef OPENVG_COMPANION_HH
 #define OPENVG_COMPANION_HH
 
+#include <stack>
+
 #include "common/non-copyable.hh"
 #include "common/common.hh"
 #include "assets/assets.hh"
 #include "gfx/openvg-adapter.hh"
 
+using namespace std;
+
 namespace rracer {
   class OpenVGCompanion : public NonCopyAble {
 
     const OpenVGAdapter &_vg;
+
+    stack<AffineTransform> _matrix_stack;
 
   public:
     OpenVGCompanion(const OpenVGAdapter &vg);
@@ -38,14 +44,21 @@ namespace rracer {
     void draw_rect(const Rect&) const;
 
     void stroke_width(const Real) const;
+
+    // Matrix management
+    const AffineTransform& current_matrix() const;
+    void push_matrix(const AffineTransform&);
+    void rmultiply(const AffineTransform&);
+    void pop_matrix();
+    void set() const;
   };
 
 
   class MatrixStacker : public NonCopyAble {
     VGfloat _m[9];
-    const OpenVGCompanion& _vgc;
+    OpenVGCompanion& _vgc;
   public:
-    MatrixStacker(const OpenVGCompanion&);
+    MatrixStacker(OpenVGCompanion&, const AffineTransform&);
     virtual ~MatrixStacker();
   };
 

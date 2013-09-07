@@ -35,7 +35,7 @@ namespace rracer {
     return res;
   }
 
-  void Straight::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
+  void Straight::render(OpenVGCompanion& vgc, const Color& ground_color) const {
     {
       PaintScope c(vgc, ground_color, VG_FILL_PATH);
       PathScope p(vgc, VG_FILL_PATH);
@@ -125,7 +125,7 @@ namespace rracer {
     }
 
 
-  void Curve::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
+  void Curve::render(OpenVGCompanion& vgc, const Color& ground_color) const {
     Real w = _ti.width();
     {
       PaintScope c(vgc, ground_color, VG_FILL_PATH);
@@ -175,7 +175,7 @@ namespace rracer {
   {
   }
 
-  void StartingGrid::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
+  void StartingGrid::render(OpenVGCompanion& vgc, const Color& ground_color) const {
     Straight::render(vgc, ground_color);
 
     // render the checkered start line

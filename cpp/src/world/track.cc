@@ -103,7 +103,7 @@ namespace rracer {
   }
 
 
-  void Track::render(const OpenVGCompanion& vgc) const {
+  void Track::render(OpenVGCompanion& vgc) const {
     const OpenVGAdapter& vg = vgc.vg();
     {
       Color ground_color(.5, .5, .5, 1.0);

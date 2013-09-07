@@ -11,7 +11,7 @@ namespace rracer {
   Car::~Car() {
   }
 
-  void Car::render(const OpenVGCompanion& vgc) const {
+  void Car::render(OpenVGCompanion& vgc) const {
     PaintScope(vgc, Color::black, VG_FILL_PATH | VG_STROKE_PATH);
     const PNGImageData& img_data = _am.image("cars/yellow.png");
     vgc.drawImage(img_data);

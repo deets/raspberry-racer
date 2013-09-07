@@ -62,7 +62,7 @@ namespace rracer {
     static shared_ptr<TrackTile> create_tile(const Json::Value&, const ConnectionPoint&, const TileInfo&);
     virtual ConnectionPoint start() const;
     virtual ConnectionPoint end() const;
-    virtual void render(const OpenVGCompanion&, const Color& ground_color) const=0;
+    virtual void render(OpenVGCompanion&, const Color& ground_color) const=0;
     virtual const Rect bounds() const;
     virtual Vector position(Real offset, int lane) const=0;
 
@@ -87,7 +87,7 @@ namespace rracer {
     size_t count() const;
     TrackTile& operator[](size_t index) const;
 
-    virtual void render(const OpenVGCompanion& vgc) const;
+    virtual void render(OpenVGCompanion& vgc) const;
 
     const Rect bounds() const;
 

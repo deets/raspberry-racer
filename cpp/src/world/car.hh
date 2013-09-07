@@ -12,7 +12,7 @@ namespace rracer {
     Car(AssetManager&);
     virtual ~Car();
 
-    virtual void render(const OpenVGCompanion& vgc) const;
+    virtual void render(OpenVGCompanion& vgc) const;
   };
 
 

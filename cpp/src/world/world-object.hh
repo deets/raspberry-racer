@@ -23,7 +23,7 @@ namespace rracer {
     virtual ~WorldObject() {}
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);
-    virtual void render(const OpenVGCompanion& vgc) const;
+    virtual void render(OpenVGCompanion& vgc) const;
 
     void add_object(WorldObject *obj);
 
@@ -32,7 +32,7 @@ namespace rracer {
   protected:
 
     virtual void dispatch_input_events(const InputEventVector& events, double elapsed);
-    virtual void dispatch_render(const OpenVGCompanion&);
+    virtual void dispatch_render(OpenVGCompanion&);
 
     WorldObjectList _children;
   };
@@ -46,7 +46,7 @@ namespace rracer {
 
   public:
     Image(AssetManager& am, string asset_name);
-    virtual void render(const OpenVGCompanion& vgc) const;
+    virtual void render(OpenVGCompanion& vgc) const;
 
   };
 
@@ -56,7 +56,7 @@ namespace rracer {
     float _x, _y;
   public:
     Translator(float x, float y);
-    virtual void render(const OpenVGCompanion& vgc) const;
+    virtual void render(OpenVGCompanion& vgc) const;
   };
 
 
@@ -67,7 +67,7 @@ namespace rracer {
     LissajouAnimator(float width, float height, float alpha, float _beta);
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);
-    virtual void render(const OpenVGCompanion& vgc) const;
+    virtual void render(OpenVGCompanion& vgc) const;
 
   };
 
@@ -77,7 +77,7 @@ namespace rracer {
   public:
     AffineTransformator(const AffineTransform& t);
 
-    virtual void dispatch_render(const OpenVGCompanion&);
+    virtual void dispatch_render(OpenVGCompanion&);
   };
 
 }; //ns::rracer

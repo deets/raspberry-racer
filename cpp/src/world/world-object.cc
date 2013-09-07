@@ -19,7 +19,7 @@ namespace rracer {
   }
 
 
-  void WorldObject::dispatch_render(const OpenVGCompanion& vgc) {
+  void WorldObject::dispatch_render(OpenVGCompanion& vgc) {
     this->render(vgc);
 
     BOOST_FOREACH(WorldObject& child, _children) {
@@ -33,7 +33,7 @@ namespace rracer {
 
 
 
-  void WorldObject::render(const OpenVGCompanion& vgc) const {
+  void WorldObject::render(OpenVGCompanion& vgc) const {
 
   }
 
@@ -45,7 +45,7 @@ namespace rracer {
   }
 
 
-  void Image::render(const OpenVGCompanion& vgc) const {
+  void Image::render(OpenVGCompanion& vgc) const {
     const PNGImageData& img_data = _am.image(_asset_name);
     VGfloat w = (VGfloat)img_data.width();
     VGfloat h = (VGfloat)img_data.height();
@@ -62,7 +62,7 @@ namespace rracer {
 
   }
 
-  void Translator::render(const OpenVGCompanion& vgc) const {
+  void Translator::render(OpenVGCompanion& vgc) const {
     vgc.vg().vgTranslate(_x, _y);
   }
 
@@ -83,7 +83,7 @@ namespace rracer {
   }
 
 
-  void LissajouAnimator::render(const OpenVGCompanion& vgc) const {
+  void LissajouAnimator::render(OpenVGCompanion& vgc) const {
     float w = sin(_phase * _alpha) * _width / 2.0;
     float h = sin(_phase * _beta) * _height / 2.0;
     vgc.vg().vgTranslate(w, h);
@@ -96,14 +96,8 @@ namespace rracer {
   {
   }
 
-  void AffineTransformator::dispatch_render(const OpenVGCompanion& vgc) {
-    MatrixStacker ms(vgc);
-    //  { sx, shy, w0, shx, sy, w1, tx, ty, w2 }
-    VGfloat m[] = { _t(0, 0), _t(1, 0), _t(2, 0), _t(0, 1), _t(1, 1), _t(2, 1), _t(0, 2), _t(1, 2), _t(2, 2)};
-    vgc.vg().vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
-    vgc.vg().vgLoadMatrix(m);
-    vgc.vg().vgSeti(VG_MATRIX_MODE, VG_MATRIX_PATH_USER_TO_SURFACE);
-    vgc.vg().vgLoadMatrix(m);
+  void AffineTransformator::dispatch_render(OpenVGCompanion& vgc) {
+    MatrixStacker ms(vgc, _t);
     WorldObject::dispatch_render(vgc);
   }
   
