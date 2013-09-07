@@ -3,6 +3,7 @@
     "name" : "Hockenheim",
     "tile-info" : {
         "width" : 20.0,
+        "slot-width" : 0.4,
         "lanes" : [
             {
                 "center-offset" : -5.5

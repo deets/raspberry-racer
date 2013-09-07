@@ -37,6 +37,7 @@ namespace rracer {
 
     void draw_rect(const Rect&) const;
 
+    void stroke_width(const Real) const;
   };
 
 

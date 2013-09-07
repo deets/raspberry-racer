@@ -64,7 +64,7 @@ void ASSERT_VECTOR_EQ(const Vector& a, const Vector& b) {
 
 
 TEST_F(TrackTests, TestTilePositions) {
-  JH ti_json = jh("width", 20.0)("lanes", jh(jh("center-offset", 7.5))(jh("center-offset", -7.5)));
+  JH ti_json = jh("width", 20.0)("slot-width", 0.4)("lanes", jh(jh("center-offset", 7.5))(jh("center-offset", -7.5)));
   TileInfo ti(ti_json);
   {
     ConnectionPoint start;

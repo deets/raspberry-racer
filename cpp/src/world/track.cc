@@ -18,8 +18,10 @@ namespace rracer {
 
   TileInfo::TileInfo(const Json::Value tile_info) {
     assert(tile_info.isMember("width") && tile_info["width"].isDouble());
+    assert(tile_info.isMember("slot-width") && tile_info["slot-width"].isDouble());
     assert(tile_info.isMember("lanes") && tile_info["lanes"].isArray());
     _width = tile_info["width"].asDouble();
+    _slot_width = tile_info["slot-width"].asDouble();
     Json::Value lanes = tile_info["lanes"];
     assert(lanes.size() > 0);
     for(int i = 0; i < lanes.size(); ++i) {

@@ -25,11 +25,17 @@ namespace rracer {
   class TileInfo {
     vector<Real> _lane_offsets;
     Real _width;
+    Real _slot_width;
+
   public:
     TileInfo(const Json::Value tile_info);
 
     Real width() const {
       return _width;
+    }
+
+    Real slot_width() const {
+      return _slot_width;
     }
 
     /**

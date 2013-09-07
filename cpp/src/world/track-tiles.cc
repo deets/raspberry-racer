@@ -50,6 +50,7 @@ namespace rracer {
     {
       PaintScope c(vgc, Color::black, VG_STROKE_PATH);
       PathScope p(vgc, VG_STROKE_PATH);
+      vgc.stroke_width(_ti.slot_width());
       for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
 	vgc.move_to(p, position(0, lane), VG_ABSOLUTE);
 	vgc.line_to(p, position(1.0, lane), VG_ABSOLUTE);
@@ -148,6 +149,7 @@ namespace rracer {
     {
       PaintScope c(vgc, Color::black, VG_STROKE_PATH);
       PathScope p(vgc, VG_STROKE_PATH);
+      vgc.stroke_width(_ti.slot_width());
       for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
 	VGfloat r = _radius + w / 2.0 - _ti[lane];
 	vgc.move_to(p, position(0, lane), VG_ABSOLUTE);

@@ -134,6 +134,12 @@ namespace rracer {
   }
 
 
+  void OpenVGCompanion::stroke_width(const Real width) const {
+    _vg.vgSetf(VG_STROKE_LINE_WIDTH, width);
+  }
+
+  //===========================================
+
   MatrixStacker::MatrixStacker(const OpenVGCompanion& vgc)
     : _vgc(vgc)
   {
