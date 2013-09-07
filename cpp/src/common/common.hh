@@ -4,7 +4,7 @@
 #include <vector>
 #include <cassert>
 #include <math.h>
-
+#include <VG/openvg.h>
 #include <Eigen/Eigen>
 
 #define DEG2RAD(x) ((x / 180.0) * M_PI)
@@ -62,6 +62,13 @@ namespace rracer {
 
   };
 
+  class Color {
+
+    VGfloat _components[4];
+  public:
+    Color(VGfloat red, VGfloat green, VGfloat blue, VGfloat alpha=1.0);
+    operator const VGfloat*() const;
+  };
 
   /**
    * Used to classify points

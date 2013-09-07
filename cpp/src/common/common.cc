@@ -212,4 +212,19 @@ namespace rracer {
     
     return res;
   }
+
+
+  //=========================================
+
+  Color::Color(VGfloat red, VGfloat green, VGfloat blue, VGfloat alpha)
+  {
+    _components[0] = red;
+    _components[1] = green;
+    _components[2] = blue;
+    _components[3] = alpha;
+  }
+
+  Color::operator const VGfloat*() const {
+    return _components;
+  }
 }; //ns::rracer

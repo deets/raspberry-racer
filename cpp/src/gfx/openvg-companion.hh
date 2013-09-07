@@ -49,15 +49,26 @@ namespace rracer {
   };
 
 
-  class PaintSetter : public NonCopyAble {
+  class PaintScope : public NonCopyAble {
     VGPaint _paint;
     const OpenVGCompanion& _vgc;
   public:
-    PaintSetter(const OpenVGCompanion&, const VGfloat* color, VGbitfield paint_mode);
-    virtual ~PaintSetter();
-
+    PaintScope(const OpenVGCompanion&, const Color&, VGbitfield paint_mode);
+    PaintScope(const OpenVGCompanion&, const VGfloat* color, VGbitfield paint_mode);
+    virtual ~PaintScope();
   };
 
+
+  class PathScope : public NonCopyAble {
+    VGPath _path;
+    const OpenVGCompanion& _vgc;
+    const VGbitfield _paint_mode;
+  public:
+    PathScope(const OpenVGCompanion&, VGbitfield paint_mode);
+    operator VGPath() const;
+    virtual ~PathScope();
+
+  };
 }; // ns::rracer
 
 

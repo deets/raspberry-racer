@@ -1,5 +1,6 @@
 #include <string.h>
 #include "gfx/openvg-companion.hh"
+using namespace std;
 
 namespace rracer {
 
@@ -143,7 +144,7 @@ namespace rracer {
   }
 
 
-  PaintSetter::PaintSetter(const OpenVGCompanion& vgc, const VGfloat* color, VGbitfield paint_mode) 
+  PaintScope::PaintScope(const OpenVGCompanion& vgc, const VGfloat* color, VGbitfield paint_mode) 
     : _vgc(vgc)
   {
     _paint = _vgc.vg().vgCreatePaint();
@@ -152,8 +153,36 @@ namespace rracer {
     _vgc.vg().vgSetPaint(_paint, paint_mode);
   }
 
-  PaintSetter::~PaintSetter() {
+
+  PaintScope::PaintScope(const OpenVGCompanion& vgc, const Color& color, VGbitfield paint_mode) 
+    : _vgc(vgc)
+  {
+    _paint = _vgc.vg().vgCreatePaint();
+    _vgc.vg().vgSetParameteri(_paint, VG_PAINT_TYPE, VG_PAINT_TYPE_COLOR);
+    _vgc.vg().vgSetParameterfv(_paint, VG_PAINT_COLOR, 4, color);
+    _vgc.vg().vgSetPaint(_paint, paint_mode);
+  }
+
+  PaintScope::~PaintScope() {
     _vgc.vg().vgDestroyPaint(_paint);
+  }
+
+
+
+  PathScope::PathScope(const OpenVGCompanion& vgc, const VGbitfield paint_mode) 
+    : _vgc(vgc)
+    , _paint_mode(paint_mode)
+  {
+    _path = vgc.newPath();
+  }
+
+  PathScope::operator VGPath() const {
+    return _path;
+  }
+
+  PathScope::~PathScope() {
+    _vgc.vg().vgDrawPath(_path, _paint_mode);
+    _vgc.vg().vgDestroyPaint(_path);
   }
 
 }; // ns::racer

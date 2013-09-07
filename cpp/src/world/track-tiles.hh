@@ -7,7 +7,7 @@ namespace rracer {
     const vector<Vector> corners() const;
   public:
     Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti);
-    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const;
+    virtual void render(const OpenVGCompanion&, const Color& ground_color) const;
     virtual Vector position(Real offset, int lane) const;
   };
 
@@ -18,8 +18,7 @@ namespace rracer {
     static Vector center_point(ConnectionPoint start, Real radius, Real tile_width);
 
     Curve(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti);
-
-    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const;
+    virtual void render(const OpenVGCompanion&, const Color& ground_color) const;
     virtual Vector position(Real offset, int lane) const;
   };
 
@@ -27,7 +26,7 @@ namespace rracer {
   class StartingGrid : public Straight {
   public:
     StartingGrid(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti);
-    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const;
+    virtual void render(const OpenVGCompanion&, const Color& ground_color) const;
   };
 }; // end ns::rracer
 

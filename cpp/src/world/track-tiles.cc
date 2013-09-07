@@ -35,13 +35,15 @@ namespace rracer {
     return res;
   }
 
-  void Straight::append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
+  void Straight::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
+    PaintScope c(vgc, ground_color, VG_FILL_PATH);
+    PathScope p(vgc, VG_FILL_PATH);
     const vector<Vector> points = corners();
-    vgc.move_to(ground_path, points[0], VG_ABSOLUTE);
-    vgc.line_to(ground_path, points[1], VG_ABSOLUTE);
-    vgc.line_to(ground_path, points[2], VG_ABSOLUTE);
-    vgc.line_to(ground_path, points[3], VG_ABSOLUTE);
-    vgc.close(ground_path);
+    vgc.move_to(p, points[0], VG_ABSOLUTE);
+    vgc.line_to(p, points[1], VG_ABSOLUTE);
+    vgc.line_to(p, points[2], VG_ABSOLUTE);
+    vgc.line_to(p, points[3], VG_ABSOLUTE);
+    vgc.close(p);
   }
 
 
@@ -109,7 +111,11 @@ namespace rracer {
       _bounds = Rect::from_points(points);
     }
 
-  void Curve::append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
+
+  void Curve::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
+    PaintScope c(vgc, ground_color, VG_FILL_PATH);
+    PathScope p(vgc, VG_FILL_PATH);
+
     Real w = _ti.width();
     Vector offset(0, w / 2.0);
     AffineTransform t = rotation(_start.direction);
@@ -120,11 +126,11 @@ namespace rracer {
     Vector p2 = _end.point + end_offset;
     Vector p3 = _end.point - end_offset;
     Vector p4 = _start.point - start_offset;
-    vgc.move_to(ground_path, p1, VG_ABSOLUTE);
-    vgc.arc(ground_path, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
-    vgc.line_to(ground_path, p3, VG_ABSOLUTE);
-    vgc.arc(ground_path, VG_SCWARC_TO, p4, _radius + w, _radius + w, _degrees, VG_ABSOLUTE);
-    vgc.close(ground_path);
+    vgc.move_to(p, p1, VG_ABSOLUTE);
+    vgc.arc(p, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
+    vgc.line_to(p, p3, VG_ABSOLUTE);
+    vgc.arc(p, VG_SCWARC_TO, p4, _radius + w, _radius + w, _degrees, VG_ABSOLUTE);
+    vgc.close(p);
   }
 
 
@@ -143,28 +149,33 @@ namespace rracer {
   {
   }
 
-  void StartingGrid::append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
-    const OpenVGAdapter& vg = vgc.vg();
-    Straight::append_to_ground_path(vgc, ground_path);
-    return;
-    // VGPath checkers_path = vgc.newPath();
-    // Real base = _ti.width() / 8.0;
-    // VGfloat black[] = {.0, .0, .0, 1.0};
-    // VGfloat white[] = {1.0, 1.0, 1.0, 1.0};
-    // Vector step_x = rotation(_start.direction) * Vector(base, 0);
-    // Vector step_y = rotation(_start.direction) * Vector(0, base);
-    // Vector end = _end.point;
-    // // VGPaint white_paint = vg.vgCreatePaint();
-    // // vg.vgSetParameterfv(white_paint, VG_PAINT_COLOR, 4, white);
-    // // vg.vgSetPaint(white_paint, VG_FILL_PATH);
-    // vgc.setFillColor(white);
-    // vgc.move_to(checkers_path, end - step_x, VG_ABSOLUTE);
-    // vgc.line_to(checkers_path, end - step_x + step_y, VG_ABSOLUTE);
-    // vgc.line_to(checkers_path, end + step_y, VG_ABSOLUTE);
-    // vgc.line_to(checkers_path, end, VG_ABSOLUTE);
-    // vg.vgDrawPath(checkers_path, VG_FILL_PATH);
-    // vg.vgDestroyPath(checkers_path);
-    // vg.vgDestroyPaint(white_paint);
+  void StartingGrid::render(const OpenVGCompanion& vgc, const Color& ground_color) const {
+    Straight::render(vgc, ground_color);
+
+    // render the checkered start line
+    Real base = _ti.width() / 8.0;
+    Vector step_x = rotation(_start.direction) * Vector(base, 0);
+    Vector step_y = rotation(_start.direction) * Vector(0, base);
+    Vector end = _end.point;
+    {
+      PaintScope white(vgc, Color(1.0, 1.0, 1.0), VG_FILL_PATH);
+      PathScope p(vgc, VG_FILL_PATH);
+      for(int i = 0; i < 4; ++i) {
+	Vector offset = step_y * (2 - i) * 2 - step_y;
+	vgc.move_to(p, end - step_x + offset, VG_ABSOLUTE);
+	vgc.line_to(p, end - step_x + step_y + offset, VG_ABSOLUTE);
+	vgc.line_to(p, end + step_y + offset, VG_ABSOLUTE);
+	vgc.line_to(p, end + offset, VG_ABSOLUTE);
+	vgc.close(p);
+	offset = offset - step_x - step_y;
+	vgc.move_to(p, end - step_x + offset, VG_ABSOLUTE);
+	vgc.line_to(p, end - step_x + step_y + offset, VG_ABSOLUTE);
+	vgc.line_to(p, end + step_y + offset, VG_ABSOLUTE);
+	vgc.line_to(p, end + offset, VG_ABSOLUTE);
+	vgc.close(p);
+
+      }
+    }
   }
 
 
