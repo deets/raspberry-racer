@@ -23,6 +23,12 @@ namespace rracer {
     virtual Vector position(Real offset, int lane) const;
   };
 
+
+  class StartingGrid : public Straight {
+  public:
+    StartingGrid(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti);
+    virtual void append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const;
+  };
 }; // end ns::rracer
 
 #endif

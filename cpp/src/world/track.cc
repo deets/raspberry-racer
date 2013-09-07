@@ -103,21 +103,23 @@ namespace rracer {
 
   void Track::render(const OpenVGCompanion& vgc) const {
     const OpenVGAdapter& vg = vgc.vg();
-    VGPath ground_path = vgc.newPath();
+    {
+      VGfloat ground_color [] ={.5, .5, .5, 1.0};
+      //      PaintSetter(vgc, ground_color, VG_FILL_PATH);
+      VGPaint ground_paint = vg.vgCreatePaint();
+      vg.vgSetParameteri(ground_paint, VG_PAINT_TYPE, VG_PAINT_TYPE_COLOR);
+      VGfloat color_components[4] = {.5, .5, .5, 1.0};
+      vg.vgSetParameterfv(ground_paint, VG_PAINT_COLOR, 4, color_components);
+      vg.vgSetPaint(ground_paint, VG_FILL_PATH|VG_STROKE_PATH);
 
-    VGPaint ground_paint = vg.vgCreatePaint();
-    vg.vgSetParameteri(ground_paint, VG_PAINT_TYPE, VG_PAINT_TYPE_COLOR);
-    VGfloat color_components[4] = {.5, .5, .5, 1.0};
-    vg.vgSetParameterfv(ground_paint, VG_PAINT_COLOR, 4, color_components);
-    vg.vgSetPaint(ground_paint, VG_FILL_PATH|VG_STROKE_PATH);
-
-    BOOST_FOREACH(shared_ptr<TrackTile> tile, _tiles) {
-      tile->append_to_ground_path(vgc, ground_path);
+      VGPath ground_path = vgc.newPath();
+      
+      BOOST_FOREACH(shared_ptr<TrackTile> tile, _tiles) {
+	tile->append_to_ground_path(vgc, ground_path);
+      }
+      vg.vgDrawPath(ground_path, VG_FILL_PATH);
+      vg.vgDestroyPath(ground_path);
     }
-
-    vg.vgDrawPath(ground_path, VG_FILL_PATH);
-    vg.vgDestroyPath(ground_path);
-    vg.vgDestroyPaint(ground_paint);
 
     if(false) {
       VGfloat debug_color[] = {1.0, 1.0, 0, 1.0};

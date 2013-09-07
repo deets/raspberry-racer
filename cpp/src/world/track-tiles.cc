@@ -137,13 +137,44 @@ namespace rracer {
     return cp + (rotation(offset * _degrees) * v);
   }
 
+
+  StartingGrid::StartingGrid(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
+    : Straight(tile, start, ti)
+  {
+  }
+
+  void StartingGrid::append_to_ground_path(const OpenVGCompanion& vgc, VGPath ground_path) const {
+    const OpenVGAdapter& vg = vgc.vg();
+    Straight::append_to_ground_path(vgc, ground_path);
+    return;
+    // VGPath checkers_path = vgc.newPath();
+    // Real base = _ti.width() / 8.0;
+    // VGfloat black[] = {.0, .0, .0, 1.0};
+    // VGfloat white[] = {1.0, 1.0, 1.0, 1.0};
+    // Vector step_x = rotation(_start.direction) * Vector(base, 0);
+    // Vector step_y = rotation(_start.direction) * Vector(0, base);
+    // Vector end = _end.point;
+    // // VGPaint white_paint = vg.vgCreatePaint();
+    // // vg.vgSetParameterfv(white_paint, VG_PAINT_COLOR, 4, white);
+    // // vg.vgSetPaint(white_paint, VG_FILL_PATH);
+    // vgc.setFillColor(white);
+    // vgc.move_to(checkers_path, end - step_x, VG_ABSOLUTE);
+    // vgc.line_to(checkers_path, end - step_x + step_y, VG_ABSOLUTE);
+    // vgc.line_to(checkers_path, end + step_y, VG_ABSOLUTE);
+    // vgc.line_to(checkers_path, end, VG_ABSOLUTE);
+    // vg.vgDrawPath(checkers_path, VG_FILL_PATH);
+    // vg.vgDestroyPath(checkers_path);
+    // vg.vgDestroyPaint(white_paint);
+  }
+
+
   // Factory function, declared in track.hh
 
   shared_ptr<TrackTile> TrackTile::create_tile(const Json::Value& tile, const ConnectionPoint& start, const TileInfo &ti) {
     assert(tile.isMember("type"));
     string type = tile["type"].asString();
     if(type == "startinggrid") {
-      return shared_ptr<TrackTile>(new Straight(tile, start, ti));
+      return shared_ptr<TrackTile>(new StartingGrid(tile, start, ti));
     } else if(type == "curve") {
       return shared_ptr<TrackTile>(new Curve(tile, start, ti));
     } else if(type == "straight") {
@@ -152,5 +183,7 @@ namespace rracer {
       assert(false);
     }
   }
+
+
 
 }; // end ns::rracer

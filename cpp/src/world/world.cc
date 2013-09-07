@@ -33,7 +33,8 @@ namespace rracer {
   
     VGint ww = _window_adapter.window_dimensions().first;
     VGint wh = _window_adapter.window_dimensions().second;
-    VGfloat black[] = {1.0,0,0,1.0};
+    VGfloat black[] = {0.0,0,0,1.0};
+    VGfloat red[] = {1.0,0,0,1.0};
     _ovg_adapter.vgSetfv(VG_CLEAR_COLOR, 4, black);
     _ovg_adapter.vgClear(0, 0, ww, wh);
 
