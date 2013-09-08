@@ -11,9 +11,19 @@ namespace rracer {
     , _ovg_adapter(ovg_adapter)
     , _has_ended(false)
   {
+    b2Vec2 gravity(0, 0);
+    _world = new b2World(gravity);
   }
 
 
+  World::~World() {
+    delete _world;
+  }
+
+
+  b2World* World::world() const {
+    return _world;
+  }
 
 
   void World::begin(const InputEventVector& events, float elapsed) {
@@ -54,6 +64,7 @@ namespace rracer {
 
   void World::add_object(WorldObject* obj) {
     _world_objects.push_back(*obj);
+    obj->physics_setup(world());
   }
 
 }; // ns::rracer

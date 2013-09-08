@@ -3,6 +3,7 @@
 
 #include <string>
 #include <boost/intrusive/list.hpp>
+#include <Box2D/Box2D.h>
 
 #include "events/events.hh"
 #include "gfx/openvg-companion.hh"
@@ -24,6 +25,7 @@ namespace rracer {
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);
     virtual void render(OpenVGCompanion& vgc) const;
+    virtual void physics_setup(b2World *);
 
     void add_object(WorldObject *obj);
 

@@ -81,7 +81,7 @@ namespace fs = boost::filesystem;
 
   rracer::AffineTransformator* t = new rracer::AffineTransformator(screen_rect.fit(track->bounds() * 1.1));
 
-  rracer::Car* car = new rracer::Car(*_asset_manager);
+  rracer::Car* car = new rracer::Car(*_asset_manager, "cars/car-one.json");
   t->add_object(track);
   t->add_object(car);
   _world->add_object(t);

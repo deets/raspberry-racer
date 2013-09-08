@@ -9,7 +9,7 @@ using namespace std;
 
 typedef pair<int, int> int_pair;
 
-class TestWindowAdaptper : public WindowAdapter {
+class TestWindowAdapter : public WindowAdapter {
 
 public:
   MOCK_METHOD0(window_dimensions, int_pair());

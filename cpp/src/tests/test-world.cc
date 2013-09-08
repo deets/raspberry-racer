@@ -37,12 +37,12 @@ public:
 
 class WorldTests : public ::testing::Test {
 public:
-  TestWindowAdaptper* window_adapter;
+  TestWindowAdapter* window_adapter;
   NiceMock<TestOpenvgAdaptper>* ovg_adapter;
 
   virtual void SetUp() {
     ovg_adapter = new NiceMock<TestOpenvgAdaptper>();
-    window_adapter = new TestWindowAdaptper();
+    window_adapter = new TestWindowAdapter();
     EXPECT_CALL(*window_adapter, start()).Times(1);
     EXPECT_CALL(*window_adapter, end()).Times(1);
     EXPECT_CALL(*window_adapter, window_dimensions()).WillRepeatedly(Return(make_pair(1920, 1080)));

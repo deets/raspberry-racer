@@ -31,7 +31,9 @@
             'src/tests/test-world.cc',
             'src/tests/test-openvg-companion.cc',
             'src/tests/test-tracks.cc',
+            'src/tests/test-cars.cc',
             'src/tests/test-system-time.cc',
+            'src/tests/json-helper.cc',
             'src/common/common.cc',
             'third-party/jsoncpp/jsoncpp.cpp',
         ],
@@ -93,6 +95,7 @@
                           '-lboost_filesystem-mt',
                           '-lboost_system-mt',
                           '-lpng15',
+                          '-lBox2D',
                           ],
                       },
                   ],
@@ -204,7 +207,8 @@
                 'libraries': [
                     '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
                     '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
-                    "/opt/ShivaVG/lib/libOpenVG.a",
+                    '/opt/ShivaVG/lib/libOpenVG.a',
+                    '-lBox2D',
                     ],
                 },
             'include_dirs' : [
