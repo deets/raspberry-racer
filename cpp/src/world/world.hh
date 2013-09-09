@@ -14,6 +14,7 @@
 
 namespace rracer {
 
+  #define WORLD_FRAMERATE 60.0
   #define WORLD_VELOCITY_ITERATIONS 6
   #define WORLD_POSITION_ITERATIONS 2
 

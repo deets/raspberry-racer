@@ -86,7 +86,7 @@ namespace fs = boost::filesystem;
   _world = new rracer::World(*_window_adapter, *_window_adapter);
 
   _debug_renderer = new rracer::DebugRenderer(*_window_adapter);
-  _debug_renderer->SetFlags(b2Draw::e_shapeBit);
+  _debug_renderer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
   _world->set_debug_renderer(_debug_renderer);
   // we want all drawing at (0,0) centered around the middle of the screen
 
@@ -103,7 +103,7 @@ namespace fs = boost::filesystem;
   _world->add_object(t);
 
   [_glview setRenderCallback: self];
-  _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / 30.0 target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
+  _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / WORLD_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
 
 }
 

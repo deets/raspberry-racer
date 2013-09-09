@@ -27,6 +27,7 @@ namespace rracer {
 
   void DebugRenderer::draw_polygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color, const VGbitfield fill_type) {
     MatrixStacker(*_vgc, _world_transform());
+    _vgc->stroke_width(1.0);
     PaintScope paint(*_vgc, Color(color.r, color.g, color.b, _alpha), fill_type);
     PathScope p(*_vgc, fill_type);
     assert(vertexCount > 1);
@@ -48,8 +49,28 @@ namespace rracer {
   }
 
 
-  void DebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) {}
-  void DebugRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) {}
+  void DebugRenderer::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color) {
+    MatrixStacker(*_vgc, _world_transform());
+    PaintScope paint(*_vgc, Color(color.r, color.g, color.b, _alpha), VG_STROKE_PATH);
+    _vgc->stroke_width(1.0);
+    VGPath path = _vgc->newPath();
+    _vgc->vg().vguEllipse(path, center.x, center.y, radius, radius);
+    _vgc->vg().vgDrawPath(path, VG_STROKE_PATH);
+    _vgc->vg().vgDestroyPath(path);
+  }
+
+
+  void DebugRenderer::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color) {
+    MatrixStacker(*_vgc, _world_transform());
+    PaintScope paint(*_vgc, Color(color.r, color.g, color.b, _alpha), VG_FILL_PATH);
+    _vgc->stroke_width(1.0);
+    VGPath path = _vgc->newPath();
+    _vgc->vg().vguEllipse(path, center.x, center.y, radius, radius);
+    _vgc->vg().vgDrawPath(path, VG_FILL_PATH);
+    _vgc->vg().vgDestroyPath(path);
+  }
+
+
   void DebugRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) {}
   void DebugRenderer::DrawTransform(const b2Transform& xf) {}
 

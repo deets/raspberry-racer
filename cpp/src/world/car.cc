@@ -63,7 +63,7 @@ namespace rracer {
     body_def.angle = 0.0f;
     _body = world->CreateBody(&body_def);
     b2PolygonShape chassis;
-    chassis.SetAsBox(_length, _width);
+    chassis.SetAsBox(_length / 2.0, _width / 2.0); // box2d uses half-widths here
     b2FixtureDef fixture_def;
     fixture_def.shape = &chassis;
     fixture_def.friction = 0.0f;
