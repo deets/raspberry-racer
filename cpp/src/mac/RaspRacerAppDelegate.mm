@@ -28,7 +28,7 @@ namespace fs = boost::filesystem;
 - (id) init {
   self = [super init];
   _window_adapter = 0;
-  _asset_manager = 0;
+  _asset_manager = _car_asset_manager = 0;
   _world = 0;
   _events = new InputEventVector();
   _world_timer = new Timer();
@@ -43,6 +43,10 @@ namespace fs = boost::filesystem;
   }
   if (_asset_manager) {
     delete _asset_manager;
+  }
+
+  if (_car_asset_manager) {
+    delete _car_asset_manager;
   }
 
   if(_events) {
@@ -71,6 +75,7 @@ namespace fs = boost::filesystem;
 
   fs::path bundle_resources([[[NSBundle mainBundle] resourcePath] UTF8String]);
   _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
+  _car_asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources" / "cars");
 
   _world = new rracer::World(*_window_adapter, *_window_adapter);
 
@@ -81,7 +86,8 @@ namespace fs = boost::filesystem;
 
   rracer::AffineTransformator* t = new rracer::AffineTransformator(screen_rect.fit(track->bounds() * 1.1));
 
-  rracer::Car* car = new rracer::Car(*_asset_manager, "cars/car-one.json");
+  rracer::Car* car = new rracer::Car(*_car_asset_manager, _car_asset_manager->json("car-one.json"));
+  car->physics_setup(_world->world());
   t->add_object(track);
   t->add_object(car);
   _world->add_object(t);

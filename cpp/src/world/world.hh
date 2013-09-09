@@ -13,6 +13,8 @@
 
 namespace rracer {
 
+  #define WORLD_VELOCITY_ITERATIONS 6
+  #define WORLD_POSITION_ITERATIONS 2
 
   class World {
     bool _has_ended;
@@ -28,7 +30,7 @@ namespace rracer {
     World(WindowAdapter &, OpenVGAdapter &);
     virtual ~World();
 
-    void begin(const InputEventVector &events, float elapsed);
+    void begin(const InputEventVector &events, Real elapsed);
     void end();
     bool has_ended() { return _has_ended; };
 

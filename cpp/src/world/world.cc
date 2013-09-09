@@ -26,7 +26,7 @@ namespace rracer {
   }
 
 
-  void World::begin(const InputEventVector& events, float elapsed) {
+  void World::begin(const InputEventVector& events, Real elapsed) {
     _window_adapter.start();
 
     BOOST_FOREACH(const InputEvent event, events) {
@@ -38,6 +38,9 @@ namespace rracer {
     BOOST_FOREACH(WorldObject& obj, _world_objects) {
       obj.dispatch_input_events(events, elapsed);
     }
+
+    // simulate physics
+    _world->Step(elapsed, WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
 
     OpenVGCompanion vgc(_ovg_adapter);
   
