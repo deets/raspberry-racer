@@ -1,4 +1,4 @@
 :name "rasbperry-racer"
-;:debug-command "out/Debug/MacRaspberryRacer.app/Contents/MacOS/MacRaspberryRacer"
-:debug-command "out/Debug/test"
+:debug-command "out/Debug/MacRaspberryRacer.app/Contents/MacOS/MacRaspberryRacer"
+;:debug-command "out/Debug/test"
 :compile-command "./build.sh"

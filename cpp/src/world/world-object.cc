@@ -9,8 +9,10 @@ namespace rracer {
     _children.push_back(*child);
   }
 
+
   void WorldObject::physics_setup(b2World* ) {
   }
+
 
   void WorldObject::dispatch_input_events(const InputEventVector& events, double elapsed) {
     this->process_input_events(events, elapsed);
@@ -29,14 +31,11 @@ namespace rracer {
     }
   }
 
-
   void WorldObject::process_input_events(const InputEventVector&, double elapsed) {
   }
 
 
-
   void WorldObject::render(OpenVGCompanion& vgc) const {
-
   }
 
 
@@ -97,6 +96,12 @@ namespace rracer {
     : _t(t)
   {
   }
+
+
+  AffineTransform AffineTransformator::affine_transform() const {
+    return _t;
+  }
+
 
   void AffineTransformator::dispatch_render(OpenVGCompanion& vgc) {
     MatrixStacker ms(vgc, _t);

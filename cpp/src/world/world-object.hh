@@ -79,6 +79,7 @@ namespace rracer {
   public:
     AffineTransformator(const AffineTransform& t);
 
+    AffineTransform affine_transform() const;
     virtual void dispatch_render(OpenVGCompanion&);
   };
 

@@ -5,6 +5,7 @@
 #include <cassert>
 #include <math.h>
 #include <VG/openvg.h>
+#include <Box2D/Box2D.h>
 #include <Eigen/Eigen>
 
 #define DEG2RAD(x) ((x / 180.0) * M_PI)
@@ -75,7 +76,11 @@ namespace rracer {
     operator const VGfloat*() const;
 
     static const Color black;
+    static const Color yellow;
   };
+
+
+  Vector vconv(b2Vec2);
 
   /**
    * Used to classify points

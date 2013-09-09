@@ -7,6 +7,7 @@
 #include "world/world.hh"
 #include "common/time.hh"
 #include "RaspRacerView.h"
+#include "debug/debug.hh"
 
 
 @interface RaspRacerAppDelegate : NSObject <NSApplicationDelegate, RRRenderCallback> {
@@ -17,6 +18,8 @@
   MacWindowAdapter* _window_adapter;
   AssetManager* _asset_manager;
   AssetManager* _car_asset_manager;
+
+  rracer::DebugRenderer* _debug_renderer;
 
   InputEventVector* _events;
   rracer::World* _world;

@@ -24,7 +24,6 @@ namespace rracer {
     virtual ~Car();
 
     virtual void render(OpenVGCompanion& vgc) const;
-
     virtual void physics_setup(b2World *);
 
   };

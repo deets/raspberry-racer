@@ -24,6 +24,9 @@ namespace rracer {
     return t.translate(v);
   }
 
+  Vector vconv(b2Vec2 v) {
+    return Vector(v.x, v.y);
+  }
 
   Rect::Rect() 
     : origin(0, 0)
@@ -213,7 +216,6 @@ namespace rracer {
     return res;
   }
 
-
   //=========================================
 
   Color::Color(VGfloat red, VGfloat green, VGfloat blue, VGfloat alpha)
@@ -230,5 +232,6 @@ namespace rracer {
 
   // Static color definitions
   const Color Color::black = Color(0, 0, 0);
+  const Color Color::yellow = Color(1, 1, 0);
 
 }; //ns::rracer

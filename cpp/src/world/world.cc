@@ -10,14 +10,21 @@ namespace rracer {
     : _window_adapter(window_adapter)
     , _ovg_adapter(ovg_adapter)
     , _has_ended(false)
+    , _debug_renderer(0)
   {
-    b2Vec2 gravity(0, 0);
+    b2Vec2 gravity(10.0, 0);
     _world = new b2World(gravity);
   }
 
 
   World::~World() {
     delete _world;
+  }
+
+
+  void World::set_debug_renderer(DebugRenderer* dr) {
+    _debug_renderer = dr;
+    _world->SetDebugDraw(dr);
   }
 
 
@@ -57,6 +64,11 @@ namespace rracer {
     BOOST_FOREACH(WorldObject& obj, _world_objects) {
       obj.dispatch_render(vgc);
     }
+
+    if(_debug_renderer) {
+      _debug_renderer->render(_world);
+    }
+
   }
 
 

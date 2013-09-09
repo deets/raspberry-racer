@@ -10,6 +10,7 @@
 #include <vg/openvg.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/bind.hpp>
 
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
@@ -57,6 +58,11 @@ namespace fs = boost::filesystem;
     delete _world;
   }
 
+
+  if(_debug_renderer) {
+    delete _debug_renderer;
+  }
+
   if(_world_timer) {
     delete _world_timer;
   }
@@ -79,6 +85,9 @@ namespace fs = boost::filesystem;
 
   _world = new rracer::World(*_window_adapter, *_window_adapter);
 
+  _debug_renderer = new rracer::DebugRenderer(*_window_adapter);
+  _debug_renderer->SetFlags(b2Draw::e_shapeBit);
+  _world->set_debug_renderer(_debug_renderer);
   // we want all drawing at (0,0) centered around the middle of the screen
 
   rracer::Rect screen_rect(0, 0, size.width, size.height);
@@ -90,6 +99,7 @@ namespace fs = boost::filesystem;
   car->physics_setup(_world->world());
   t->add_object(track);
   t->add_object(car);
+  _debug_renderer->world_transform(boost::bind(&rracer::AffineTransformator::affine_transform, t));
   _world->add_object(t);
 
   [_glview setRenderCallback: self];
