@@ -1,6 +1,7 @@
 #include <boost/foreach.hpp>
 #include <math.h>
 #include "json/json.h"
+
 #include "world/track.hh"
 
 namespace rracer {

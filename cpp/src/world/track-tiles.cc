@@ -7,18 +7,16 @@ namespace rracer {
       : TrackTile(ti)
     {
       assert(tile.isMember("length") && tile["length"].isDouble());
-      Real length = tile["length"].asDouble();
+      _length = tile["length"].asDouble();
       AffineTransform t = rotation(start.direction);
-      Vector l;
-      l << length, 0;
+      Vector l(_length, 0);
       l = t * l;
       _start = start;
       _end.point = _start.point + l;
       _end.direction = _start.direction;
-
       _bounds = Rect::from_points(corners());
-
     }
+
 
   const vector<Vector> Straight::corners() const {
     vector<Vector> res;
@@ -33,6 +31,23 @@ namespace rracer {
     res.push_back(end - offset);
     res.push_back(start - offset);
     return res;
+  }
+
+  NearestPointInfo Straight::nearest_point(const Vector& slot_position) const {
+    vector<NearestPointInfo> results;
+    for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
+      NearestPointInfo npi;
+      npi.lane = lane;
+      const Vector start = position(0, lane);
+      const Vector n = rotation(_start.direction) * Vector(0, 1.0);
+      npi.distance = fabs((slot_position - start).dot(n));
+      const Vector d = rotation(_start.direction) * Vector(1.0, 0);
+      npi.offset = (slot_position - start).dot(d) / _length;
+      npi.point = start + (d * npi.offset * _length);
+      results.push_back(npi);
+    }
+    sort(results.begin(), results.end());
+    return results[0];
   }
 
   void Straight::render(OpenVGCompanion& vgc, const Color& ground_color) const {
@@ -87,6 +102,13 @@ namespace rracer {
     AffineTransform r = rotation(start.direction);
     return (r * center_point) + start.point;
   }
+
+
+  NearestPointInfo Curve::nearest_point(const Vector& slot_position) const {
+    NearestPointInfo npi;
+    return npi;
+  }
+
 
   Curve::Curve(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti)
       : TrackTile(ti)

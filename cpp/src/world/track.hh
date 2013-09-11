@@ -50,6 +50,18 @@ namespace rracer {
 
   };
 
+  struct NearestPointInfo {
+    int lane;
+    Vector point;
+    Real offset;
+    Real distance;
+
+    bool operator<(const NearestPointInfo& other) const {
+      return fabs(this->distance) < fabs(other.distance);
+    }
+
+  };
+
   class TrackTile {
 
 
@@ -61,7 +73,7 @@ namespace rracer {
     virtual void render(OpenVGCompanion&, const Color& ground_color) const=0;
     virtual const Rect bounds() const;
     virtual Vector position(Real offset, int lane) const=0;
-
+    virtual NearestPointInfo nearest_point(const Vector&) const=0;
   protected:
     Rect _bounds;
     const TileInfo& _ti;

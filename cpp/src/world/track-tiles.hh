@@ -4,11 +4,13 @@
 
 namespace rracer {
   class Straight : public TrackTile {
+    Real _length;
     const vector<Vector> corners() const;
   public:
     Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti);
     virtual void render(OpenVGCompanion&, const Color& ground_color) const;
     virtual Vector position(Real offset, int lane) const;
+    virtual NearestPointInfo nearest_point(const Vector&) const;
   };
 
   class Curve : public TrackTile {
@@ -20,6 +22,7 @@ namespace rracer {
     Curve(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti);
     virtual void render(OpenVGCompanion&, const Color& ground_color) const;
     virtual Vector position(Real offset, int lane) const;
+    virtual NearestPointInfo nearest_point(const Vector&) const;
   };
 
 
