@@ -54,19 +54,38 @@ public:
 };  
 
 
+class TestCar : public Car {
+
+public:
+  TestCar(AssetManager& am, const Json::Value& def) 
+    : Car(am, def) 
+  {
+  }
+  int wheel_count() const { return _wheels.size(); }
+  int destroyer_count() const { return _destroyers.size(); }
+};
+
+
 TEST_F(CarTests, TestCarLoading) {
   JH car_info = jh
     ("image", "yellow.png")
     ("length", 12.0)
-    ("width", 1.0)
+    ("width", 8.0)
     ("mass", 100)
     ("slot-offset", 3.0)
+    ("wheels", 
+     jh
+     (jh("offset", jh(-5.0)(2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
+     (jh("offset", jh(-5.0)(-2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
+    )
     ;
   InputEventVector events;
   World world(*window_adapter, *ovg_adapter);
   {
-    Car* car = new Car(*asset_manager, car_info);
+    TestCar* car = new TestCar(*asset_manager, car_info);
     world.add_object(car);
     world.begin(events, 1/30.0);
+    ASSERT_EQ(2, car->wheel_count());
+    ASSERT_EQ(3, car->destroyer_count());
   }
 }

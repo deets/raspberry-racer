@@ -8,6 +8,7 @@ using namespace std;
 enum EKeys {
   K_UNKNOWN = 0,
   K_ESC = 1,
+  K_d = 2,
   K_h = 4
 };
 

@@ -13,6 +13,7 @@ namespace rracer {
     const Fontinfo _fi;
     World* _world;
     bool _visible;
+    bool _debug_renderer_set;
   public:
     HUD(const Vector& position, const Fontinfo&, OpenVGAdapter&vg, World* world, function<AffineTransform ()> world_transform);
     virtual ~HUD();

@@ -12,7 +12,7 @@ namespace rracer {
     , _has_ended(false)
     , _debug_renderer(0)
   {
-    b2Vec2 gravity(10.0, 0);
+    b2Vec2 gravity(.0, 0);
     _world = new b2World(gravity);
   }
 

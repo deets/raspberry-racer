@@ -151,11 +151,14 @@ namespace fs = boost::filesystem;
     game_event.scancode = [event keyCode];
 
     switch(game_event.scancode) {
-    case 53:  // esc
-      game_event.key = K_ESC;
+    case 2:
+      game_event.key = K_d;
       break;
-    case 4: // h
+    case 4:
       game_event.key = K_h;
+      break;
+    case 53:
+      game_event.key = K_ESC;
       break;
     default:
       game_event.key = K_UNKNOWN;
