@@ -105,8 +105,27 @@ namespace rracer {
 
 
   NearestPointInfo Curve::nearest_point(const Vector& slot_position) const {
-    NearestPointInfo npi;
-    return npi;
+    vector<NearestPointInfo> results;
+    const Vector cp = center_point(_start, _radius, _ti.width());
+    const Vector swipe = _start.point - cp;
+    const Vector norm = swipe / swipe.norm();
+    const Vector p = slot_position - cp;
+    const Real angle = ::acos((swipe / swipe.norm()).dot(p / p.norm())) / M_PI * 180;
+    const Real offset = angle / _degrees;
+    const AffineTransform r = rotation(angle);
+    for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
+      const Real tile_offset = _ti.width() / 2.0 + _radius - _ti[lane];
+      const Vector point = r * norm * tile_offset + cp;
+      NearestPointInfo npi = { 
+	lane,
+	point,
+	offset,
+	(point - slot_position).norm()
+      };
+      results.push_back(npi);
+    }
+    sort(results.begin(), results.end());
+    return results[0];
   }
 
 

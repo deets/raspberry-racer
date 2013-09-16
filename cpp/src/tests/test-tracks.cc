@@ -127,4 +127,22 @@ TEST_F(TrackTests, TestNearestPoint) {
     ASSERT_FLOAT_EQ(.5, pi.offset);
     ASSERT_FLOAT_EQ(1.0, pi.distance);
   }
+
+  {
+    ConnectionPoint start;
+    start.point = Vector(0, 0);
+    start.direction = 0;
+    JH curve_json = jh("type", "curve")("radius", 10.0)("degrees", 90.0);
+    Curve curve(curve_json, start, ti);
+    Vector cp(0, 20);
+    Vector swipe(0, -20 + 8);
+    const Vector rp = rotation(45) * swipe;
+    Vector np = rp + cp;
+    NearestPointInfo pi = curve.nearest_point(np);
+    //ASSERT_VECTOR_EQ(lane_point, pi.point);
+    ASSERT_EQ(0, pi.lane);
+    ASSERT_FLOAT_EQ(.5, pi.offset);
+    ASSERT_FLOAT_EQ(.5, pi.distance);
+  }
+
 }

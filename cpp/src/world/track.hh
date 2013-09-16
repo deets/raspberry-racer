@@ -53,7 +53,7 @@ namespace rracer {
   struct NearestPointInfo {
     int lane;
     Vector point;
-    Real offset;
+    Real offset; // the offset in tile-parametrization
     Real distance;
 
     bool operator<(const NearestPointInfo& other) const {
