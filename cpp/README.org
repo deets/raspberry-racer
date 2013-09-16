@@ -1,6 +1,9 @@
 * TODOs
 
-** DONE check out difftime, it looks fishy
+** TODO check right-turn curves
+
+ - [ ] check nearest_point() works
+ - [ ] check rendering
 
 ** TODO deletion of world-objects
 
@@ -21,12 +24,14 @@ This could be a candidate:
 http://pastie.org/1574516
 
 
-** Add credits 
+** TODO Add credits 
 
  - jsoncpp http://sourceforge.net/projects/jsoncpp/
  - ShivaVG http://ivanleben.blogspot.de/2007/07/shivavg-open-source-ansi-c-openvg.html
  - GO openvg https://github.com/ajstarks/openvg/blob/master/openvg.go
  - Eigen3
+
+** DONE check out difftime, it looks fishy
 
 
 * OSX

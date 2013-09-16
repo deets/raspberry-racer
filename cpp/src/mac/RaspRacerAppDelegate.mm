@@ -29,6 +29,7 @@ namespace fs = boost::filesystem;
 - (id) init {
   self = [super init];
   _window_adapter = 0;
+  _hud = 0;
   _asset_manager = _car_asset_manager = 0;
   _world = 0;
   _events = new InputEventVector();
@@ -54,13 +55,12 @@ namespace fs = boost::filesystem;
     delete _events;
   }
 
-  if(_world) {
-    delete _world;
+  if(_hud) {
+    delete _hud;
   }
 
-
-  if(_debug_renderer) {
-    delete _debug_renderer;
+  if(_world) {
+    delete _world;
   }
 
   if(_world_timer) {
@@ -85,10 +85,6 @@ namespace fs = boost::filesystem;
 
   _world = new rracer::World(*_window_adapter, *_window_adapter);
 
-  _debug_renderer = new rracer::DebugRenderer(*_window_adapter);
-  _debug_renderer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
-  _world->set_debug_renderer(_debug_renderer);
-  // we want all drawing at (0,0) centered around the middle of the screen
 
   rracer::Rect screen_rect(0, 0, size.width, size.height);
   rracer::Track* track = new rracer::Track(*_asset_manager, "tests/simple-test-track.json");
@@ -99,8 +95,15 @@ namespace fs = boost::filesystem;
   car->physics_setup(_world->world());
   t->add_object(track);
   t->add_object(car);
-  _debug_renderer->world_transform(boost::bind(&rracer::AffineTransformator::affine_transform, t));
   _world->add_object(t);
+  _hud = new rracer::HUD(
+      rracer::Vector(20, size.height - 20),
+      _asset_manager->font(),
+      *_window_adapter,
+      _world,
+      boost::bind(&rracer::AffineTransformator::affine_transform, t)
+  );
+  _world->add_object(_hud);
 
   [_glview setRenderCallback: self];
   _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / WORLD_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
@@ -150,6 +153,9 @@ namespace fs = boost::filesystem;
     switch(game_event.scancode) {
     case 53:  // esc
       game_event.key = K_ESC;
+      break;
+    case 4: // h
+      game_event.key = K_h;
       break;
     default:
       game_event.key = K_UNKNOWN;

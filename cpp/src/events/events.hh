@@ -6,8 +6,9 @@
 using namespace std;
 
 enum EKeys {
+  K_UNKNOWN = 0,
   K_ESC = 1,
-  K_UNKNOWN = 0
+  K_h = 4
 };
 
 struct InputEvent {

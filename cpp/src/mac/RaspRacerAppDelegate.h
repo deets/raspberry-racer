@@ -7,7 +7,7 @@
 #include "world/world.hh"
 #include "common/time.hh"
 #include "RaspRacerView.h"
-#include "debug/debug.hh"
+#include "debug/hud.hh"
 
 
 @interface RaspRacerAppDelegate : NSObject <NSApplicationDelegate, RRRenderCallback> {
@@ -19,7 +19,7 @@
   AssetManager* _asset_manager;
   AssetManager* _car_asset_manager;
 
-  rracer::DebugRenderer* _debug_renderer;
+  rracer::HUD* _hud;
 
   InputEventVector* _events;
   rracer::World* _world;

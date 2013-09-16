@@ -77,6 +77,7 @@ AssetManager::AssetManager(const OpenVGAdapter& vg)
 AssetManager::AssetManager(const OpenVGAdapter& vg, const fs::path base) 
   : _vg(vg)
   , _base(base)
+  , _fonts_initialized(false)
 {
 }
 
