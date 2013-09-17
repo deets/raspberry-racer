@@ -115,13 +115,13 @@ TEST_F(TrackTests, TestNearestPoint) {
     start.direction = 0;
     JH straight_json = jh("type", "startinggrid")("length", 20.0);
     Straight straight(straight_json, start, ti);
-    NearestPointInfo pi = straight.nearest_point(Vector(10.0, 8.5));
+    NearestPointInfo pi = straight.nearest_point(0, Vector(10.0, 8.5));
     ASSERT_VECTOR_EQ(Vector(10.0, 7.5), pi.point);
     ASSERT_EQ(0, pi.lane);
     ASSERT_FLOAT_EQ(.5, pi.offset);
     ASSERT_FLOAT_EQ(1.0, pi.distance);
 
-    pi = straight.nearest_point(Vector(10.0, -8.5));
+    pi = straight.nearest_point(1, Vector(10.0, -8.5));
     ASSERT_VECTOR_EQ(Vector(10.0, -7.5), pi.point);
     ASSERT_EQ(1, pi.lane);
     ASSERT_FLOAT_EQ(.5, pi.offset);
@@ -138,7 +138,7 @@ TEST_F(TrackTests, TestNearestPoint) {
     Vector swipe(0, -20 + 8);
     const Vector rp = rotation(45) * swipe;
     Vector np = rp + cp;
-    NearestPointInfo pi = curve.nearest_point(np);
+    NearestPointInfo pi = curve.nearest_point(0, np);
     //ASSERT_VECTOR_EQ(lane_point, pi.point);
     ASSERT_EQ(0, pi.lane);
     ASSERT_FLOAT_EQ(.5, pi.offset);

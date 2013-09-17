@@ -1,5 +1,6 @@
 * TODOs
 
+
 ** TODO check right-turn curves
 
  - [ ] check nearest_point() works
@@ -32,6 +33,7 @@ http://pastie.org/1574516
  - Eigen3
 
 ** DONE check out difftime, it looks fishy
+** DONE nearest_point() should take explicit lane argument
 
 
 * OSX
