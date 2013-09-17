@@ -27,7 +27,7 @@
 }
 -(void) timerCallback:(NSTimer*)timer;
 -(void) render;
--(void) convertEvent:(NSEvent*) event;
+-(BOOL) convertEvent:(NSEvent*) event;
 
 @property (assign) IBOutlet NSWindow* window;
 @property (assign) IBOutlet RaspRacerView* glview;

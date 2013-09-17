@@ -130,7 +130,7 @@ namespace fs = boost::filesystem;
 }
 
 
--(void) convertEvent:(NSEvent*) event {
+-(BOOL) convertEvent:(NSEvent*) event {
   InputEvent game_event;
   bool is_valid = false;
   bool pressed = false;
@@ -160,11 +160,27 @@ namespace fs = boost::filesystem;
     case 53:
       game_event.key = K_ESC;
       break;
+    case 126:
+      game_event.key = K_UP;
+      break;
+    case 125:
+      game_event.key = K_DOWN;
+      break;
+    case 123:
+      game_event.key = K_LEFT;
+      break;
+    case 124:
+      game_event.key = K_RIGHT;
+      break;
     default:
       game_event.key = K_UNKNOWN;
       break;
     }
-    _events->push_back(game_event);
+    if(game_event.key != K_UNKNOWN) {
+      _events->push_back(game_event);
+      return YES;
+    }
   }
+  return NO;
 }
 @end

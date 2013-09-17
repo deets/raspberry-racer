@@ -73,6 +73,7 @@ TEST_F(CarTests, TestCarLoading) {
     ("width", 8.0)
     ("mass", 100)
     ("slot-offset", 3.0)
+    ("power", 1500.0)
     ("wheels", 
      jh
      (jh("offset", jh(-5.0)(2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
@@ -80,6 +81,9 @@ TEST_F(CarTests, TestCarLoading) {
     )
     ;
   InputEventVector events;
+  // simulate the user accelerating
+  InputEvent event = { true, K_UP, 126 };
+  events.push_back(event);
   World world(*window_adapter, *ovg_adapter);
   {
     TestCar* car = new TestCar(*asset_manager, car_info);

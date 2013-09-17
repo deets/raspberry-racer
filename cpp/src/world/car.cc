@@ -8,6 +8,7 @@ namespace rracer {
 
   Car::Car(AssetManager& am, const Json::Value& car_info) 
     : _am(am)
+    , _accelerate(false)
   {
     assert(car_info.isMember("image") && car_info["image"].isString());
     assert(car_info.isMember("length") && car_info["length"].isDouble());
@@ -15,8 +16,10 @@ namespace rracer {
     assert(car_info.isMember("mass") && car_info["mass"].isDouble());
     assert(car_info.isMember("slot-offset") && car_info["slot-offset"].isDouble());
     assert(car_info.isMember("wheels") && car_info["wheels"].isArray());
+    assert(car_info.isMember("power") && car_info["power"].isDouble());
     _position.point = Vector(0, 5.5);
     _position.direction = 30.0;
+    _engine.power = car_info["power"].asDouble();
     _image_name = car_info["image"].asString();
     _length = car_info["length"].asDouble();
     _width = car_info["width"].asDouble();
@@ -60,7 +63,25 @@ namespace rracer {
     PaintScope(vgc, Color::black, VG_FILL_PATH | VG_STROKE_PATH);
     vgc.drawImage(img_data);
   }
-  
+
+
+  void Car::step(Real elapsed) {
+    BOOST_FOREACH(Wheel& wheel, _wheels) {
+      wheel.step(elapsed, _accelerate, _engine);
+    }
+  }
+
+  void Car::process_input_events(const InputEventVector& events, double elapsed) {
+    BOOST_FOREACH(const InputEvent event, events) {
+      switch(event.key) {
+      case K_UP:
+	_accelerate = event.pressed;
+      }
+    }
+    this->step(elapsed);
+  }
+
+
   void Car::physics_setup(b2World* world) {
     _world = world;
     b2BodyDef body_def;
@@ -81,14 +102,15 @@ namespace rracer {
     fixture_def.density = _mass / (_length * _width);
     _body->CreateFixture(&fixture_def);
     BOOST_FOREACH(Wheel& wheel, _wheels) {
-      wheel.physics_setup(world, _destroyers);
+      wheel.physics_setup(world, _body, _destroyers);
     }
   }
 
 
   // =============================================================
 
-  Wheel::Wheel(const Json::Value& definition) {
+  Wheel::Wheel(const Json::Value& definition) 
+  {
       assert(definition.isObject());
       assert(definition.isMember("offset") && definition["offset"].isArray());
       assert(definition.isMember("width") && definition["width"].isDouble());
@@ -103,7 +125,17 @@ namespace rracer {
   Wheel::~Wheel() {
   }
 
-  void Wheel::physics_setup(b2World* world, vector<function< void()> >& destroyers) {
+
+  void Wheel::step(Real elapsed, bool accelerate, const EngineInfo& engine) {
+    if(accelerate) {
+      b2Vec2 force(engine.power, 0);
+      force = _body->GetWorldVector(force);
+      b2Vec2 point = _body->GetWorldCenter();
+      _body->ApplyForce(force, point);
+    }
+  }
+  
+  void Wheel::physics_setup(b2World* world, b2Body* chassis, vector<function< void()> >& destroyers) {
     b2BodyDef body_def;
     body_def.type = b2_dynamicBody;
     body_def.linearDamping = 0.0f;
@@ -111,16 +143,25 @@ namespace rracer {
     body_def.active = true;
     body_def.position.Set(_offset[0], _offset[1]);
     body_def.angle = 0.0f;
-    b2Body* body = world->CreateBody(&body_def);
-    destroyers.push_back(bind(&b2World::DestroyBody, world, body));
+    _body = world->CreateBody(&body_def);
+    destroyers.push_back(bind(&b2World::DestroyBody, world, _body));
 
-    b2PolygonShape chassis;
-    chassis.SetAsBox(_width / 2.0, _diameter / 2.0); // box2d uses half-widths here
+    b2PolygonShape wheel_shape;
+    wheel_shape.SetAsBox(_width / 2.0, _diameter / 2.0); // box2d uses half-widths here
     b2FixtureDef fixture_def;
-    fixture_def.shape = &chassis;
+    fixture_def.shape = &wheel_shape;
     fixture_def.friction = 0.0f;
     fixture_def.density = _mass / (_width * _diameter);
-    body->CreateFixture(&fixture_def);
+    _body->CreateFixture(&fixture_def);
+
+    // attach our wheel to the chassis
+    b2RevoluteJointDef jointDef;
+    // limit the joint on our back-wheels
+    // so they can't rotate
+    jointDef.lowerAngle = 0.0;
+    jointDef.upperAngle = 0.0;
+    jointDef.Initialize(_body, chassis, _body->GetWorldCenter());
+    world->CreateJoint(&jointDef);
   }
 
 }; // end ns::rracer

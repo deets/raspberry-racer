@@ -4,8 +4,10 @@
 @implementation RRApplication
 
 - (void)sendEvent:(NSEvent *)event {
-  NSLog(@"sendEvent: %@", event);
-  [[self delegate] convertEvent: event];
-  [super sendEvent: event];
+  // if we didn't consume the event, pass it on
+  if(![[self delegate] convertEvent: event]) {
+    NSLog(@"sendEvent: %@", event);
+    [super sendEvent: event];
+  }
 }
 @end

@@ -11,15 +11,23 @@ using namespace boost;
 
 namespace rracer {
 
+  struct EngineInfo {
+    Real power;
+  };
+
   class Wheel {
     Vector _offset;
     Real _width;
     Real _diameter;
     Real _mass;
+
+    b2Body* _body;
+
   public:
     Wheel(const Json::Value&);
     virtual ~Wheel();
-    void physics_setup(b2World*, vector<function< void()> >& destroyers);
+    void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
+    void step(Real elapsed, bool accelerate, const EngineInfo&);
   };
 
   class Car : public WorldObject {
@@ -34,17 +42,24 @@ namespace rracer {
     string _image_name;
     b2Body* _body;
     b2World* _world;
+    bool _accelerate;
+
+    void step(Real elapsed);
+
 
   protected:
     vector<function< void () > > _destroyers;
     vector<Wheel> _wheels;
+
+    EngineInfo _engine;
+
   public:
     Car(AssetManager&, const Json::Value&);
     virtual ~Car();
 
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
-
+    virtual void process_input_events(const InputEventVector& events, double elapsed);
   };
 
 

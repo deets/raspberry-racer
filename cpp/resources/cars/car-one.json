@@ -4,6 +4,7 @@
     "width" : 6.0,
     "slot-offset" : 3.0,
     "mass" : 100.0,
+    "power" : 48000,
     "wheels" : [
         {
             "offset" : [-5.0, 2.0],
