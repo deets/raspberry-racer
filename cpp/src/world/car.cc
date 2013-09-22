@@ -40,11 +40,7 @@ namespace rracer {
 
 
   void Car::render(OpenVGCompanion& vgc) const {
-    ConnectionPoint position;
-    b2Vec2 pos = _body->GetPosition();
-    position.point[0] = pos.x;
-    position.point[1] = pos.y;
-    position.direction = _body->GetAngle();
+    ConnectionPoint position = Car::position();
     const PNGImageData& img_data = _am.image(_image_name);
     // move to the middle axis of the car
     AffineTransform t = translate(Vector(-img_data.width() / 2.0, -img_data.height() / 2.0));
@@ -104,6 +100,7 @@ namespace rracer {
     }
   }
 
+
   ConnectionPoint Car::position() const {
     ConnectionPoint res;
     b2Vec2 center = _body->GetWorldCenter();
@@ -116,12 +113,13 @@ namespace rracer {
   }
 
 
-  void Car::translate_body(b2Body* body, const AffineTransform& rot, const Real rad_angle, const ConnectionPoint& dest, const ConnectionPoint& pos) {
+  void Car::translate_body(b2Body* body, const Real rad_angle, const b2Vec2& dest, const b2Vec2& pos) {
     const b2Vec2 body_pos = body->GetWorldCenter();
-    const b2Vec2 offset = vconv(rot * (vconv(body_pos) - pos.point));
+    const b2Rot rot(rad_angle);
+    const b2Vec2 offset = b2Mul(rot, (body_pos - pos));
     const Real d_angle = body->GetAngle() + rad_angle;
-    const b2Vec2 translate = vconv(dest.point) - body_pos;
-    const b2Vec2 new_pos = body->GetWorldCenter() + translate + offset;
+    const b2Vec2 translate = dest - body_pos;
+    const b2Vec2 new_pos = body_pos + translate + offset;
     body->SetAngularVelocity(0);
     body->SetLinearVelocity(b2Vec2(0, 0));
     body->SetTransform(new_pos, d_angle);
@@ -131,12 +129,13 @@ namespace rracer {
   void Car::place(const ConnectionPoint& dest) {
     ConnectionPoint pos = position();
     const Real angle = dest.direction - pos.direction;
-    const AffineTransform rot = rotation(angle);
     const Real rad_angle = DEG2RAD(angle);
-    translate_body(_body, rot, rad_angle, dest, pos);
+    const b2Vec2 dest_pos = vconv(dest.point);
+    const b2Vec2 current_pos = vconv(pos.point);
+    translate_body(_body, rad_angle, dest_pos, current_pos);
     
     BOOST_FOREACH(Wheel& wheel, _wheels) {
-      translate_body(wheel.body(), rot, rad_angle, dest, pos);
+      translate_body(wheel.body(), rad_angle, dest_pos, current_pos);
     }
   }
 
@@ -194,14 +193,22 @@ namespace rracer {
     _body->CreateFixture(&fixture_def);
 
     // attach our wheel to the chassis
-    b2RevoluteJointDef jointDef;
+    b2WeldJointDef jointDef;
     // limit the joint on our back-wheels
     // so they can't rotate
-    jointDef.lowerAngle = 0.0;
-    jointDef.upperAngle = 0.0;
     jointDef.Initialize(_body, chassis, _body->GetWorldCenter());
     world->CreateJoint(&jointDef);
   }
 
 }; // end ns::rracer
+
+
+
+
+
+
+
+
+
+
 

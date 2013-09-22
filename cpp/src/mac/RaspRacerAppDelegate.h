@@ -21,7 +21,7 @@
 
   rracer::HUD* _hud;
 
-  InputEventVector* _events;
+  rracer::InputEventVector* _events;
   rracer::World* _world;
   Timer* _world_timer;
 }

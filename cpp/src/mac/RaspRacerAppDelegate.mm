@@ -32,7 +32,7 @@ namespace fs = boost::filesystem;
   _hud = 0;
   _asset_manager = _car_asset_manager = 0;
   _world = 0;
-  _events = new InputEventVector();
+  _events = new rracer::InputEventVector();
   _world_timer = new Timer();
   return self;
 }
@@ -115,6 +115,13 @@ namespace fs = boost::filesystem;
   );
   _world->add_object(_hud);
 
+  rracer::ConnectionPoint point = { rracer::Vector(10, 10), 45 };
+  rracer::KeyAction* resetter = new rracer::KeyAction(
+      rracer::K_SPACE,
+      boost::bind(&rracer::Car::place, car, point)
+  );
+
+  _world->add_object(resetter);
   [_glview setRenderCallback: self];
   _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / WORLD_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
 
@@ -141,7 +148,7 @@ namespace fs = boost::filesystem;
 
 
 -(BOOL) convertEvent:(NSEvent*) event {
-  InputEvent game_event;
+  rracer::InputEvent game_event;
   bool is_valid = false;
   bool pressed = false;
 
@@ -162,31 +169,34 @@ namespace fs = boost::filesystem;
 
     switch(game_event.scancode) {
     case 2:
-      game_event.key = K_d;
+      game_event.key = rracer::K_d;
       break;
     case 4:
-      game_event.key = K_h;
+      game_event.key = rracer::K_h;
       break;
     case 53:
-      game_event.key = K_ESC;
+      game_event.key = rracer::K_ESC;
       break;
     case 126:
-      game_event.key = K_UP;
+      game_event.key = rracer::K_UP;
       break;
     case 125:
-      game_event.key = K_DOWN;
+      game_event.key = rracer::K_DOWN;
       break;
     case 123:
-      game_event.key = K_LEFT;
+      game_event.key = rracer::K_LEFT;
       break;
     case 124:
-      game_event.key = K_RIGHT;
+      game_event.key = rracer::K_RIGHT;
+      break;
+    case 49:
+      game_event.key = rracer::K_SPACE;
       break;
     default:
-      game_event.key = K_UNKNOWN;
+      game_event.key = rracer::K_UNKNOWN;
       break;
     }
-    if(game_event.key != K_UNKNOWN) {
+    if(game_event.key != rracer::K_UNKNOWN) {
       _events->push_back(game_event);
       return YES;
     }

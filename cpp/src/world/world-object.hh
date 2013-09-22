@@ -95,6 +95,15 @@ namespace rracer {
 
   };
 
+
+  class KeyAction : public WorldObject {
+    function< void () > _key_callback;
+    EKeys _key;
+
+  public:
+    KeyAction(EKeys key, function< void () >);
+    virtual void process_input_events(const InputEventVector& events, double elapsed);
+  };
 }; //ns::rracer
 
 #endif

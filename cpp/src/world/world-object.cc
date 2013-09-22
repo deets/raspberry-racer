@@ -124,5 +124,23 @@ namespace rracer {
     const Vector pos = _position_callback();
     vgc.drawCircle(pos[0], pos[1], _radius);
   }
+
+
+  // =======================================================================
+
+  KeyAction::KeyAction(EKeys key, function< void () > key_callback) 
+    : _key(key)
+    , _key_callback(key_callback)
+  {
+  }
+
+
+  void KeyAction::process_input_events(const InputEventVector& events, double elapsed) {
+    BOOST_FOREACH(const InputEvent& event, events) {
+      if(event.pressed && event.key == _key) {
+	_key_callback();
+      }
+    }
+  }
   
 }; // ns::rracer

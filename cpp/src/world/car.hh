@@ -47,7 +47,7 @@ namespace rracer {
 
     void step(Real elapsed);
 
-    static void translate_body(b2Body* body, const AffineTransform& rot, const Real rad_angle, const ConnectionPoint& dest, const ConnectionPoint& pos);
+    static void translate_body(b2Body* body, const Real rad_angle, const b2Vec2& dest, const b2Vec2& pos);
 
   protected:
     vector<function< void () > > _destroyers;
