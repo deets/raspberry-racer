@@ -9,6 +9,7 @@
 #include <Eigen/Eigen>
 
 #define DEG2RAD(x) ((x / 180.0) * M_PI)
+#define RAD2DEG(x) ((x / M_PI) * 180.0)
 #define SIGN(x) ((x < 0 ? -1 : 1))
 
 
@@ -80,7 +81,8 @@ namespace rracer {
   };
 
 
-  Vector vconv(b2Vec2);
+  Vector vconv(const b2Vec2&);
+  b2Vec2 vconv(const Vector&);
 
   /**
    * Used to classify points

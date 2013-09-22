@@ -28,6 +28,8 @@ namespace rracer {
     virtual ~Wheel();
     void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
     void step(Real elapsed, bool accelerate, const EngineInfo&);
+
+    b2Body* body();
   };
 
   class Car : public WorldObject {
@@ -38,7 +40,6 @@ namespace rracer {
     Real _slot_offset;
     Real _mass;
 
-    ConnectionPoint _position;
     string _image_name;
     b2Body* _body;
     b2World* _world;
@@ -46,6 +47,7 @@ namespace rracer {
 
     void step(Real elapsed);
 
+    static void translate_body(b2Body* body, const AffineTransform& rot, const Real rad_angle, const ConnectionPoint& dest, const ConnectionPoint& pos);
 
   protected:
     vector<function< void () > > _destroyers;
@@ -60,6 +62,9 @@ namespace rracer {
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
     virtual void process_input_events(const InputEventVector& events, double elapsed);
+
+    ConnectionPoint position() const;
+    void place(const ConnectionPoint&);
   };
 
 

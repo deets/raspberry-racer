@@ -107,5 +107,22 @@ namespace rracer {
     MatrixStacker ms(vgc, _t);
     WorldObject::dispatch_render(vgc);
   }
+
+
+  CircleRenderer::CircleRenderer(function< Vector () > pc, Real radius, const Color& color) 
+    : _position_callback(pc)
+    , _radius(radius)
+    , _color(color) 
+  {
+  }
+
+
+  void CircleRenderer::render(OpenVGCompanion& vgc) const {
+    PaintScope p(vgc, _color, VG_FILL_PATH | VG_STROKE_PATH);
+    vgc.set();
+    vgc.stroke_width(1.0);
+    const Vector pos = _position_callback();
+    vgc.drawCircle(pos[0], pos[1], _radius);
+  }
   
 }; // ns::rracer

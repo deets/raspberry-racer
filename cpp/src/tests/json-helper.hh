@@ -43,7 +43,6 @@ public:
   }
 
   JH&  operator= (const JH & other) {
-    assert(false);
     if(this != &other) {
       _state = other._state;
       if(_v) {

@@ -72,6 +72,11 @@ namespace rracer {
     for(int i=0; i < json["tiles"].size(); ++i) {
       Json::Value tile_json = json["tiles"][i];
       assert(tile_json.isObject());
+      // we want the first tile to be the startinggrid
+      assert((i == 0 && tile_json["type"].asString() == "startinggrid") ||
+	     (i > 0 && tile_json["type"].asString() != "startinggrid")
+      );
+	     
       shared_ptr<TrackTile> tile = TrackTile::create_tile(tile_json, connection_point, *_tile_info);
       connection_point = tile->end();
       bounds = bounds | tile->bounds();

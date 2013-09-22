@@ -17,8 +17,6 @@ namespace rracer {
     assert(car_info.isMember("slot-offset") && car_info["slot-offset"].isDouble());
     assert(car_info.isMember("wheels") && car_info["wheels"].isArray());
     assert(car_info.isMember("power") && car_info["power"].isDouble());
-    _position.point = Vector(0, 5.5);
-    _position.direction = 30.0;
     _engine.power = car_info["power"].asDouble();
     _image_name = car_info["image"].asString();
     _length = car_info["length"].asDouble();
@@ -106,6 +104,42 @@ namespace rracer {
     }
   }
 
+  ConnectionPoint Car::position() const {
+    ConnectionPoint res;
+    b2Vec2 center = _body->GetWorldCenter();
+    b2Vec2 slot(_slot_offset, 0);
+    slot = _body->GetWorldVector(slot);
+    b2Vec2 slot_position = center + slot;
+    res.point = Vector(slot_position.x, slot_position.y);
+    res.direction = RAD2DEG(atan2(slot.y, slot.x));
+    return res;
+  }
+
+
+  void Car::translate_body(b2Body* body, const AffineTransform& rot, const Real rad_angle, const ConnectionPoint& dest, const ConnectionPoint& pos) {
+    const b2Vec2 body_pos = body->GetWorldCenter();
+    const b2Vec2 offset = vconv(rot * (vconv(body_pos) - pos.point));
+    const Real d_angle = body->GetAngle() + rad_angle;
+    const b2Vec2 translate = vconv(dest.point) - body_pos;
+    const b2Vec2 new_pos = body->GetWorldCenter() + translate + offset;
+    body->SetAngularVelocity(0);
+    body->SetLinearVelocity(b2Vec2(0, 0));
+    body->SetTransform(new_pos, d_angle);
+  }
+
+
+  void Car::place(const ConnectionPoint& dest) {
+    ConnectionPoint pos = position();
+    const Real angle = dest.direction - pos.direction;
+    const AffineTransform rot = rotation(angle);
+    const Real rad_angle = DEG2RAD(angle);
+    translate_body(_body, rot, rad_angle, dest, pos);
+    
+    BOOST_FOREACH(Wheel& wheel, _wheels) {
+      translate_body(wheel.body(), rot, rad_angle, dest, pos);
+    }
+  }
+
 
   // =============================================================
 
@@ -123,6 +157,11 @@ namespace rracer {
   }
 
   Wheel::~Wheel() {
+  }
+
+
+  b2Body* Wheel::body() {
+    return _body;
   }
 
 

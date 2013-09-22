@@ -5,6 +5,7 @@
 
 #include "json/json.h"
 #include "common/common.hh"
+#include "tests/common.hh"
 
 // include mocks and deps
 #include "tests/json-helper.hh"
@@ -35,6 +36,7 @@ public:
   NiceMock<TestOpenvgAdaptper>* ovg_adapter;
   AssetManager* asset_manager;
   NiceMock<TestWindowAdapter>* window_adapter;
+  JH car_info;
 
   virtual void SetUp() {
     window_adapter = new NiceMock<TestWindowAdapter>();
@@ -42,7 +44,19 @@ public:
     fs::path cars_path("resources/cars");
     asset_manager = new AssetManager(*ovg_adapter, cars_path);
     EXPECT_CALL(*window_adapter, window_dimensions()).WillRepeatedly(Return(make_pair(1920, 1080)));
-
+    car_info = jh
+      ("image", "yellow.png")
+      ("length", 12.0)
+      ("width", 8.0)
+      ("mass", 100)
+      ("slot-offset", 3.0)
+      ("power", 1500.0)
+      ("wheels", 
+       jh
+       (jh("offset", jh(-5.0)(2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
+       (jh("offset", jh(-5.0)(-2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
+      )
+      ;
   }
 
   virtual void TearDown() {
@@ -67,19 +81,6 @@ public:
 
 
 TEST_F(CarTests, TestCarLoading) {
-  JH car_info = jh
-    ("image", "yellow.png")
-    ("length", 12.0)
-    ("width", 8.0)
-    ("mass", 100)
-    ("slot-offset", 3.0)
-    ("power", 1500.0)
-    ("wheels", 
-     jh
-     (jh("offset", jh(-5.0)(2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
-     (jh("offset", jh(-5.0)(-2.0))("width", 2.0)("diameter", 3.0)("mass", 15))
-    )
-    ;
   InputEventVector events;
   // simulate the user accelerating
   InputEvent event = { true, K_UP, 126 };
@@ -88,8 +89,32 @@ TEST_F(CarTests, TestCarLoading) {
   {
     TestCar* car = new TestCar(*asset_manager, car_info);
     world.add_object(car);
-    world.begin(events, 1/30.0);
     ASSERT_EQ(2, car->wheel_count());
     ASSERT_EQ(3, car->destroyer_count());
+    ConnectionPoint pos = car->position();
+    ASSERT_FLOAT_EQ(0, pos.direction);
+    ASSERT_VECTOR_EQ(Vector(3.0, .0), pos.point);
+    world.begin(events, 1/30.0);
   }
 }
+
+
+TEST_F(CarTests, TestCarPlacing) {
+  InputEventVector events;
+  World world(*window_adapter, *ovg_adapter);
+  {
+    TestCar* car = new TestCar(*asset_manager, car_info);
+    world.add_object(car);
+    ConnectionPoint dest = { Vector(10, 20), 45 };
+    car->place(dest);
+    ConnectionPoint pos = car->position();
+    ASSERT_FLOAT_EQ(dest.direction, pos.direction);
+    ASSERT_VECTOR_EQ(dest.point, pos.point);
+  }
+}
+
+
+
+
+
+

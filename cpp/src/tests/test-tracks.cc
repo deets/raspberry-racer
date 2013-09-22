@@ -5,6 +5,7 @@
 
 #include "json/json.h"
 #include "common/common.hh"
+#include "tests/common.hh"
 
 // include mocks and deps
 #include "tests/json-helper.hh"
@@ -55,11 +56,6 @@ TEST_F(TrackTests, TestSimpleTrackLoading) {
   }
   ASSERT_FALSE(test_track.bounds().empty());
   
-}
-
-void ASSERT_VECTOR_EQ(const Vector& a, const Vector& b) {
-  ASSERT_NEAR(a[0], b[0], 0.000001);
-  ASSERT_NEAR(a[1], b[1], 0.000001);
 }
 
 

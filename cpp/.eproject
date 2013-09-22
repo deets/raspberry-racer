@@ -2,3 +2,4 @@
 ;:debug-command "out/Debug/MacRaspberryRacer.app/Contents/MacOS/MacRaspberryRacer"
 :debug-command "out/Debug/test"
 :compile-command "./build.sh"
+:include-dirs '("src" "/usr/local/opt/libpng/include" "/usr/local/include" "/opt/ShivaVG/include" "osx-gmock-1.6.0/include" "osx-gmock-1.6.0/gtest/include" "third-party/jsoncpp" "third-party/eigen")

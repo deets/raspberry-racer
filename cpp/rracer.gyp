@@ -34,6 +34,7 @@
             'src/tests/test-cars.cc',
             'src/tests/test-system-time.cc',
             'src/tests/json-helper.cc',
+            'src/tests/common.cc',
             'src/common/common.cc',
             'src/debug/debug.cc',
             'src/debug/hud.cc',

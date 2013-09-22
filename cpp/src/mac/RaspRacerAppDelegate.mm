@@ -92,9 +92,19 @@ namespace fs = boost::filesystem;
   rracer::AffineTransformator* t = new rracer::AffineTransformator(screen_rect.fit(track->bounds() * 1.1));
 
   rracer::Car* car = new rracer::Car(*_car_asset_manager, _car_asset_manager->json("car-one.json"));
+
   car->physics_setup(_world->world());
   t->add_object(track);
   t->add_object(car);
+
+  // rracer::CircleRenderer* slot_renderer = new rracer::CircleRenderer(
+  //     boost::bind(&rracer::Car::slot_position, car),
+  //     .1,
+  //     rracer::Color::yellow
+  // );
+
+  // t->add_object(slot_renderer);
+
   _world->add_object(t);
   _hud = new rracer::HUD(
       rracer::Vector(20, size.height - 20),

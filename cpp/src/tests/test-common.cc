@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <boost/assign/list_of.hpp>
-
 #include "common/common.hh"
+#include "tests/common.hh"
 
 using namespace boost::assign;
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <boost/intrusive/list.hpp>
+#include <boost/function.hpp>
 #include <Box2D/Box2D.h>
 
 #include "events/events.hh"
@@ -11,7 +12,7 @@
 
 using namespace std;
 namespace bi = boost::intrusive;
-
+using namespace boost;
 
 namespace rracer {
   class World;
@@ -81,6 +82,17 @@ namespace rracer {
 
     AffineTransform affine_transform() const;
     virtual void dispatch_render(OpenVGCompanion&);
+  };
+
+
+  class CircleRenderer : public WorldObject {
+    function< Vector ()> _position_callback;
+    Real _radius;
+    const Color& _color;
+  public:
+    CircleRenderer(function< Vector () >, Real radius, const Color&);
+    virtual void render(OpenVGCompanion& vgc) const;
+
   };
 
 }; //ns::rracer

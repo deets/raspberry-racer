@@ -24,9 +24,15 @@ namespace rracer {
     return t.translate(v);
   }
 
-  Vector vconv(b2Vec2 v) {
+  Vector vconv(const b2Vec2& v) {
     return Vector(v.x, v.y);
   }
+
+
+  b2Vec2 vconv(const Vector& v) {
+    return b2Vec2(v[0], v[1]);
+  }
+
 
   Rect::Rect() 
     : origin(0, 0)
