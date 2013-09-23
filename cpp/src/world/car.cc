@@ -40,7 +40,10 @@ namespace rracer {
 
 
   void Car::render(OpenVGCompanion& vgc) const {
-    ConnectionPoint position = Car::position();
+    const ConnectionPoint position = { 
+      vconv(_body->GetWorldCenter()), 
+      RAD2DEG(_body->GetAngle())
+    };
     const PNGImageData& img_data = _am.image(_image_name);
     // move to the middle axis of the car
     AffineTransform t = translate(Vector(-img_data.width() / 2.0, -img_data.height() / 2.0));
@@ -54,7 +57,7 @@ namespace rracer {
     t = rotation(position.direction) * t;
     t = translate(position.point) * t;
     MatrixStacker(vgc, t);
-    PaintScope(vgc, Color::black, VG_FILL_PATH | VG_STROKE_PATH);
+    PaintScope p(vgc, Color::black, VG_FILL_PATH | VG_STROKE_PATH);
     vgc.drawImage(img_data);
   }
 

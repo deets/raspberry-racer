@@ -39,19 +39,12 @@ namespace rracer {
     VGint width = image_data.width();
     VGint height = image_data.height();
     VGImage img = _vg.vgCreateImage(
-	VG_sRGBA_8888, 
+	VG_lABGR_8888, 
 	width, height,
 	VG_IMAGE_QUALITY_BETTER);
-    _vg.vgImageSubData(img, image_data.data(), image_data.stride(), VG_sRGBA_8888, 0, 0, width, height);
+    _vg.vgImageSubData(img, image_data.data(), image_data.stride(), VG_lABGR_8888, 0, 0, width, height);
     _vg.vgSeti(VG_IMAGE_MODE, VG_DRAW_IMAGE_NORMAL);
-    VGPaint paint = _vg.vgCreatePaint();
-    _vg.vgSetParameteri(paint, VG_PAINT_TYPE, VG_PAINT_TYPE_COLOR);
-    VGfloat white[4] = {1.0, 1.0, 1.0, 1.0};
-    _vg.vgSetParameterfv(paint, VG_PAINT_COLOR, 4, white);
-  
-    _vg.vgSetPaint(paint, VG_FILL_PATH);
     _vg.vgDrawImage(img);
-    _vg.vgDestroyPaint(paint);
     _vg.vgDestroyImage(img);
   }
 
