@@ -51,8 +51,7 @@ TEST_F(TrackTests, TestSimpleTrackLoading) {
   for(int i = 0; i < 8; ++i) {
     const TrackTile& tile_one = test_track[i];
     const TrackTile& tile_two = test_track[(i+1) % 8];
-    ASSERT_NEAR(tile_one.end().point[0], tile_two.start().point[0], 0.000001);
-    ASSERT_NEAR(tile_one.end().point[1], tile_two.start().point[1], 0.000001);
+    ASSERT_VECTOR_EQ(tile_one.end().point, tile_two.start().point);
   }
   ASSERT_FALSE(test_track.bounds().empty());
   
@@ -141,4 +140,13 @@ TEST_F(TrackTests, TestNearestPoint) {
     ASSERT_FLOAT_EQ(.5, pi.distance);
   }
 
+}
+
+TEST_F(TrackTests, TestStartingPosition) {
+  fs::path json_path("resources/tests/simple-test-track.json");
+  ASSERT_TRUE(fs::exists(json_path));
+  AssetManager am(*ovg_adapter);
+  Track test_track(am, json_path);
+  ConnectionPoint p1 = test_track.starting_position(0);
+  
 }

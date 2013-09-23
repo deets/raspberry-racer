@@ -83,10 +83,6 @@ namespace rracer {
 
 
   class Track : public WorldObject {
-
-    AssetManager& _am;
-    shared_ptr<TileInfo> _tile_info;
-
   public:
     Track(AssetManager& am, fs::path data);
     virtual ~Track();
@@ -99,9 +95,13 @@ namespace rracer {
 
     const Rect bounds() const;
 
+    ConnectionPoint starting_position(int lane) const;
+
   private:
+    AssetManager& _am;
     string _name;
     Rect _bounds;
+    shared_ptr<TileInfo> _tile_info;
     vector<shared_ptr<TrackTile> > _tiles;
   };
 

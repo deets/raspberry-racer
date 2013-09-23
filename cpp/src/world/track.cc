@@ -103,6 +103,12 @@ namespace rracer {
     return _tiles.size();
   }
 
+
+  ConnectionPoint Track::starting_position(int lane) const {
+    
+  }
+
+  
   TrackTile& Track::operator[](size_t index) const {
     assert(index < _tiles.size());
     return *_tiles[index];

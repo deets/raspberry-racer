@@ -204,16 +204,29 @@ namespace rracer {
   StartingGrid::StartingGrid(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti) 
     : Straight(tile, start, ti)
   {
+    assert(tile.isMember("start-box") && tile["start-box"].isObject());
+    Json::Value startbox_json = tile["start-box"];
+    assert(startbox_json.isMember("length") && startbox_json["length"].isDouble());
+    assert(startbox_json.isMember("width") && startbox_json["width"].isDouble());
+    assert(startbox_json.isMember("finish-line-offset") && startbox_json["finish-line-offset"].isDouble());
+    _startbox.length = startbox_json["length"].asDouble();
+    _startbox.width = startbox_json["width"].asDouble();
+    _startbox.finish_line_offset = startbox_json["finish-line-offset"].asDouble();
+    assert(_startbox.length > 0 && _startbox.length < this->_length);
+    assert(_startbox.width >= 0 && _startbox.width <= 1.0);
+    assert(_startbox.finish_line_offset > 0 && _startbox.finish_line_offset < _length);
   }
+
 
   void StartingGrid::render(OpenVGCompanion& vgc, const Color& ground_color) const {
     Straight::render(vgc, ground_color);
 
     // render the checkered start line
-    Real base = _ti.width() / 8.0;
-    Vector step_x = rotation(_start.direction) * Vector(base, 0);
-    Vector step_y = rotation(_start.direction) * Vector(0, base);
-    Vector end = _end.point;
+    const Real base = _ti.width() / 8.0;
+    const AffineTransform r = rotation(_start.direction);
+    const Vector step_x = r * Vector(base, 0);
+    const Vector step_y = r * Vector(0, base);
+    const Vector end = _end.point;
     {
       PaintScope white(vgc, Color(1.0, 1.0, 1.0), VG_FILL_PATH);
       PathScope p(vgc, VG_FILL_PATH);
@@ -229,6 +242,22 @@ namespace rracer {
 	vgc.line_to(p, end - step_x + step_y + offset, VG_ABSOLUTE);
 	vgc.line_to(p, end + step_y + offset, VG_ABSOLUTE);
 	vgc.line_to(p, end + offset, VG_ABSOLUTE);
+	vgc.close(p);
+      }
+    }
+    // render the starting box lines
+    const Vector box_half_width = r * Vector(0, 1) * (_ti.width() / 4.0) * _startbox.width;
+    const Vector box_length = r * Vector(-_startbox.length, 0);
+    const Vector finish_line_offset = r * Vector(-_startbox.finish_line_offset, 0);
+    vgc.vg().vgSetf(VG_STROKE_LINE_WIDTH, _ti.width() / 40.0);
+    for(int lane = 0; lane < _ti.number_of_lanes(); ++lane) {
+      Vector finish_line = position(1.0, lane);
+      for(int box_no = 0; box_no < 1; ++box_no) {
+	PaintScope white(vgc, Color(1.0, 1.0, 1.0), VG_STROKE_PATH);
+	PathScope p(vgc, VG_STROKE_PATH);
+	const Vector box_pos = (box_length * box_no) + finish_line_offset + finish_line;
+	vgc.move_to(p, box_pos + box_half_width, VG_ABSOLUTE);
+	vgc.line_to(p, box_pos - box_half_width, VG_ABSOLUTE);
 	vgc.close(p);
       }
     }

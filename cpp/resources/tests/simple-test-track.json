@@ -16,7 +16,12 @@
     "tiles" : [
         {
             "type" : "startinggrid",
-            "length" : 20.0
+            "length" : 20.0,
+            "start-box" : {
+                "length" : 18.0,
+                "width" : 0.6,
+                "finish-line-offset" : 6.0
+            }
         },
         {
             "type" : "curve",

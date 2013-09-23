@@ -212,7 +212,7 @@ namespace rracer {
 
   PathScope::~PathScope() {
     _vgc.vg().vgDrawPath(_path, _paint_mode);
-    _vgc.vg().vgDestroyPaint(_path);
+    _vgc.vg().vgDestroyPath(_path);
   }
 
 }; // ns::racer
