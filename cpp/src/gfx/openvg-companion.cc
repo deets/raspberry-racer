@@ -64,7 +64,7 @@ namespace rracer {
     return tw;
   }
 
-  void OpenVGCompanion::drawText(const Fontinfo& fi, VGfloat x, VGfloat y, char *s, int pointsize) const {
+  void OpenVGCompanion::drawText(const Fontinfo& fi, VGfloat x, VGfloat y, const char *s, int pointsize) const {
     VGfloat size = (VGfloat) pointsize, xx = x, mm[9];
     int i;
   
