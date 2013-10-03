@@ -81,6 +81,9 @@ namespace rracer {
       connection_point = tile->end();
       bounds = bounds | tile->bounds();
       _tiles.push_back(tile);
+      if(i == 0) {
+	_starting_grid = static_cast<StartingGrid*>(tile.get());
+      }
     }
     _bounds = bounds;
     assert(!_bounds.empty());
@@ -104,8 +107,8 @@ namespace rracer {
   }
 
 
-  ConnectionPoint Track::starting_position(int lane) const {
-    
+  ConnectionPoint Track::starting_position(int lane, int box) const {
+    return _starting_grid->starting_position(lane, box);
   }
 
   

@@ -6,6 +6,9 @@
 
 namespace rracer {
 
+
+  //================================================
+
   World::World(WindowAdapter &window_adapter, OpenVGAdapter &ovg_adapter)
     : _window_adapter(window_adapter)
     , _ovg_adapter(ovg_adapter)
@@ -33,7 +36,7 @@ namespace rracer {
   }
 
 
-  void World::begin(const InputEventVector& events, Real elapsed) {
+  void World::start_frame(const InputEventVector& events, Real elapsed) {
     _window_adapter.start();
 
     BOOST_FOREACH(const InputEvent event, events) {
@@ -72,7 +75,7 @@ namespace rracer {
   }
 
 
-  void World::end() {
+  void World::end_frame() {
     _window_adapter.end();
   }
 
@@ -81,5 +84,146 @@ namespace rracer {
     _world_objects.push_back(*obj);
     obj->physics_setup(world());
   }
+
+
+  World::iterator World::begin() {
+    return iterator(_world_objects.begin(), _world_objects.end());
+  }
+
+
+  World::iterator World::end() {
+    return iterator(_world_objects.end(), _world_objects.end());
+  }
+
+
+  // World::const_iterator World::begin() const {
+  //   return const_iterator(true);
+  // }
+
+
+  // World::const_iterator World::end() const {
+  //   return const_iterator(true);
+  // }
+
+
+  //===== iterator ========
+
+  World::iterator::iterator(wo_iterator begin, wo_iterator end) 
+  {
+    if(begin == end) {
+      return;
+    }
+    _iterators.push(make_pair(begin, end));
+  }
+
+
+  World::iterator::iterator(const iterator& other) {
+    this->_iterators = other._iterators;
+  }
+
+
+  World::iterator::~iterator() {
+  }
+
+
+  World::iterator& World::iterator::operator=(const iterator& rhs) {
+    this->_iterators = rhs._iterators;
+    return *this;
+  }
+
+
+  bool World::iterator::operator==(const iterator& rhs) const {
+    return _iterators.size() == 0 && rhs._iterators.size() == 0;
+  }
+
+
+  bool World::iterator::operator!=(const iterator& rhs) const {
+    return !(*this==rhs);
+  }
+
+
+  World::iterator& World::iterator::operator++() {
+    if(_iterators.size()) {
+      reference current = **this;
+      // if we *have* children,
+      // the first of them is the next current
+      if(current.begin() != current.end()) {
+	_iterators.push(make_pair(current.begin(), current.end()));
+      } else {
+	// we don't have children, so advance the top
+	// begin iterator until
+	//  - it's not the end, then it's the next current
+	//  - it's the end, then pop and re-do
+	//  - we're out of iterators, then we're finished
+	while(true) {
+	  ++(_iterators.top().first);
+	  if(_iterators.top().first != _iterators.top().second) {
+	    return *this; // we're pointing to the next child
+	  }
+	  _iterators.pop();
+	  if(_iterators.size() == 0) {
+	    // we are finished, because
+	    // there is no iterator to come.
+	    return *this;
+	  }
+	}
+      }
+    }
+    return *this;
+  }
+  
+  World::iterator::reference World::iterator::operator*() const {
+    return *_iterators.top().first;
+  }
+
+
+  World::iterator::pointer World::iterator::operator->() const {
+  }
+
+  // ===== iterator const =====
+
+  // World::const_iterator::const_iterator(bool end) 
+  //   : _end(end)
+  // {
+  // }
+
+
+  // World::const_iterator::const_iterator(const const_iterator& other) {
+  //   this->_end = other._end;
+  // }
+
+
+  // World::const_iterator::~const_iterator() {
+  // }
+
+
+  // World::const_iterator& World::const_iterator::operator=(const const_iterator& rhs) {
+  //   this->_end = rhs._end;
+  //   return *this;
+  // }
+
+
+  // bool World::const_iterator::operator==(const const_iterator& rhs) const {
+  //   return _end == rhs._end;
+  // }
+
+
+  // bool World::const_iterator::operator!=(const const_iterator& rhs) const {
+  //   return !(*this==rhs);
+  // }
+
+
+  // World::const_iterator& World::const_iterator::operator++() {
+  //   return *this;
+  // }
+  
+
+  // World::const_iterator::reference World::const_iterator::operator*() const {
+  //   return *const_cast<value_type*>(_current);
+  // }
+
+
+  // World::const_iterator::pointer World::const_iterator::operator->() const {
+  // }
 
 }; // ns::rracer

@@ -96,7 +96,7 @@ namespace fs = boost::filesystem;
   car->physics_setup(_world->world());
   t->add_object(track);
   t->add_object(car);
-
+  car->place(track->starting_position(0, 0));
   // rracer::CircleRenderer* slot_renderer = new rracer::CircleRenderer(
   //     boost::bind(&rracer::Car::slot_position, car),
   //     .1,
@@ -136,8 +136,8 @@ namespace fs = boost::filesystem;
   if(_world) {
     double elapsed = _world_timer->elapsed();
     if(elapsed > 0.0) {
-      _world->begin(*_events, elapsed);
-      _world->end();
+      _world->start_frame(*_events, elapsed);
+      _world->end_frame();
       if(_world->has_ended()) {
 	[[NSApplication sharedApplication] terminate: self];
       }

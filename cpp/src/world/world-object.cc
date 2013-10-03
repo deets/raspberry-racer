@@ -10,6 +10,16 @@ namespace rracer {
   }
 
 
+  WorldObject::wo_iterator WorldObject::begin() {
+    return _children.begin();
+  }
+
+  
+  WorldObject::wo_iterator WorldObject::end() {
+    return _children.end();
+  }
+
+
   void WorldObject::physics_setup(b2World* ) {
   }
 

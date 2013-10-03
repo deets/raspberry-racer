@@ -2,6 +2,7 @@
 #include "json/json.h"
 #include "world/track-tiles.hh"
 
+
 namespace rracer {
   Straight::Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti)
       : TrackTile(ti)
@@ -263,6 +264,14 @@ namespace rracer {
     }
   }
 
+  ConnectionPoint StartingGrid::starting_position(int lane, int box) const {
+    const AffineTransform r = rotation(_start.direction);
+    const Vector box_length = r * Vector(-_startbox.length, 0);
+    const Vector finish_line_offset = r * Vector(-_startbox.finish_line_offset, 0);
+    Vector finish_line = position(1.0, lane);
+    ConnectionPoint res = { finish_line + finish_line_offset + (box_length * box), _start.direction };
+    return res;
+  }
 
   // Factory function, declared in track.hh
 

@@ -94,7 +94,7 @@ TEST_F(CarTests, TestCarLoading) {
     ConnectionPoint pos = car->position();
     ASSERT_FLOAT_EQ(0, pos.direction);
     ASSERT_VECTOR_EQ(Vector(3.0, .0), pos.point);
-    world.begin(events, 1/30.0);
+    world.start_frame(events, 1/30.0);
   }
 }
 

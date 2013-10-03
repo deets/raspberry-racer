@@ -1,6 +1,6 @@
 #include <utility>
 #include <gmock/gmock.h>
-
+#include <boost/foreach.hpp>
 // include mocks
 #include "tests/test-window-adapter.hh"
 #include "tests/test-openvg-adapter.hh"
@@ -18,11 +18,19 @@ class TestChild : public WorldObject {
   
   
 public:
+  string name;
   int event_count;
   double elapsed;
 
   TestChild() 
     : event_count(0)
+    , elapsed(.0)
+  {
+  }
+
+  TestChild(const string &name) 
+    : name(name)
+    , event_count(0)
     , elapsed(.0)
   {
   }
@@ -59,8 +67,8 @@ public:
 TEST_F(WorldTests, TestWorldLifeCycle) {
   InputEventVector events;
   World world(*window_adapter, *ovg_adapter);
-  world.begin(events, 1.0/30.0);
-  world.end();
+  world.start_frame(events, 1.0/30.0);
+  world.end_frame();
 }
 
 TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
@@ -74,8 +82,8 @@ TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
   {
     World world(*window_adapter, *ovg_adapter);
     world.add_object(parent);
-    world.begin(events, 1.0/30.0);
-    world.end();
+    world.start_frame(events, 1.0/30.0);
+    world.end_frame();
   
     ASSERT_TRUE(parent->event_count > 0);
     ASSERT_TRUE(child->event_count > 0);
@@ -84,3 +92,55 @@ TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
   }
 }
 
+
+TEST_F(WorldTests, TestWorldTraverseObjectTree) {
+  World world(*window_adapter, *ovg_adapter);
+  vector<WorldObject*> expected;
+  {
+    vector<WorldObject*> result;
+    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+      result.push_back(&*it);
+    }
+    ASSERT_EQ(expected, result);
+  }
+
+  TestChild* parent = new TestChild("parent");
+  world.add_object(parent);
+  expected.push_back(parent);
+  {
+    vector<WorldObject*> result;
+    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+      result.push_back(&*it);
+    }
+    ASSERT_EQ(expected, result);
+  }
+
+  TestChild* child = new TestChild("child");
+  parent->add_object(child);
+  expected.push_back(child);
+  {
+    vector<WorldObject*> result;
+    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+      result.push_back(&*it);
+    }
+    ASSERT_EQ(expected, result);
+  }
+
+  TestChild* other = new TestChild("other");
+  world.add_object(other);
+  expected.push_back(other);
+  {
+    vector<WorldObject*> result;
+    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+      result.push_back(&*it);
+    }
+    ASSERT_EQ(expected, result);
+  }
+
+  
+
+  // satisfy windtow adapter reqs
+  InputEventVector events;
+  world.start_frame(events, 1.0/30.0);
+  world.end_frame();
+}

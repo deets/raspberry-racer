@@ -21,7 +21,7 @@ namespace rracer {
 
   public:
     typedef bi::list<WorldObject> WorldObjectList;
-
+    typedef WorldObjectList::iterator wo_iterator;
     virtual ~WorldObject() {}
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);
@@ -29,6 +29,9 @@ namespace rracer {
     virtual void physics_setup(b2World *);
 
     void add_object(WorldObject *obj);
+
+    wo_iterator begin();
+    wo_iterator end();
 
     friend class World;
 

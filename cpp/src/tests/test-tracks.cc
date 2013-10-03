@@ -147,6 +147,6 @@ TEST_F(TrackTests, TestStartingPosition) {
   ASSERT_TRUE(fs::exists(json_path));
   AssetManager am(*ovg_adapter);
   Track test_track(am, json_path);
-  ConnectionPoint p1 = test_track.starting_position(0);
+  ConnectionPoint p1 = test_track.starting_position(0, 0);
   
 }
