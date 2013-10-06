@@ -80,6 +80,7 @@ namespace rracer {
     b2World* world() const;
     Rect screen_rect() const;
 
+    OpenVGAdapter& vg() const;
   private:
     bool _has_ended;
 

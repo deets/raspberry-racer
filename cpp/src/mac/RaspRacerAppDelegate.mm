@@ -10,7 +10,7 @@
 #include <vg/openvg.h>
 
 #include <boost/filesystem.hpp>
-#include <boost/bind.hpp>
+
 
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"

@@ -3,6 +3,8 @@
 #include "world/race.hh"
 #include "world/track.hh"
 #include "world/car.hh"
+#include "debug/hud.hh"
+#include <boost/bind.hpp>
 
 namespace rracer {
 
@@ -46,14 +48,13 @@ namespace rracer {
     CarInfo car_info(car, track, 0);
     _cars.push_back(car_info);
 
-    // _hud = new rracer::HUD(
-    //     rracer::Vector(20, size.height - 20),
-    //     _asset_manager.font(),
-    //     *_window_adapter,
-    //     _world,
-    //     boost::bind(&rracer::AffineTransformator::affine_transform, t)
-    // );
-    // _world->add_object(_hud);
+    HUD* hud = new HUD(
+        rracer::Vector(20, world.screen_rect().height() - 20),
+        _asset_manager.font(),
+        _world,
+        boost::bind(&rracer::AffineTransformator::affine_transform, t)
+    );
+    _world.add_object(hud);
     
     // rracer::ConnectionPoint point = { rracer::Vector(10, 10), 45 };
     // rracer::KeyAction* resetter = new rracer::KeyAction(

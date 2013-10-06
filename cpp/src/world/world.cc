@@ -81,6 +81,11 @@ namespace rracer {
   }
 
 
+  OpenVGAdapter& World::vg() const {
+    return _ovg_adapter;
+  }
+
+
   void World::end_frame() {
     _window_adapter.end();
   }

@@ -83,7 +83,8 @@ namespace rracer {
     const Vector pivot_pos = position().point;
     const Vector d = slot - pivot_pos;
     if(d.norm()) {
-      _body->ApplyLinearImpulse(vconv(d * 100), vconv(pivot_pos));
+      Real f = pow(d.norm() / SLOT_DISTANCE, 2);
+      _body->ApplyLinearImpulse(vconv(d * f * 100), vconv(pivot_pos));
       //_body->ApplyLinearImpulse(b2Vec2(0, 1000), vconv(pivot_pos));
     }
   }

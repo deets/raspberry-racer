@@ -11,11 +11,11 @@ namespace rracer {
     DebugRenderer* _debug_renderer;
     Vector _position;
     const Fontinfo _fi;
-    World* _world;
+    World& _world;
     bool _visible;
     bool _debug_renderer_set;
   public:
-    HUD(const Vector& position, const Fontinfo&, OpenVGAdapter&vg, World* world, function<AffineTransform ()> world_transform);
+    HUD(const Vector& position, const Fontinfo&, World& world, function<AffineTransform ()> world_transform);
     virtual ~HUD();
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);

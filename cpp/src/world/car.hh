@@ -7,6 +7,7 @@
 
 #define CAR_ANGULAR_DAMPING 0.01f
 #define DRAG_COEFFICIENT 1.0f
+#define SLOT_DISTANCE 0.4f
 
 using namespace boost;
 
