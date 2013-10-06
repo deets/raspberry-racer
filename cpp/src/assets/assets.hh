@@ -46,6 +46,21 @@ public:
 
 class AssetManager : public NonCopyAble {
 
+
+public:
+
+  AssetManager(const OpenVGAdapter& vg);
+  AssetManager(const OpenVGAdapter& vg, const fs::path base);
+
+  const Fontinfo& font();
+  const PNGImageData& image(const fs::path&);
+  Json::Value json(const fs::path&);
+
+private:
+
+  bool _fonts_initialized;
+  map<fs::path, PNGImageData> _image_data;
+
   const fs::path _base;
   const OpenVGAdapter& _vg;
 
@@ -55,20 +70,12 @@ class AssetManager : public NonCopyAble {
 		    const int *InstructionIndices, const int *InstructionCounts, const int *adv, const short *cmap, int ng) const;
   void fonts_init();
 
+  /**
+   * Resolves the passed path relative
+   * to our own _base, if set
+   */
   const fs::path resolve_path(const fs::path p);
 
-public:
-
-  AssetManager(const OpenVGAdapter& vg);
-  AssetManager(const OpenVGAdapter& vg, const fs::path base);
-  // TODO: naming convention
-  const Fontinfo& font();
-  const PNGImageData& image(const fs::path&);
-  Json::Value json(const fs::path&);
-private:
-
-  bool _fonts_initialized;
-  map<fs::path, PNGImageData> _image_data;
 };
 
 

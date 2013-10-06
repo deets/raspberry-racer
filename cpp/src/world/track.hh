@@ -29,8 +29,11 @@ namespace rracer {
     virtual void render(OpenVGCompanion& vgc) const;
 
     const Rect bounds() const;
+    int number_of_lanes() const;
 
-    ConnectionPoint starting_position(int lane, int box) const;
+    pair<ConnectionPoint, TrackTile*> starting_position(int lane, int box) const;
+
+    pair<NearestPointInfo, TrackTile*> locate_slot_anchor(int lane, const Vector& slot) const;
 
   private:
     AssetManager& _am;

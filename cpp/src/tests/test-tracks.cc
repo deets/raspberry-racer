@@ -1,6 +1,6 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
-
+#include <boost/tuple/tuple.hpp>
 #include <gmock/gmock.h>
 
 #include "json/json.h"
@@ -147,6 +147,22 @@ TEST_F(TrackTests, TestStartingPosition) {
   ASSERT_TRUE(fs::exists(json_path));
   AssetManager am(*ovg_adapter);
   Track test_track(am, json_path);
-  ConnectionPoint p1 = test_track.starting_position(0, 0);
-  
+  ConnectionPoint p1 = test_track.starting_position(0, 0).first;
+}
+
+
+TEST_F(TrackTests, TestSlotAnchorLocation) {
+  fs::path json_path("resources/tests/simple-test-track.json");
+  ASSERT_TRUE(fs::exists(json_path));
+  AssetManager am(*ovg_adapter);
+  Track test_track(am, json_path);
+  ConnectionPoint p1 = test_track.starting_position(0, 0).first;
+  NearestPointInfo npi;
+  TrackTile* tile;
+  tie(npi, tile) = test_track.locate_slot_anchor(0, p1.point);
+  ASSERT_EQ(&test_track[0], tile);
+  ASSERT_EQ(p1.point, npi.point);
+  p1.point += Vector(0, 50);
+  tie(npi, tile) = test_track.locate_slot_anchor(0, p1.point);
+  ASSERT_EQ(&test_track[4], tile);
 }

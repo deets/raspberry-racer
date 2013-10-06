@@ -22,6 +22,7 @@ namespace rracer {
   public:
     typedef bi::list<WorldObject> WorldObjectList;
     typedef WorldObjectList::iterator wo_iterator;
+
     virtual ~WorldObject() {}
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);

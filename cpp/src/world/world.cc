@@ -36,6 +36,12 @@ namespace rracer {
   }
 
 
+  Rect World::screen_rect() const {
+    pair<int, int> window_dims = _window_adapter.window_dimensions();
+    return Rect(0, 0, window_dims.first, window_dims.second);
+  }
+
+
   void World::start_frame(const InputEventVector& events, Real elapsed) {
     _window_adapter.start();
 
@@ -94,7 +100,6 @@ namespace rracer {
   World::iterator World::end() {
     return iterator(_world_objects.end(), _world_objects.end());
   }
-
 
   // World::const_iterator World::begin() const {
   //   return const_iterator(true);

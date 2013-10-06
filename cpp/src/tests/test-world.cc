@@ -45,15 +45,13 @@ public:
 
 class WorldTests : public ::testing::Test {
 public:
-  TestWindowAdapter* window_adapter;
+  NiceMock<TestWindowAdapter>* window_adapter;
   NiceMock<TestOpenvgAdaptper>* ovg_adapter;
 
   virtual void SetUp() {
     ovg_adapter = new NiceMock<TestOpenvgAdaptper>();
-    window_adapter = new TestWindowAdapter();
-    EXPECT_CALL(*window_adapter, start()).Times(1);
-    EXPECT_CALL(*window_adapter, end()).Times(1);
-    EXPECT_CALL(*window_adapter, window_dimensions()).WillRepeatedly(Return(make_pair(1920, 1080)));
+    window_adapter = new NiceMock<TestWindowAdapter>();
+    ON_CALL(*window_adapter, window_dimensions()).WillByDefault(Return(make_pair(1920, 1080)));
   }
 
   virtual void TearDown() {
@@ -66,7 +64,11 @@ public:
 
 TEST_F(WorldTests, TestWorldLifeCycle) {
   InputEventVector events;
-  World world(*window_adapter, *ovg_adapter);
+  TestWindowAdapter window_adapter;
+  EXPECT_CALL(window_adapter, start()).Times(1);
+  EXPECT_CALL(window_adapter, end()).Times(1);
+  EXPECT_CALL(window_adapter, window_dimensions()).WillRepeatedly(Return(make_pair(1920, 1080)));
+  World world(window_adapter, *ovg_adapter);
   world.start_frame(events, 1.0/30.0);
   world.end_frame();
 }
@@ -136,11 +138,4 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
     }
     ASSERT_EQ(expected, result);
   }
-
-  
-
-  // satisfy windtow adapter reqs
-  InputEventVector events;
-  world.start_frame(events, 1.0/30.0);
-  world.end_frame();
 }

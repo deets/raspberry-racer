@@ -17,7 +17,6 @@
 
   MacWindowAdapter* _window_adapter;
   AssetManager* _asset_manager;
-  AssetManager* _car_asset_manager;
 
   rracer::HUD* _hud;
 

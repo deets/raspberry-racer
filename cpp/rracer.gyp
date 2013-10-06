@@ -23,6 +23,7 @@
             'src/world/world.cc',
             'src/world/track.cc',
             'src/world/car.cc',
+            'src/world/race.cc',
             'src/world/track-tiles.cc',
             'src/world/world-object.cc',
             'src/gfx/openvg-companion.cc',
@@ -192,6 +193,7 @@
                 'src/debug/debug.cc',
                 'src/debug/hud.cc',
                 'src/world/car.cc',
+                'src/world/race.cc',
 		'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'libraries' : [

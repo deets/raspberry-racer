@@ -49,7 +49,7 @@ namespace rracer {
     int lane;
     Vector point;
     Real offset; // the offset in tile-parametrization
-    Real distance;
+    Real distance; // distance from the originally given point
 
     bool operator<(const NearestPointInfo& other) const {
       return fabs(this->distance) < fabs(other.distance);
@@ -62,6 +62,10 @@ namespace rracer {
 
   public:
     TrackTile(const TileInfo&);
+    void connect(TrackTile* next);
+    TrackTile* next() const;
+    TrackTile* prev() const;
+
     static shared_ptr<TrackTile> create_tile(const Json::Value&, const ConnectionPoint&, const TileInfo&);
     virtual ConnectionPoint start() const;
     virtual ConnectionPoint end() const;
@@ -69,11 +73,15 @@ namespace rracer {
     virtual const Rect bounds() const;
     virtual Vector position(Real offset, int lane) const=0;
     virtual NearestPointInfo nearest_point(int lane, const Vector&) const=0;
+
   protected:
     Rect _bounds;
     const TileInfo& _ti;
     ConnectionPoint _start;
     ConnectionPoint _end;
+
+    TrackTile* _next;
+    TrackTile* _prev;
   };
 
 

@@ -14,8 +14,7 @@
 
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
-#include "world/track.hh"
-#include "world/car.hh"
+#include "world/race.hh"
 
 #import "RaspRacerAppDelegate.h"
 
@@ -30,7 +29,7 @@ namespace fs = boost::filesystem;
   self = [super init];
   _window_adapter = 0;
   _hud = 0;
-  _asset_manager = _car_asset_manager = 0;
+  _asset_manager = 0;
   _world = 0;
   _events = new rracer::InputEventVector();
   _world_timer = new Timer();
@@ -45,10 +44,6 @@ namespace fs = boost::filesystem;
   }
   if (_asset_manager) {
     delete _asset_manager;
-  }
-
-  if (_car_asset_manager) {
-    delete _car_asset_manager;
   }
 
   if(_events) {
@@ -76,52 +71,15 @@ namespace fs = boost::filesystem;
   NSLog(@"glview: %@", _glview);
 
   NSSize size = [_glview frame].size;
-
   _window_adapter = new MacWindowAdapter(size.width, size.height);
 
   fs::path bundle_resources([[[NSBundle mainBundle] resourcePath] UTF8String]);
+
   _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
-  _car_asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources" / "cars");
-
   _world = new rracer::World(*_window_adapter, *_window_adapter);
+  rracer::Race* race = new rracer::Race(*_world, *_asset_manager, "tests/simple-test-track.json", "cars/car-one.json");
+  _world->add_object(race);
 
-
-  rracer::Rect screen_rect(0, 0, size.width, size.height);
-  rracer::Track* track = new rracer::Track(*_asset_manager, "tests/simple-test-track.json");
-
-  rracer::AffineTransformator* t = new rracer::AffineTransformator(screen_rect.fit(track->bounds() * 1.1));
-
-  rracer::Car* car = new rracer::Car(*_car_asset_manager, _car_asset_manager->json("car-one.json"));
-
-  car->physics_setup(_world->world());
-  t->add_object(track);
-  t->add_object(car);
-  car->place(track->starting_position(0, 0));
-  // rracer::CircleRenderer* slot_renderer = new rracer::CircleRenderer(
-  //     boost::bind(&rracer::Car::slot_position, car),
-  //     .1,
-  //     rracer::Color::yellow
-  // );
-
-  // t->add_object(slot_renderer);
-
-  _world->add_object(t);
-  _hud = new rracer::HUD(
-      rracer::Vector(20, size.height - 20),
-      _asset_manager->font(),
-      *_window_adapter,
-      _world,
-      boost::bind(&rracer::AffineTransformator::affine_transform, t)
-  );
-  _world->add_object(_hud);
-
-  rracer::ConnectionPoint point = { rracer::Vector(10, 10), 45 };
-  rracer::KeyAction* resetter = new rracer::KeyAction(
-      rracer::K_SPACE,
-      boost::bind(&rracer::Car::place, car, point)
-  );
-
-  _world->add_object(resetter);
   [_glview setRenderCallback: self];
   _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / WORLD_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
 

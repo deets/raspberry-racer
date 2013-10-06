@@ -37,6 +37,9 @@ namespace rracer {
       iterator& operator++();
       reference operator*() const;
       pointer operator->() const;
+
+      Rect screen_rect() const;
+
     private:
       stack<pair<wo_iterator, wo_iterator> > _iterators;
     };
@@ -75,6 +78,7 @@ namespace rracer {
 
     void set_debug_renderer(DebugRenderer*);
     b2World* world() const;
+    Rect screen_rect() const;
 
   private:
     bool _has_ended;

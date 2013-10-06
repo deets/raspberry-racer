@@ -1,5 +1,5 @@
 {
-    "image" : "yellow.png",
+    "image" : "cars/yellow.png",
     "length" : 12.0,
     "width" : 6.0,
     "slot-offset" : 3.0,

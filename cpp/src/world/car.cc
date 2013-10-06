@@ -79,6 +79,16 @@ namespace rracer {
   }
 
 
+  void Car::push_to_slot(const Vector& slot) {
+    const Vector pivot_pos = position().point;
+    const Vector d = slot - pivot_pos;
+    if(d.norm()) {
+      _body->ApplyLinearImpulse(vconv(d * 100), vconv(pivot_pos));
+      //_body->ApplyLinearImpulse(b2Vec2(0, 1000), vconv(pivot_pos));
+    }
+  }
+
+
   void Car::physics_setup(b2World* world) {
     _world = world;
     b2BodyDef body_def;
@@ -168,13 +178,22 @@ namespace rracer {
 
 
   void Wheel::step(Real elapsed, bool accelerate, const EngineInfo& engine) {
+    const b2Vec2 center = _body->GetWorldCenter();
+    b2Vec2 vel = _body->GetLinearVelocity();
+    b2Vec2 rn = _body->GetWorldVector(b2Vec2(0, 1.0));
+    b2Vec2 fn = _body->GetWorldVector(b2Vec2(1.0, 0));
+
     if(accelerate) {
-      b2Vec2 force(engine.power, 0);
-      force = _body->GetWorldVector(force);
-      b2Vec2 point = _body->GetWorldCenter();
-      _body->ApplyForce(force, point);
+      _body->ApplyForce(engine.power * fn, center);
     }
+    
+    _body->ApplyForce(-DRAG_COEFFICIENT * fn, center);
+
+    Real pvel = b2Dot(rn, vel);
+    b2Vec2 lat_vel = pvel * rn;
+    _body->ApplyLinearImpulse(-lat_vel, center);
   }
+
   
   void Wheel::physics_setup(b2World* world, b2Body* chassis, vector<function< void()> >& destroyers) {
     b2BodyDef body_def;

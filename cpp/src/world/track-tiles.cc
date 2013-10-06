@@ -4,6 +4,23 @@
 
 
 namespace rracer {
+
+  void TrackTile::connect(TrackTile* next) {
+    _next = next;
+    next->_prev = this;
+  }
+
+
+  TrackTile* TrackTile::next() const {
+    return _next;
+  }
+
+
+  TrackTile* TrackTile::prev() const {
+    return _prev;
+  }
+
+
   Straight::Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti)
       : TrackTile(ti)
     {

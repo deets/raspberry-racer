@@ -6,6 +6,7 @@
 #include "world/world-object.hh"
 
 #define CAR_ANGULAR_DAMPING 0.01f
+#define DRAG_COEFFICIENT 1.0f
 
 using namespace boost;
 
@@ -34,6 +35,19 @@ namespace rracer {
 
   class Car : public WorldObject {
 
+  public:
+    Car(AssetManager&, const Json::Value&);
+    virtual ~Car();
+
+    virtual void render(OpenVGCompanion& vgc) const;
+    virtual void physics_setup(b2World *);
+    virtual void process_input_events(const InputEventVector& events, double elapsed);
+
+    ConnectionPoint position() const;
+    void place(const ConnectionPoint&);
+    void push_to_slot(const Vector& slot);
+  private:
+
     AssetManager& _am;
     Real _length;
     Real _width;
@@ -55,16 +69,6 @@ namespace rracer {
 
     EngineInfo _engine;
 
-  public:
-    Car(AssetManager&, const Json::Value&);
-    virtual ~Car();
-
-    virtual void render(OpenVGCompanion& vgc) const;
-    virtual void physics_setup(b2World *);
-    virtual void process_input_events(const InputEventVector& events, double elapsed);
-
-    ConnectionPoint position() const;
-    void place(const ConnectionPoint&);
   };
 
 

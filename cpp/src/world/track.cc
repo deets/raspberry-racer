@@ -85,6 +85,10 @@ namespace rracer {
 	_starting_grid = static_cast<StartingGrid*>(tile.get());
       }
     }
+    for(int i = 0; i < _tiles.size() - 1; ++i) {
+      _tiles[i]->connect(_tiles[i+1].get());
+    }
+    _tiles[_tiles.size()-1]->connect(_tiles[0].get());
     _bounds = bounds;
     assert(!_bounds.empty());
   }
@@ -107,14 +111,37 @@ namespace rracer {
   }
 
 
-  ConnectionPoint Track::starting_position(int lane, int box) const {
-    return _starting_grid->starting_position(lane, box);
+  pair<ConnectionPoint, TrackTile*> Track::starting_position(int lane, int box) const {
+    return make_pair(_starting_grid->starting_position(lane, box), _starting_grid);
   }
 
+
+  pair<NearestPointInfo, TrackTile*> Track::locate_slot_anchor(int lane, const Vector& slot) const {
+    NearestPointInfo npi;
+    npi.distance = -1.0;
+    TrackTile* the_tile;
+    BOOST_FOREACH(shared_ptr<TrackTile> tile, _tiles)  {
+      if(tile->bounds().contains(slot)) {
+	NearestPointInfo h = tile->nearest_point(lane, slot);
+	if(npi.distance == -1.0 || npi.distance > h.distance) {
+	  npi = h;
+	  the_tile = tile.get();
+	}
+      }
+    }
+    assert(npi.distance != -1.0);
+    return make_pair(npi, the_tile);
+  }
+  
   
   TrackTile& Track::operator[](size_t index) const {
     assert(index < _tiles.size());
     return *_tiles[index];
+  }
+
+
+  int Track::number_of_lanes() const {
+    return _tile_info->number_of_lanes();
   }
 
 
