@@ -78,6 +78,7 @@ namespace rracer {
 
     static const Color black;
     static const Color yellow;
+    static const Color red;
   };
 
 

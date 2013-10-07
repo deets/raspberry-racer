@@ -239,5 +239,6 @@ namespace rracer {
   // Static color definitions
   const Color Color::black = Color(0, 0, 0);
   const Color Color::yellow = Color(1, 1, 0);
+  const Color Color::red = Color(1, 0, 0);
 
 }; //ns::rracer
