@@ -51,14 +51,14 @@ namespace rracer {
     return res;
   }
 
-  NearestPointInfo Straight::nearest_point(int lane, const Vector& slot_position) const {
+  NearestPointInfo Straight::nearest_point(int lane, const Vector& pivot_position) const {
     NearestPointInfo npi;
     npi.lane = lane;
     const Vector start = position(0, lane);
     const Vector n = rotation(_start.direction) * Vector(0, 1.0);
-    npi.distance = fabs((slot_position - start).dot(n));
+    npi.distance = fabs((pivot_position - start).dot(n));
     const Vector d = rotation(_start.direction) * Vector(1.0, 0);
-    npi.offset = (slot_position - start).dot(d) / _length;
+    npi.offset = (pivot_position - start).dot(d) / _length;
     npi.point = start + (d * npi.offset * _length);
     return npi;
   }
@@ -117,11 +117,11 @@ namespace rracer {
   }
 
 
-  NearestPointInfo Curve::nearest_point(int lane, const Vector& slot_position) const {
+  NearestPointInfo Curve::nearest_point(int lane, const Vector& pivot_position) const {
     const Vector cp = center_point(_start, _radius, _ti.width());
     const Vector swipe = _start.point - cp;
     const Vector norm = swipe / swipe.norm();
-    const Vector p = slot_position - cp;
+    const Vector p = pivot_position - cp;
     const Real angle = ::acos((swipe / swipe.norm()).dot(p / p.norm())) / M_PI * 180;
     const Real offset = angle / _degrees;
     const AffineTransform r = rotation(angle);
@@ -131,7 +131,7 @@ namespace rracer {
       lane,
       point,
       offset,
-      (point - slot_position).norm()
+      (point - pivot_position).norm()
     };
     return npi;
   }

@@ -7,7 +7,7 @@
 
 #define CAR_ANGULAR_DAMPING 0.01f
 #define DRAG_COEFFICIENT 1.0f
-#define SLOT_DISTANCE 0.4f
+#define SLOT_DISTANCE 0.1f
 
 using namespace boost;
 
@@ -15,6 +15,34 @@ namespace rracer {
 
   struct EngineInfo {
     Real power;
+  };
+
+  class SlotJoint {
+  public:
+    virtual Vector slot_impulse(const Vector& pivot_position, const Vector& slot_position)=0;
+  };
+
+
+  class FunctionSlotJoint : public SlotJoint {
+  public:
+    FunctionSlotJoint(Real distance_norm, Real power);
+    virtual Vector slot_impulse(const Vector& pivot_position, const Vector& slot_position);
+  private:
+    Real _distance_norm;
+    Real _power;
+  };
+
+
+  class PDSlotJoint : public SlotJoint {
+  public:
+    PDSlotJoint(Real df, Real pf);
+    virtual Vector slot_impulse(const Vector& pivot_position, const Vector& slot_position);
+
+  private:
+    Real _f;
+    Real _df;
+    Real _pf;
+    Real _last_distance;
   };
 
   class Wheel {
@@ -52,11 +80,12 @@ namespace rracer {
     AssetManager& _am;
     Real _length;
     Real _width;
-    Real _slot_offset;
+    Real _pivot_offset;
     Real _mass;
 
     string _image_name;
     b2Body* _body;
+    b2Body* _pivot_body;
     b2World* _world;
     bool _accelerate;
 
@@ -70,6 +99,7 @@ namespace rracer {
 
     EngineInfo _engine;
 
+    shared_ptr<SlotJoint> _slot_joint;
   };
 
 

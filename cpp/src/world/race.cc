@@ -19,8 +19,14 @@ namespace rracer {
     car->place(point);
   }
 
-  void CarInfo::process_input_events(const InputEventVector& events, double elapsed) {
-    const Vector car_pos = car->position().point;
+
+  Vector CarInfo::car_position() const {
+    return car->position().point;
+  }
+
+
+  Vector CarInfo::slot_position() {
+    const Vector car_pos = car_position();
     NearestPointInfo npi = tile->nearest_point(lane, car_pos);
     if(npi.offset > 1.0) {
       tile = tile->next();
@@ -29,8 +35,13 @@ namespace rracer {
       tile = tile->prev();
       npi = tile->nearest_point(lane, car_pos);
     }
-    assert(npi.offset >= 0 && npi.offset <= 1.0);
-    car->push_to_slot(npi.point);
+    assert(npi.offset >= 0 && npi.offset <= 1.0);    
+    return npi.point;
+  }
+
+
+  void CarInfo::process_input_events(const InputEventVector& events, double elapsed) {
+    car->push_to_slot(slot_position());
   }
 
   Race::Race(World& world, AssetManager& asset_manager, const string& track_name, const string& car_name) 
@@ -64,6 +75,8 @@ namespace rracer {
 
     // _world->add_object(resetter);
 
+    t->add_object(new CircleRenderer(boost::bind(&CarInfo::car_position, &_cars[0]), .2, Color::yellow));
+    t->add_object(new CircleRenderer(boost::bind(&CarInfo::slot_position, &_cars[0]), .2, Color::red));
   }
 
   void Race::process_input_events(const InputEventVector& events, double elapsed) {

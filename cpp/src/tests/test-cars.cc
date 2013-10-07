@@ -49,7 +49,7 @@ public:
       ("length", 12.0)
       ("width", 8.0)
       ("mass", 100)
-      ("slot-offset", 3.0)
+      ("pivot-offset", 3.0)
       ("power", 1500.0)
       ("wheels", 
        jh

@@ -6,6 +6,61 @@
 
 namespace rracer {
 
+
+  FunctionSlotJoint::FunctionSlotJoint(Real distance_norm, Real power) 
+    : _distance_norm(distance_norm)
+    , _power(power)
+  {
+
+  }
+
+
+  Vector FunctionSlotJoint::slot_impulse(const Vector& pivot_position, const Vector& slot_position) {
+    const Vector d = slot_position - pivot_position;
+    const Real distance = d.norm();
+    if(distance) {
+      Real f = pow(distance / _distance_norm, _power) / distance;
+      return d * f;
+    }
+    return Vector(0, 0);
+  }
+
+
+  PDSlotJoint::PDSlotJoint(Real pf, Real df)
+    : _df(df)
+    , _pf(pf)
+    , _f(0)
+    , _last_distance(0)
+  {
+  }
+
+
+  Vector PDSlotJoint::slot_impulse(const Vector& pivot_position, const Vector& slot_position) {
+    const Vector d = slot_position - pivot_position;
+    const Real distance = d.norm();
+    if(distance) {
+      Real df = 0;
+      //if(distance < _last_distance) {
+	df = (distance - _last_distance) * _df;
+	//} else {
+	
+	//x}
+      Real pf = distance * _pf;
+      _f += pf + df;
+      cerr << "pf: " << pf << " df:" << df << endl;
+
+      _last_distance = distance;
+      return d * (_f / distance);
+    } else {
+      _f = 0;
+      _last_distance = distance;
+      return Vector(0, 0);
+    }
+  }
+
+
+  //=====================
+
   Car::Car(AssetManager& am, const Json::Value& car_info) 
     : _am(am)
     , _accelerate(false)
@@ -14,7 +69,7 @@ namespace rracer {
     assert(car_info.isMember("length") && car_info["length"].isDouble());
     assert(car_info.isMember("width") && car_info["width"].isDouble());
     assert(car_info.isMember("mass") && car_info["mass"].isDouble());
-    assert(car_info.isMember("slot-offset") && car_info["slot-offset"].isDouble());
+    assert(car_info.isMember("pivot-offset") && car_info["pivot-offset"].isDouble());
     assert(car_info.isMember("wheels") && car_info["wheels"].isArray());
     assert(car_info.isMember("power") && car_info["power"].isDouble());
     _engine.power = car_info["power"].asDouble();
@@ -22,12 +77,16 @@ namespace rracer {
     _length = car_info["length"].asDouble();
     _width = car_info["width"].asDouble();
     _mass = car_info["mass"].asDouble();
-    _slot_offset = car_info["slot-offset"].asDouble();
+    _pivot_offset = car_info["pivot-offset"].asDouble();
     Json::Value json_wheels = car_info["wheels"];
     for(int i = 0; i < json_wheels.size(); ++i) {
       Json::Value json_wheel = json_wheels[i];
       _wheels.push_back(Wheel(json_wheel));
     }
+    _slot_joint = shared_ptr<SlotJoint>(
+	new PDSlotJoint(5.0, 5.0)
+    );
+    // new FunctionSlotJoint(SLOT_DISTANCE, 3));
   }
 
 
@@ -68,6 +127,7 @@ namespace rracer {
     }
   }
 
+
   void Car::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent event, events) {
       switch(event.key) {
@@ -80,13 +140,11 @@ namespace rracer {
 
 
   void Car::push_to_slot(const Vector& slot) {
-    const Vector pivot_pos = position().point;
-    const Vector d = slot - pivot_pos;
-    if(d.norm()) {
-      Real f = pow(d.norm() / SLOT_DISTANCE, 2);
-      _body->ApplyLinearImpulse(vconv(d * f * 100), vconv(pivot_pos));
-      //_body->ApplyLinearImpulse(b2Vec2(0, 1000), vconv(pivot_pos));
-    }
+    b2Vec2 pos = _pivot_body->GetPosition();
+    cerr << "slot: " << slot[0] << "x" << slot[1] << " pivot_body: " << pos.x << "x" << pos.y << endl;
+    _pivot_body->SetTransform(vconv(slot), 0);
+    _pivot_body->SetAngularVelocity(0);
+    _pivot_body->SetLinearVelocity(b2Vec2(0, 0));
   }
 
 
@@ -102,6 +160,32 @@ namespace rracer {
     _body = world->CreateBody(&body_def);
     _destroyers.push_back(bind(&b2World::DestroyBody, _world, _body));
 
+    b2BodyDef pivot_body_def;
+    pivot_body_def.type = b2_kinematicBody;
+    pivot_body_def.linearDamping = 0.0f;
+    pivot_body_def.angularDamping = CAR_ANGULAR_DAMPING;
+    pivot_body_def.active = true;
+    pivot_body_def.position = vconv(position().point);
+    pivot_body_def.angle = 0.0f;
+    _pivot_body = world->CreateBody(&pivot_body_def);
+    _destroyers.push_back(bind(&b2World::DestroyBody, _world, _pivot_body));
+
+    // b2PolygonShape foo;
+    // foo.SetAsBox(.1, .1); // box2d uses half-widths here
+    // b2FixtureDef fixture_def;
+    // fixture_def.shape = &foo;
+    // fixture_def.friction = 0.0f;
+    // fixture_def.density = 1000000.0;
+    // _pivot_body->CreateFixture(&fixture_def);
+
+    b2RopeJointDef pivot_joint_def;
+    pivot_joint_def.bodyA = _body;
+    pivot_joint_def.bodyB = _pivot_body;
+    pivot_joint_def.localAnchorA = pivot_body_def.position;
+    pivot_joint_def.localAnchorB = b2Vec2(0, 0); //pivot_body_def.position;
+    pivot_joint_def.maxLength = 1.1;
+    world->CreateJoint(&pivot_joint_def);
+    
     b2PolygonShape chassis;
     chassis.SetAsBox(_length / 2.0, _width / 2.0); // box2d uses half-widths here
     b2FixtureDef fixture_def;
@@ -109,6 +193,7 @@ namespace rracer {
     fixture_def.friction = 0.0f;
     fixture_def.density = _mass / (_length * _width);
     _body->CreateFixture(&fixture_def);
+
     BOOST_FOREACH(Wheel& wheel, _wheels) {
       wheel.physics_setup(world, _body, _destroyers);
     }
@@ -118,11 +203,11 @@ namespace rracer {
   ConnectionPoint Car::position() const {
     ConnectionPoint res;
     b2Vec2 center = _body->GetWorldCenter();
-    b2Vec2 slot(_slot_offset, 0);
-    slot = _body->GetWorldVector(slot);
-    b2Vec2 slot_position = center + slot;
-    res.point = Vector(slot_position.x, slot_position.y);
-    res.direction = RAD2DEG(atan2(slot.y, slot.x));
+    b2Vec2 pivot(_pivot_offset, 0);
+    pivot = _body->GetWorldVector(pivot);
+    b2Vec2 pivot_position = center + pivot;
+    res.point = Vector(pivot_position.x, pivot_position.y);
+    res.direction = RAD2DEG(atan2(pivot.y, pivot.x));
     return res;
   }
 
@@ -146,6 +231,7 @@ namespace rracer {
     const Real rad_angle = DEG2RAD(angle);
     const b2Vec2 dest_pos = vconv(dest.point);
     const b2Vec2 current_pos = vconv(pos.point);
+    _pivot_body->SetTransform(current_pos, 0);
     translate_body(_body, rad_angle, dest_pos, current_pos);
     
     BOOST_FOREACH(Wheel& wheel, _wheels) {
