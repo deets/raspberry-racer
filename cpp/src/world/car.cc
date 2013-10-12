@@ -183,7 +183,7 @@ namespace rracer {
     pivot_joint_def.bodyB = _pivot_body;
     pivot_joint_def.localAnchorA = pivot_body_def.position;
     pivot_joint_def.localAnchorB = b2Vec2(0, 0); //pivot_body_def.position;
-    pivot_joint_def.maxLength = 1.1;
+    pivot_joint_def.maxLength = .1;
     world->CreateJoint(&pivot_joint_def);
     
     b2PolygonShape chassis;
@@ -273,12 +273,12 @@ namespace rracer {
     if(accelerate) {
       _body->ApplyForce(engine.power * fn, center);
     }
-    
-    _body->ApplyForce(-DRAG_COEFFICIENT * fn, center);
+    Real nvel = b2Dot(fn, vel);
+    _body->ApplyForce(-DRAG_COEFFICIENT * nvel * fn, center);
 
     Real pvel = b2Dot(rn, vel);
     b2Vec2 lat_vel = pvel * rn;
-    _body->ApplyLinearImpulse(-lat_vel, center);
+    _body->ApplyLinearImpulse(-LAT_COEFFICIENT * lat_vel, center);
   }
 
   
