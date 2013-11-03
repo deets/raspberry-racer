@@ -75,7 +75,7 @@ namespace rracer {
 
     ConnectionPoint position() const;
     void place(const ConnectionPoint&);
-    void push_to_slot(const Vector& slot);
+    void push_to_slot(const ConnectionPoint& slot);
   private:
 
     AssetManager& _am;

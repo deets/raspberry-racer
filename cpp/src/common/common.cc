@@ -9,7 +9,21 @@ using namespace std;
 
 namespace rracer {
 
-  AffineTransform rotation(int degree) {
+  //================
+
+  Vector ConnectionPoint::tangent() const {
+    return rotation(direction) * Vector(1.0, 0);
+  }
+
+
+  Vector ConnectionPoint::normal() const {
+    return rotation(direction) * Vector(0, 1.0);
+  }
+
+
+  //================
+
+  AffineTransform rotation(Real degree) {
     AffineTransform t = AffineTransform::Identity();
     return t.rotate(DEG2RAD(degree));
   }

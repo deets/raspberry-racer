@@ -30,7 +30,7 @@ namespace rracer {
       Vector l(_length, 0);
       l = t * l;
       _start = start;
-      _end.point = _start.point + l;
+      _end.position = _start.position + l;
       _end.direction = _start.direction;
       _bounds = Rect::from_points(corners());
     }
@@ -42,8 +42,8 @@ namespace rracer {
     Vector offset(0, whalf);
     AffineTransform t = rotation(start().direction);
     offset = t * offset;
-    const Vector start = this->start().point;
-    const Vector end =  this->end().point;
+    const Vector start = this->start().position;
+    const Vector end =  this->end().position;
     res.push_back(start + offset);
     res.push_back(end + offset);
     res.push_back(end - offset);
@@ -59,7 +59,8 @@ namespace rracer {
     npi.distance = fabs((pivot_position - start).dot(n));
     const Vector d = rotation(_start.direction) * Vector(1.0, 0);
     npi.offset = (pivot_position - start).dot(d) / _length;
-    npi.point = start + (d * npi.offset * _length);
+    npi.point.position = start + (d * npi.offset * _length);
+    npi.point.direction = _start.direction;
     return npi;
   }
 
@@ -92,7 +93,7 @@ namespace rracer {
     assert(offset >= 0 && offset <= 1.0);
     assert(lane >= 0 && lane < _ti.number_of_lanes());
     const Vector lane_offset = rotation(_start.direction) * Vector(0, _ti[lane]);
-    return _start.point + (_end.point - _start.point) * offset + lane_offset;
+    return _start.position + (_end.position - _start.position) * offset + lane_offset;
   }
 
   //======================================================================
@@ -113,25 +114,25 @@ namespace rracer {
     Vector center_point(0, sign);
     center_point *= tile_width / 2.0 + fabs(radius);
     AffineTransform r = rotation(start.direction);
-    return (r * center_point) + start.point;
+    return (r * center_point) + start.position;
   }
 
 
   NearestPointInfo Curve::nearest_point(int lane, const Vector& pivot_position) const {
     const Vector cp = center_point(_start, _radius, _ti.width());
-    const Vector swipe = _start.point - cp;
+    const Vector swipe = _start.position - cp;
     const Vector norm = swipe / swipe.norm();
     const Vector p = pivot_position - cp;
     const Real angle = ::acos((swipe / swipe.norm()).dot(p / p.norm())) / M_PI * 180;
     const Real offset = angle / _degrees;
     const AffineTransform r = rotation(angle);
     const Real tile_offset = _ti.width() / 2.0 + _radius - _ti[lane];
-    const Vector point = r * norm * tile_offset + cp;
+    const ConnectionPoint point = { r * norm * tile_offset + cp, angle };
     NearestPointInfo npi = { 
       lane,
       point,
       offset,
-      (point - pivot_position).norm()
+      (point.position - pivot_position).norm()
     };
     return npi;
   }
@@ -146,8 +147,8 @@ namespace rracer {
       _radius = tile["radius"].asDouble();
       _degrees = tile["degrees"].asDouble();
       Vector center_point = Curve::center_point(start, _radius, _ti.width());
-      Vector swipe = start.point - center_point;
-      _end.point = (rotation(_degrees) * swipe) + center_point;
+      Vector swipe = start.position - center_point;
+      _end.position = (rotation(_degrees) * swipe) + center_point;
       _end.direction = start.direction + _degrees;
 
       vector<Vector> points;
@@ -184,10 +185,10 @@ namespace rracer {
       Vector start_offset = t * offset;
       t = rotation(_end.direction);
       Vector end_offset = t * offset;
-      Vector p1 = _start.point + start_offset;
-      Vector p2 = _end.point + end_offset;
-      Vector p3 = _end.point - end_offset;
-      Vector p4 = _start.point - start_offset;
+      Vector p1 = _start.position + start_offset;
+      Vector p2 = _end.position + end_offset;
+      Vector p3 = _end.position - end_offset;
+      Vector p4 = _start.position - start_offset;
       vgc.move_to(p, p1, VG_ABSOLUTE);
       vgc.arc(p, VG_SCCWARC_TO, p2, _radius, _radius, _degrees, VG_ABSOLUTE);
       vgc.line_to(p, p3, VG_ABSOLUTE);
@@ -213,7 +214,7 @@ namespace rracer {
     assert(offset >= 0 && offset <= 1.0);
     assert(lane >= 0 && lane < _ti.number_of_lanes());
     const Vector cp = Curve::center_point(_start, _radius, _ti.width());
-    Vector v = (_start.point - cp) / (_ti.width() / 2.0 + _radius);
+    Vector v = (_start.position - cp) / (_ti.width() / 2.0 + _radius);
     v *= _ti.width() / 2.0 + _radius - _ti[lane];
     return cp + (rotation(offset * _degrees) * v);
   }
@@ -244,7 +245,7 @@ namespace rracer {
     const AffineTransform r = rotation(_start.direction);
     const Vector step_x = r * Vector(base, 0);
     const Vector step_y = r * Vector(0, base);
-    const Vector end = _end.point;
+    const Vector end = _end.position;
     {
       PaintScope white(vgc, Color(1.0, 1.0, 1.0), VG_FILL_PATH);
       PathScope p(vgc, VG_FILL_PATH);

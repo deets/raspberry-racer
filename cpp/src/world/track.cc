@@ -65,7 +65,7 @@ namespace rracer {
     _tile_info = shared_ptr<TileInfo>(new TileInfo(json["tile-info"]));
 
     ConnectionPoint connection_point;
-    connection_point.point << 0.0, 0.0;
+    connection_point.position << 0.0, 0.0;
     connection_point.direction = 0.0;
 
     Rect bounds;

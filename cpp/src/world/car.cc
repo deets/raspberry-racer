@@ -114,7 +114,7 @@ namespace rracer {
     t = rotation(-90) * t;
     // rot/t to our position
     t = rotation(position.direction) * t;
-    t = translate(position.point) * t;
+    t = translate(position.position) * t;
     MatrixStacker(vgc, t);
     PaintScope p(vgc, Color::black, VG_FILL_PATH | VG_STROKE_PATH);
     vgc.drawImage(img_data);
@@ -139,10 +139,10 @@ namespace rracer {
   }
 
 
-  void Car::push_to_slot(const Vector& slot) {
+  void Car::push_to_slot(const ConnectionPoint& slot) {
     b2Vec2 pos = _pivot_body->GetPosition();
-    cerr << "slot: " << slot[0] << "x" << slot[1] << " pivot_body: " << pos.x << "x" << pos.y << endl;
-    _pivot_body->SetTransform(vconv(slot), 0);
+    //cerr << "slot: " << slot[0] << "x" << slot[1] << " pivot_body: " << pos.x << "x" << pos.y << endl;
+    _pivot_body->SetTransform(vconv(slot.position), 0);
     _pivot_body->SetAngularVelocity(0);
     _pivot_body->SetLinearVelocity(b2Vec2(0, 0));
   }
@@ -165,7 +165,7 @@ namespace rracer {
     pivot_body_def.linearDamping = 0.0f;
     pivot_body_def.angularDamping = CAR_ANGULAR_DAMPING;
     pivot_body_def.active = true;
-    pivot_body_def.position = vconv(position().point);
+    pivot_body_def.position = vconv(position().position);
     pivot_body_def.angle = 0.0f;
     _pivot_body = world->CreateBody(&pivot_body_def);
     _destroyers.push_back(bind(&b2World::DestroyBody, _world, _pivot_body));
@@ -206,7 +206,7 @@ namespace rracer {
     b2Vec2 pivot(_pivot_offset, 0);
     pivot = _body->GetWorldVector(pivot);
     b2Vec2 pivot_position = center + pivot;
-    res.point = Vector(pivot_position.x, pivot_position.y);
+    res.position = vconv(pivot_position);
     res.direction = RAD2DEG(atan2(pivot.y, pivot.x));
     return res;
   }
@@ -229,8 +229,8 @@ namespace rracer {
     ConnectionPoint pos = position();
     const Real angle = dest.direction - pos.direction;
     const Real rad_angle = DEG2RAD(angle);
-    const b2Vec2 dest_pos = vconv(dest.point);
-    const b2Vec2 current_pos = vconv(pos.point);
+    const b2Vec2 dest_pos = vconv(dest.position);
+    const b2Vec2 current_pos = vconv(pos.position);
     _pivot_body->SetTransform(current_pos, 0);
     translate_body(_body, rad_angle, dest_pos, current_pos);
     

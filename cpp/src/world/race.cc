@@ -21,11 +21,11 @@ namespace rracer {
 
 
   Vector CarInfo::car_position() const {
-    return car->position().point;
+    return car->position().position;
   }
 
 
-  Vector CarInfo::slot_position() {
+  ConnectionPoint CarInfo::slot_position() {
     const Vector car_pos = car_position();
     NearestPointInfo npi = tile->nearest_point(lane, car_pos);
     if(npi.offset > 1.0) {
@@ -44,10 +44,17 @@ namespace rracer {
     car->push_to_slot(slot_position());
   }
 
+
   Race::Race(World& world, AssetManager& asset_manager, const string& track_name, const string& car_name) 
   : _world(world)
   , _asset_manager(asset_manager)
   {
+    struct local {
+      static Vector to_vector(function<ConnectionPoint () > cpf) {
+	return cpf().position;
+      }
+    };
+
     rracer::Track* track = new rracer::Track(_asset_manager, track_name);
     rracer::AffineTransformator* t = new rracer::AffineTransformator(_world.screen_rect().fit(track->bounds() * 1.1));
     rracer::Car* car = new rracer::Car(_asset_manager, _asset_manager.json(car_name));
@@ -74,9 +81,12 @@ namespace rracer {
     // );
 
     // _world->add_object(resetter);
-
+    
+    function<ConnectionPoint ()> slot_pos_func2 = boost::bind(&CarInfo::slot_position, &_cars[0]);
+    function<Vector ()> slot_position_func;
+    slot_position_func = boost::bind(&local::to_vector, slot_pos_func2);
     t->add_object(new CircleRenderer(boost::bind(&CarInfo::car_position, &_cars[0]), .2, Color::yellow));
-    t->add_object(new CircleRenderer(boost::bind(&CarInfo::slot_position, &_cars[0]), .2, Color::red));
+    t->add_object(new CircleRenderer(slot_position_func, .2, Color::red));
   }
 
   void Race::process_input_events(const InputEventVector& events, double elapsed) {
@@ -86,3 +96,12 @@ namespace rracer {
   }
 
 } // end ns::rracer
+
+
+
+
+
+
+
+
+

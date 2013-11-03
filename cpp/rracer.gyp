@@ -194,7 +194,7 @@
                 'src/debug/hud.cc',
                 'src/world/car.cc',
                 'src/world/race.cc',
-		'third-party/jsoncpp/jsoncpp.cpp',
+                'third-party/jsoncpp/jsoncpp.cpp',
                 ],
             'libraries' : [
                 '-L/usr/local/opt/libpng/lib',

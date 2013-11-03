@@ -14,7 +14,7 @@ namespace rracer {
     void process_input_events(const InputEventVector& events, double elapsed);
 
     Vector car_position() const;
-    Vector slot_position();
+    ConnectionPoint slot_position();
 
     Car* car;
     Track* track;

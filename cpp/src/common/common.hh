@@ -21,14 +21,18 @@ namespace rracer {
   typedef Eigen::Vector2d Vector;
   typedef double Real;
 
-  AffineTransform rotation(int degree);
+  AffineTransform rotation(Real degree);
   AffineTransform scale(Real f);
   AffineTransform translate(const Vector&);
 
-  typedef struct {
-    Vector point;
+  struct ConnectionPoint {
+    Vector position;
     Real direction;
-  } ConnectionPoint;
+
+    Vector tangent() const;
+    Vector normal() const;
+
+  };
 
   class Rect {
 

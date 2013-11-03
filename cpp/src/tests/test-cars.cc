@@ -90,10 +90,10 @@ TEST_F(CarTests, TestCarLoading) {
     TestCar* car = new TestCar(*asset_manager, car_info);
     world.add_object(car);
     ASSERT_EQ(2, car->wheel_count());
-    ASSERT_EQ(3, car->destroyer_count());
+    ASSERT_EQ(4, car->destroyer_count());
     ConnectionPoint pos = car->position();
     ASSERT_FLOAT_EQ(0, pos.direction);
-    ASSERT_VECTOR_EQ(Vector(3.0, .0), pos.point);
+    ASSERT_VECTOR_EQ(Vector(3.0, .0), pos.position);
     world.start_frame(events, 1/30.0);
   }
 }
@@ -109,7 +109,7 @@ TEST_F(CarTests, TestCarPlacing) {
     car->place(dest);
     ConnectionPoint pos = car->position();
     ASSERT_FLOAT_EQ(dest.direction, pos.direction);
-    ASSERT_VECTOR_EQ(dest.point, pos.point);
+    ASSERT_VECTOR_EQ(dest.position, pos.position);
   }
 }
 

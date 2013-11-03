@@ -51,7 +51,7 @@ TEST_F(TrackTests, TestSimpleTrackLoading) {
   for(int i = 0; i < 8; ++i) {
     const TrackTile& tile_one = test_track[i];
     const TrackTile& tile_two = test_track[(i+1) % 8];
-    ASSERT_VECTOR_EQ(tile_one.end().point, tile_two.start().point);
+    ASSERT_VECTOR_EQ(tile_one.end().position, tile_two.start().position);
   }
   ASSERT_FALSE(test_track.bounds().empty());
   
@@ -63,39 +63,39 @@ TEST_F(TrackTests, TestTilePositions) {
   TileInfo ti(ti_json);
   {
     ConnectionPoint start;
-    start.point = Vector(0, 0);
+    start.position = Vector(0, 0);
     start.direction = 0;
     JH straight_json = jh("type", "startinggrid")("length", 20.0);
     Straight straight(straight_json, start, ti);
-    ASSERT_EQ(start.point + Vector(0, 7.5), straight.position(0, 0));
-    ASSERT_EQ(start.point + Vector(0, -7.5), straight.position(0, 1));
-    ASSERT_VECTOR_EQ((start.point + Vector(0, 7.5) + Vector(20, 0)), straight.position(1.0, 0));
+    ASSERT_EQ(start.position + Vector(0, 7.5), straight.position(0, 0));
+    ASSERT_EQ(start.position + Vector(0, -7.5), straight.position(0, 1));
+    ASSERT_VECTOR_EQ((start.position + Vector(0, 7.5) + Vector(20, 0)), straight.position(1.0, 0));
   }
   {
     ConnectionPoint start;
-    start.point = Vector(0, 0);
+    start.position = Vector(0, 0);
     start.direction = 90;
     JH straight_json = jh("type", "startinggrid")("length", 20.0);
     Straight straight(straight_json, start, ti);
-    ASSERT_VECTOR_EQ(start.point + Vector(-7.5, 0), straight.position(0, 0));
-    ASSERT_VECTOR_EQ(start.point + Vector(7.5, 0), straight.position(0, 1));
-    ASSERT_VECTOR_EQ((start.point + Vector(-7.5, 0) + Vector(0, 20)), straight.position(1.0, 0));
+    ASSERT_VECTOR_EQ(start.position + Vector(-7.5, 0), straight.position(0, 0));
+    ASSERT_VECTOR_EQ(start.position + Vector(7.5, 0), straight.position(0, 1));
+    ASSERT_VECTOR_EQ((start.position + Vector(-7.5, 0) + Vector(0, 20)), straight.position(1.0, 0));
   }
 
   {
     ConnectionPoint start;
-    start.point = Vector(0, 0);
+    start.position = Vector(0, 0);
     start.direction = 0;
     JH curve_json = jh("type", "curve")("radius", 10.0)("degrees", 90.0);
     Curve curve(curve_json, start, ti);
     Vector p1 = curve.position(0, 0);
     Vector p2 = curve.position(0, 1);
-    ASSERT_VECTOR_EQ(start.point + Vector(0, 7.5), p1);
-    ASSERT_VECTOR_EQ(start.point + Vector(0, -7.5), p2);
+    ASSERT_VECTOR_EQ(start.position + Vector(0, 7.5), p1);
+    ASSERT_VECTOR_EQ(start.position + Vector(0, -7.5), p2);
     p1 = curve.position(1.0, 0);
     p2 = curve.position(1.0, 1);
-    ASSERT_VECTOR_EQ(curve.end().point + Vector(-7.5, 0), p1);
-    ASSERT_VECTOR_EQ(curve.end().point + Vector(7.5, 0), p2);
+    ASSERT_VECTOR_EQ(curve.end().position + Vector(-7.5, 0), p1);
+    ASSERT_VECTOR_EQ(curve.end().position + Vector(7.5, 0), p2);
   }
 
 }
@@ -106,18 +106,18 @@ TEST_F(TrackTests, TestNearestPoint) {
   TileInfo ti(ti_json);
   {
     ConnectionPoint start;
-    start.point = Vector(0, 0);
+    start.position = Vector(0, 0);
     start.direction = 0;
     JH straight_json = jh("type", "startinggrid")("length", 20.0);
     Straight straight(straight_json, start, ti);
     NearestPointInfo pi = straight.nearest_point(0, Vector(10.0, 8.5));
-    ASSERT_VECTOR_EQ(Vector(10.0, 7.5), pi.point);
+    ASSERT_VECTOR_EQ(Vector(10.0, 7.5), pi.point.position);
     ASSERT_EQ(0, pi.lane);
     ASSERT_FLOAT_EQ(.5, pi.offset);
     ASSERT_FLOAT_EQ(1.0, pi.distance);
 
     pi = straight.nearest_point(1, Vector(10.0, -8.5));
-    ASSERT_VECTOR_EQ(Vector(10.0, -7.5), pi.point);
+    ASSERT_VECTOR_EQ(Vector(10.0, -7.5), pi.point.position);
     ASSERT_EQ(1, pi.lane);
     ASSERT_FLOAT_EQ(.5, pi.offset);
     ASSERT_FLOAT_EQ(1.0, pi.distance);
@@ -125,7 +125,7 @@ TEST_F(TrackTests, TestNearestPoint) {
 
   {
     ConnectionPoint start;
-    start.point = Vector(0, 0);
+    start.position = Vector(0, 0);
     start.direction = 0;
     JH curve_json = jh("type", "curve")("radius", 10.0)("degrees", 90.0);
     Curve curve(curve_json, start, ti);
@@ -159,10 +159,10 @@ TEST_F(TrackTests, TestSlotAnchorLocation) {
   ConnectionPoint p1 = test_track.starting_position(0, 0).first;
   NearestPointInfo npi;
   TrackTile* tile;
-  tie(npi, tile) = test_track.locate_slot_anchor(0, p1.point);
+  tie(npi, tile) = test_track.locate_slot_anchor(0, p1.position);
   ASSERT_EQ(&test_track[0], tile);
-  ASSERT_EQ(p1.point, npi.point);
-  p1.point += Vector(0, 50);
-  tie(npi, tile) = test_track.locate_slot_anchor(0, p1.point);
+  ASSERT_EQ(p1.position, npi.point.position);
+  p1.position += Vector(0, 50);
+  tie(npi, tile) = test_track.locate_slot_anchor(0, p1.position);
   ASSERT_EQ(&test_track[4], tile);
 }

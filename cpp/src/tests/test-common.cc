@@ -20,6 +20,16 @@ TEST(CommonTests, TestSomeMath) {
 }
 
 
+TEST(CommonTests, TestConnectionPoints) {
+  const ConnectionPoint p1 = { Vector(0, 0), 0};
+  ASSERT_VECTOR_EQ(Vector(1.0, 0), p1.tangent());
+  ASSERT_VECTOR_EQ(Vector(0.0, 1.0), p1.normal());
+  const ConnectionPoint p2 = { Vector(0, 0), 90};
+  ASSERT_VECTOR_EQ(Vector(0, 1.0), p2.tangent());
+  ASSERT_VECTOR_EQ(Vector(-1.0, 0), p2.normal());
+}
+
+
 TEST(CommonTests, TestRectOperations) {
   Rect a(10, 20, 30, 40);
   Rect b(Vector(10, 20), Vector(30, 40));

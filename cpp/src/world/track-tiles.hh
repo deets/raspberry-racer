@@ -47,7 +47,7 @@ namespace rracer {
 
   struct NearestPointInfo {
     int lane;
-    Vector point;
+    ConnectionPoint point;
     Real offset; // the offset in tile-parametrization
     Real distance; // distance from the originally given point
 
