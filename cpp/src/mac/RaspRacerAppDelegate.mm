@@ -77,6 +77,7 @@ namespace fs = boost::filesystem;
 
   _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
   _world = new rracer::World(*_window_adapter, *_window_adapter);
+  _world->fixed_frame_rate(WORLD_FRAMERATE);
   rracer::Race* race = new rracer::Race(*_world, *_asset_manager, "tests/simple-test-track.json", "cars/car-one.json");
   _world->add_object(race);
 

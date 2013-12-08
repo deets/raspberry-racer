@@ -14,6 +14,7 @@ namespace rracer {
     , _ovg_adapter(ovg_adapter)
     , _has_ended(false)
     , _debug_renderer(0)
+    , _fixed_frame_rate(0.0)
   {
     b2Vec2 gravity(.0, 0);
     _world = new b2World(gravity);
@@ -28,6 +29,16 @@ namespace rracer {
   void World::set_debug_renderer(DebugRenderer* dr) {
     _debug_renderer = dr;
     _world->SetDebugDraw(dr);
+  }
+
+
+  Real World::fixed_frame_rate() const {
+    return _fixed_frame_rate;
+  }
+
+
+  void World::fixed_frame_rate(Real fixed_frame_rate) {
+    _fixed_frame_rate = fixed_frame_rate;
   }
 
 
@@ -56,7 +67,8 @@ namespace rracer {
     }
 
     // simulate physics
-    _world->Step(elapsed, WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
+    const double step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
+    _world->Step(step_size, WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
 
     OpenVGCompanion vgc(_ovg_adapter);
   
@@ -76,6 +88,9 @@ namespace rracer {
 
     if(_debug_renderer) {
       _debug_renderer->render(_world);
+      for(World::iterator it = begin(); it != end(); ++it) {
+	(*it).debug_render(*_debug_renderer);
+      }
     }
 
   }

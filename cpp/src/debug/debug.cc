@@ -3,9 +3,10 @@
 #include "debug/debug.hh"
 
 namespace rracer {
-  DebugRenderer::DebugRenderer(OpenVGAdapter& vg) 
+  DebugRenderer::DebugRenderer(OpenVGAdapter& vg, Real line_width) 
     : _world_transform(AffineTransform::Identity)
     , _alpha(0.3)
+    , _line_width(line_width)
   {
     _vgc = new OpenVGCompanion(vg);
   }
@@ -72,6 +73,19 @@ namespace rracer {
 
 
   void DebugRenderer::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) {}
+
   void DebugRenderer::DrawTransform(const b2Transform& xf) {}
+
+  void DebugRenderer::render_arrow(const b2Vec2& p, const b2Vec2& d, const Color& color) {
+    MatrixStacker(*_vgc, _world_transform());
+    PaintScope paint(*_vgc, color, VG_STROKE_PATH);
+    _vgc->stroke_width(_line_width);
+    {
+      PathScope path(*_vgc, VG_STROKE_PATH);
+      _vgc->move_to(path, vconv(p), VG_ABSOLUTE);
+      _vgc->line_to(path, vconv(d), VG_RELATIVE);
+    }
+  }
+
 
 }; // end ns::rracer

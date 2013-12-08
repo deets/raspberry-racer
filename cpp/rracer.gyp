@@ -4,6 +4,9 @@
 {
     'target_defaults' : {
         'default_configuration': 'Debug',
+        'defines': [
+        'BOOST_LOG_DYN_LINK',
+        ],
         'configurations': {
             'Debug': {
                 'xcode_settings': {
@@ -19,6 +22,7 @@
         'type': 'executable',
         'sources': [
             'src/assets/assets.cc',
+            'src/box2d/b2CurveJoint.cc',
             'src/tests/main.cc',
             'src/world/world.cc',
             'src/world/track.cc',
@@ -45,8 +49,8 @@
         'include_dirs': [
                 '.',
                 'src',
-		'third-party/jsoncpp',
-		'third-party/eigen',
+                'third-party/jsoncpp',
+                'third-party/eigen',
                 ],
             'conditions' : [
                  ['OS=="linux"',
@@ -98,6 +102,8 @@
                           '-lpthread',
                           '-lboost_filesystem-mt',
                           '-lboost_system-mt',
+                          '-lboost_log-mt',
+                          '-lboost_log_setup-mt',
                           '-lpng15',
                           '-lBox2D',
                           ],
@@ -114,12 +120,12 @@
                 'main.cc',
                 'src/assets/assets.cc',
                 'src/gfx/openvg-companion.cc',
-		'src/gfx/openvg-adapter-impl.cc',
+        'src/gfx/openvg-adapter-impl.cc',
                 ],
             'include_dirs': [
                 '.',
                 'src',
-		'third-party/jsoncpp',
+        'third-party/jsoncpp',
                 ],
             'conditions' : [
                  ['OS=="linux"',
@@ -142,6 +148,8 @@
                           '-lboost_filesystem',
                           '-lboost_system',
                           '-lpng12',
+                          '-lboost_log-mt',
+                          '-lboost_log_setup-mt',
                           ],
                       'ldflags': [
                           '-L/opt/vc/lib',
@@ -162,6 +170,8 @@
                           '-L/usr/local/lib',
                           '-lboost_filesystem-mt',
                           '-lboost_system-mt',
+                          '-lboost_log-mt',
+                          '-lboost_log_setup-mt',
                           '-lpng15',
                           ],
                       },
@@ -175,9 +185,10 @@
             'cflags' : ["-g"],
             'mac_bundle': 1,
             'sources': [
-		'src/gfx/openvg-companion.cc',
-		'src/gfx/openvg-adapter-impl.cc',
-		'src/mac/mac-window-adapter.cc',
+                'src/box2d/b2CurveJoint.cc',
+                'src/gfx/openvg-companion.cc',
+                'src/gfx/openvg-adapter-impl.cc',
+                'src/mac/mac-window-adapter.cc',
                 'src/assets/assets.cc',
                 'src/mac/RaspRacerAppDelegate.h',
                 'src/mac/RaspRacerAppDelegate.mm',
@@ -202,13 +213,15 @@
                 '-L/usr/local/lib',
                 '-lboost_filesystem-mt',
                 '-lboost_system-mt',
+                '-lboost_log-mt',
+                '-lboost_log_setup-mt',
                 '-lpng15',
                 ],
 
             'mac_bundle_resources': [
                 'src/mac/Resources/InfoPlist.strings',
                 'src/mac/Resources/MainMenu.xib',
-		'resources',
+        'resources',
                 ],
             'link_settings': {
                 'libraries': [
@@ -222,8 +235,8 @@
                 "/opt/ShivaVG/include",
                 '/usr/local/opt/libpng/include',
                 '/usr/local/include',
-		'third-party/jsoncpp',
-		'third-party/eigen',
+                'third-party/jsoncpp',
+                'third-party/eigen',
                 "src",
                 ],
             'xcode_settings': {

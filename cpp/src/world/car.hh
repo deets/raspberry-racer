@@ -3,6 +3,7 @@
 #include <vector>
 #include <boost/function.hpp>
 #include <json/json.h>
+#include "box2d/b2CurveJoint.h"
 #include "world/world-object.hh"
 
 #define CAR_ANGULAR_DAMPING 0.01f
@@ -20,30 +21,35 @@ namespace rracer {
 
   class SlotJoint {
   public:
-    virtual Vector slot_impulse(const Vector& pivot_position, const Vector& slot_position)=0;
+    virtual void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers)=0;
+    virtual void push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point)=0;
+    virtual void debug_render(DebugRenderer& debug_renderer) const=0;
   };
 
 
-  class FunctionSlotJoint : public SlotJoint {
+
+  class CurveJointSlotJoint : public SlotJoint, public ::RailPositionCallback {
   public:
-    FunctionSlotJoint(Real distance_norm, Real power);
-    virtual Vector slot_impulse(const Vector& pivot_position, const Vector& slot_position);
-  private:
-    Real _distance_norm;
-    Real _power;
-  };
+    CurveJointSlotJoint();
 
+    virtual void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
+    virtual void push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point);
 
-  class PDSlotJoint : public SlotJoint {
-  public:
-    PDSlotJoint(Real df, Real pf);
-    virtual Vector slot_impulse(const Vector& pivot_position, const Vector& slot_position);
+    virtual b2Vec2 GetLocalAnchorA( const b2Vec2& testPoint );
+    virtual b2Vec2 GetLocalAxisA( const b2Vec2& testPoint );
+    virtual float32 GetReferenceAngle( const b2Vec2& testPoint );
+    virtual float32 GetTranslation( const b2Vec2& testPoint );
+    virtual void debug_render(DebugRenderer& debug_renderer) const;
 
   private:
-    Real _f;
-    Real _df;
-    Real _pf;
-    Real _last_distance;
+    b2Vec2 _local_anchor_a;
+    b2Vec2 _local_axis_a;
+    float32 _angle;
+    float32 _translation;
+    bool _initialized;
+    b2Body* _body;
+    b2CurveJoint* _joint;
+
   };
 
   class Wheel {
@@ -72,6 +78,7 @@ namespace rracer {
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
     virtual void process_input_events(const InputEventVector& events, double elapsed);
+    virtual void debug_render(DebugRenderer& debug_renderer) const;
 
     ConnectionPoint position() const;
     void place(const ConnectionPoint&);
@@ -86,7 +93,6 @@ namespace rracer {
 
     string _image_name;
     b2Body* _body;
-    b2Body* _pivot_body;
     b2World* _world;
     bool _accelerate;
 

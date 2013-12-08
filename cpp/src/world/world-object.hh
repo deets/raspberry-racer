@@ -9,6 +9,8 @@
 #include "events/events.hh"
 #include "gfx/openvg-companion.hh"
 #include "assets/assets.hh"
+#include "debug/debug.hh"
+
 
 using namespace std;
 namespace bi = boost::intrusive;
@@ -28,6 +30,7 @@ namespace rracer {
     virtual void process_input_events(const InputEventVector& events, double elapsed);
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
+    virtual void debug_render(DebugRenderer& debug_renderer) const;
 
     void add_object(WorldObject *obj);
 

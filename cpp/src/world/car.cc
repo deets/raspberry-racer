@@ -1,61 +1,86 @@
 #include <cassert>
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
+#include <boost/log/trivial.hpp>
+
 
 #include "world/car.hh"
 
 namespace rracer {
 
-
-  FunctionSlotJoint::FunctionSlotJoint(Real distance_norm, Real power) 
-    : _distance_norm(distance_norm)
-    , _power(power)
-  {
-
-  }
-
-
-  Vector FunctionSlotJoint::slot_impulse(const Vector& pivot_position, const Vector& slot_position) {
-    const Vector d = slot_position - pivot_position;
-    const Real distance = d.norm();
-    if(distance) {
-      Real f = pow(distance / _distance_norm, _power) / distance;
-      return d * f;
-    }
-    return Vector(0, 0);
-  }
-
-
-  PDSlotJoint::PDSlotJoint(Real pf, Real df)
-    : _df(df)
-    , _pf(pf)
-    , _f(0)
-    , _last_distance(0)
+  CurveJointSlotJoint::CurveJointSlotJoint() 
+    : _initialized(false)
+    , _body(0)
+    , _joint(0)
   {
   }
 
 
-  Vector PDSlotJoint::slot_impulse(const Vector& pivot_position, const Vector& slot_position) {
-    const Vector d = slot_position - pivot_position;
-    const Real distance = d.norm();
-    if(distance) {
-      Real df = 0;
-      //if(distance < _last_distance) {
-	df = (distance - _last_distance) * _df;
-	//} else {
-	
-	//x}
-      Real pf = distance * _pf;
-      _f += pf + df;
-      cerr << "pf: " << pf << " df:" << df << endl;
+  void CurveJointSlotJoint::debug_render(DebugRenderer& debug_renderer) const {
+    debug_renderer.render_arrow(_local_anchor_a, _local_axis_a, Color::red);
+  }
 
-      _last_distance = distance;
-      return d * (_f / distance);
-    } else {
-      _f = 0;
-      _last_distance = distance;
-      return Vector(0, 0);
-    }
+  
+  void CurveJointSlotJoint::push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point) {
+    _local_anchor_a = vconv(slot_point.position);
+    _local_axis_a = vconv(slot_point.tangent());
+    _angle = DEG2RAD(slot_point.direction);
+    _body->SetTransform(_local_anchor_a, _angle);
+    _translation = (pivot_point.position - slot_point.position).norm();
+    _initialized = true;
+    BOOST_LOG_TRIVIAL(trace) << "_local_anchor_a: " << _local_anchor_a.x << ", " <<_local_anchor_a.y;
+    BOOST_LOG_TRIVIAL(trace) << "_local_axis_a: " << _local_axis_a.x << ", " <<_local_axis_a.y;
+    BOOST_LOG_TRIVIAL(trace) << "_angle: " << _angle;
+  }
+
+
+  void CurveJointSlotJoint::physics_setup(b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
+    b2BodyDef kd;
+    kd.type = b2_staticBody;
+    kd.position.Set(0,0);
+    _body = world->CreateBody(&kd);
+    //b2PolygonShape shape;
+    //shape.SetAsBox(10,10);
+    //m_bodyA->CreateFixture( &shape, 1 );
+
+    b2CurveJointDef jointDef;
+    jointDef.bodyA = _body;
+    jointDef.bodyB = car_body;
+    // TODO: probably the pivot position
+    jointDef.localAnchorB.Set(3,0 );// = jointDef.bodyB->GetLocalCenter();
+    
+    jointDef.enableMotor = false;
+    jointDef.motorSpeed = 10;
+    jointDef.maxMotorForce = 1000;
+    
+    jointDef.enableLimit = true;
+    jointDef.lowerTranslation = -20;
+    jointDef.upperTranslation = 20;
+    _joint = (b2CurveJoint*)world->CreateJoint(&jointDef);
+    _joint->SetRailPositionCallback(this);
+    destroyers.push_back(bind(&b2World::DestroyBody, world, _body));
+  }
+
+
+  b2Vec2 CurveJointSlotJoint::GetLocalAnchorA( const b2Vec2& testPoint ) {
+    assert(_initialized);
+    _initialized = false;
+    return _local_anchor_a;
+  }
+
+
+  b2Vec2 CurveJointSlotJoint::GetLocalAxisA( const b2Vec2& testPoint ) {
+    return _local_axis_a;
+  }
+
+
+  float32 CurveJointSlotJoint::GetReferenceAngle( const b2Vec2& testPoint ) {
+    return _angle;
+  }
+
+
+  float32 CurveJointSlotJoint::GetTranslation( const b2Vec2& testPoint ) {
+    return _translation;
   }
 
 
@@ -83,10 +108,7 @@ namespace rracer {
       Json::Value json_wheel = json_wheels[i];
       _wheels.push_back(Wheel(json_wheel));
     }
-    _slot_joint = shared_ptr<SlotJoint>(
-	new PDSlotJoint(5.0, 5.0)
-    );
-    // new FunctionSlotJoint(SLOT_DISTANCE, 3));
+    _slot_joint = shared_ptr<SlotJoint>(new CurveJointSlotJoint());
   }
 
 
@@ -95,6 +117,12 @@ namespace rracer {
       destroy();
     }
     _body = 0;
+  }
+
+  void Car::debug_render(DebugRenderer& debug_renderer) const {
+    if(_slot_joint) {
+      _slot_joint->debug_render(debug_renderer);
+    }
   }
 
 
@@ -140,11 +168,10 @@ namespace rracer {
 
 
   void Car::push_to_slot(const ConnectionPoint& slot) {
-    b2Vec2 pos = _pivot_body->GetPosition();
-    //cerr << "slot: " << slot[0] << "x" << slot[1] << " pivot_body: " << pos.x << "x" << pos.y << endl;
-    _pivot_body->SetTransform(vconv(slot.position), 0);
-    _pivot_body->SetAngularVelocity(0);
-    _pivot_body->SetLinearVelocity(b2Vec2(0, 0));
+    _slot_joint->push_to_slot(this->position(), slot);
+    // _pivot_body->SetTransform(vconv(slot.position), 0);
+    // _pivot_body->SetAngularVelocity(0);
+    // _pivot_body->SetLinearVelocity(b2Vec2(0, 0));
   }
 
 
@@ -160,15 +187,16 @@ namespace rracer {
     _body = world->CreateBody(&body_def);
     _destroyers.push_back(bind(&b2World::DestroyBody, _world, _body));
 
-    b2BodyDef pivot_body_def;
-    pivot_body_def.type = b2_kinematicBody;
-    pivot_body_def.linearDamping = 0.0f;
-    pivot_body_def.angularDamping = CAR_ANGULAR_DAMPING;
-    pivot_body_def.active = true;
-    pivot_body_def.position = vconv(position().position);
-    pivot_body_def.angle = 0.0f;
-    _pivot_body = world->CreateBody(&pivot_body_def);
-    _destroyers.push_back(bind(&b2World::DestroyBody, _world, _pivot_body));
+    // b2BodyDef pivot_body_def;
+    // pivot_body_def.type = b2_kinematicBody;
+    // pivot_body_def.linearDamping = 0.0f;
+    // pivot_body_def.angularDamping = CAR_ANGULAR_DAMPING;
+    // pivot_body_def.active = true;
+    // pivot_body_def.position = vconv(position().position);
+    // pivot_body_def.angle = 0.0f;
+
+    // _pivot_body = world->CreateBody(&pivot_body_def);
+    // _destroyers.push_back(bind(&b2World::DestroyBody, _world, _pivot_body));
 
     // b2PolygonShape foo;
     // foo.SetAsBox(.1, .1); // box2d uses half-widths here
@@ -178,13 +206,13 @@ namespace rracer {
     // fixture_def.density = 1000000.0;
     // _pivot_body->CreateFixture(&fixture_def);
 
-    b2RopeJointDef pivot_joint_def;
-    pivot_joint_def.bodyA = _body;
-    pivot_joint_def.bodyB = _pivot_body;
-    pivot_joint_def.localAnchorA = pivot_body_def.position;
-    pivot_joint_def.localAnchorB = b2Vec2(0, 0); //pivot_body_def.position;
-    pivot_joint_def.maxLength = .1;
-    world->CreateJoint(&pivot_joint_def);
+    // b2RopeJointDef pivot_joint_def;
+    // pivot_joint_def.bodyA = _body;
+    // pivot_joint_def.bodyB = _pivot_body;
+    // pivot_joint_def.localAnchorA = pivot_body_def.position;
+    // pivot_joint_def.localAnchorB = b2Vec2(0, 0); //pivot_body_def.position;
+    // pivot_joint_def.maxLength = .1;
+    // world->CreateJoint(&pivot_joint_def);
     
     b2PolygonShape chassis;
     chassis.SetAsBox(_length / 2.0, _width / 2.0); // box2d uses half-widths here
@@ -197,6 +225,7 @@ namespace rracer {
     BOOST_FOREACH(Wheel& wheel, _wheels) {
       wheel.physics_setup(world, _body, _destroyers);
     }
+    _slot_joint->physics_setup(world, _body, _destroyers);
   }
 
 
@@ -231,7 +260,7 @@ namespace rracer {
     const Real rad_angle = DEG2RAD(angle);
     const b2Vec2 dest_pos = vconv(dest.position);
     const b2Vec2 current_pos = vconv(pos.position);
-    _pivot_body->SetTransform(current_pos, 0);
+    //_pivot_body->SetTransform(current_pos, 0);
     translate_body(_body, rad_angle, dest_pos, current_pos);
     
     BOOST_FOREACH(Wheel& wheel, _wheels) {
@@ -271,14 +300,14 @@ namespace rracer {
     b2Vec2 fn = _body->GetWorldVector(b2Vec2(1.0, 0));
 
     if(accelerate) {
-      _body->ApplyForce(engine.power * fn, center);
+      _body->ApplyForce(engine.power * fn, center, true);
     }
     Real nvel = b2Dot(fn, vel);
-    _body->ApplyForce(-DRAG_COEFFICIENT * nvel * fn, center);
+    _body->ApplyForce(-DRAG_COEFFICIENT * nvel * fn, center, true);
 
     Real pvel = b2Dot(rn, vel);
     b2Vec2 lat_vel = pvel * rn;
-    _body->ApplyLinearImpulse(-LAT_COEFFICIENT * lat_vel, center);
+    _body->ApplyLinearImpulse(-LAT_COEFFICIENT * lat_vel, center, true);
   }
 
   

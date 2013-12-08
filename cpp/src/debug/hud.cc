@@ -9,7 +9,7 @@ namespace rracer {
     , _visible(true)
     , _debug_renderer_set(true)
   {
-    _debug_renderer = new rracer::DebugRenderer(_world.vg());
+    _debug_renderer = new rracer::DebugRenderer(_world.vg(), .1);
     _debug_renderer->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit);
     _debug_renderer->world_transform(world_transform);
     _world.set_debug_renderer(_debug_renderer);

@@ -81,6 +81,10 @@ namespace rracer {
     Rect screen_rect() const;
 
     OpenVGAdapter& vg() const;
+
+    Real fixed_frame_rate() const;
+    void fixed_frame_rate(Real fixed_frame_rate);
+
   private:
     bool _has_ended;
 
@@ -92,6 +96,8 @@ namespace rracer {
     b2World* _world;
 
     DebugRenderer* _debug_renderer;
+
+    Real _fixed_frame_rate;
 
   };
 

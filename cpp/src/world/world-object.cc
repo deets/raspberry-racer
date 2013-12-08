@@ -24,6 +24,10 @@ namespace rracer {
   }
 
 
+  void WorldObject::debug_render(DebugRenderer& debug_renderer) const {
+  }
+
+
   void WorldObject::dispatch_input_events(const InputEventVector& events, double elapsed) {
     this->process_input_events(events, elapsed);
 
