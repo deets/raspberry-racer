@@ -72,21 +72,8 @@ namespace rracer {
         _world,
         boost::bind(&rracer::AffineTransformator::affine_transform, t)
     );
-    _world.add_object(hud);
-    
-    // rracer::ConnectionPoint point = { rracer::Vector(10, 10), 45 };
-    // rracer::KeyAction* resetter = new rracer::KeyAction(
-    // 	rracer::K_SPACE,
-    // 	boost::bind(&rracer::Car::place, car, point)
-    // );
 
-    // _world->add_object(resetter);
-    
-    // function<ConnectionPoint ()> slot_pos_func2 = boost::bind(&CarInfo::slot_position, &_cars[0]);
-    // function<Vector ()> slot_position_func;
-    // slot_position_func = boost::bind(&local::to_vector, slot_pos_func2);
-    // t->add_object(new CircleRenderer(boost::bind(&CarInfo::car_position, &_cars[0]), .2, Color::yellow));
-    // t->add_object(new CircleRenderer(slot_position_func, .2, Color::red));
+    _world.add_object(hud);
   }
 
   void Race::process_input_events(const InputEventVector& events, double elapsed) {

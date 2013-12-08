@@ -45,6 +45,11 @@ namespace rracer {
 
   };
 
+  /**
+   * This struct captures information to describe
+   * where the pivot of a car should be on a track's
+   * lane.
+   */
   struct NearestPointInfo {
     int lane;
     ConnectionPoint point;
@@ -71,6 +76,11 @@ namespace rracer {
     virtual ConnectionPoint end() const;
     virtual void render(OpenVGCompanion&, const Color& ground_color) const=0;
     virtual const Rect bounds() const;
+    /**
+     * The position of the slot in <lane> at <offset>
+     * where <offset> is [0..1] and describes the normalized
+     * distance between the two connector points of the lane.
+     */
     virtual Vector position(Real offset, int lane) const=0;
     virtual NearestPointInfo nearest_point(int lane, const Vector&) const=0;
 

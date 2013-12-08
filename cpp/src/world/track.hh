@@ -32,7 +32,6 @@ namespace rracer {
     int number_of_lanes() const;
 
     pair<ConnectionPoint, TrackTile*> starting_position(int lane, int box) const;
-
     pair<NearestPointInfo, TrackTile*> locate_slot_anchor(int lane, const Vector& slot) const;
 
   private:

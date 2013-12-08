@@ -123,11 +123,11 @@ namespace rracer {
     const Vector swipe = _start.position - cp;
     const Vector norm = swipe / swipe.norm();
     const Vector p = pivot_position - cp;
-    const Real angle = ::acos((swipe / swipe.norm()).dot(p / p.norm())) / M_PI * 180;
+    const Real angle = ::acos(norm.dot(p / p.norm())) / M_PI * 180;
     const Real offset = angle / _degrees;
     const AffineTransform r = rotation(angle);
     const Real tile_offset = _ti.width() / 2.0 + _radius - _ti[lane];
-    const ConnectionPoint point = { r * norm * tile_offset + cp, angle };
+    const ConnectionPoint point = { r * norm * tile_offset + cp, _start.direction + angle };
     NearestPointInfo npi = { 
       lane,
       point,

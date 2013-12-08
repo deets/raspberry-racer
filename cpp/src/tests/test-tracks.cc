@@ -166,3 +166,17 @@ TEST_F(TrackTests, TestSlotAnchorLocation) {
   tie(npi, tile) = test_track.locate_slot_anchor(0, p1.position);
   ASSERT_EQ(&test_track[4], tile);
 }
+
+
+TEST_F(TrackTests, TestSlotAnchorOnSecondCurve) {
+  fs::path json_path("resources/tests/simple-test-track.json");
+  ASSERT_TRUE(fs::exists(json_path));
+  AssetManager am(*ovg_adapter);
+  Track test_track(am, json_path);
+  NearestPointInfo npi;
+  TrackTile* tile;
+  Vector position = test_track[3].position(0, 0);
+  tie(npi, tile) = test_track.locate_slot_anchor(0, position);
+  ASSERT_EQ(&test_track[3], tile);
+  ASSERT_VECTOR_EQ(Vector(0, 1), npi.point.tangent());
+}
