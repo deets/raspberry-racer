@@ -8,4 +8,4 @@ fi
 
 echo "project-dir: $PROJECT_DIR"
 
-GYP_GENERATORS=ninja $GYP rracer.gyp --toplevel-dir=$PROJECT_DIR --depth=0 
+GYP_GENERATORS=ninja $GYP rracer.gyp --toplevel-dir=$PROJECT_DIR --depth=0 -Dlibrary=static_library

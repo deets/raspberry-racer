@@ -3,7 +3,6 @@
 #include <vector>
 #include <boost/function.hpp>
 #include <json/json.h>
-#include "box2d/b2CurveJoint.h"
 #include "world/world-object.hh"
 
 #define CAR_ANGULAR_DAMPING 0.01f
@@ -47,6 +46,7 @@ namespace rracer {
     float32 _angle;
     float32 _translation;
     b2Body* _body;
+    b2Body* _car_body;
     b2CurveJoint* _joint;
 
   };

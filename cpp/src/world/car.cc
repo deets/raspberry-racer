@@ -29,29 +29,31 @@ namespace rracer {
 
 
   void CurveJointSlotJoint::physics_setup(const b2Vec2& pivot, b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
+    _car_body = car_body;
     b2BodyDef kd;
     kd.type = b2_staticBody;
     kd.position.Set(0,0);
     _body = world->CreateBody(&kd);
-    //b2PolygonShape shape;
-    //shape.SetAsBox(10,10);
-    //m_bodyA->CreateFixture( &shape, 1 );
-
-    b2CurveJointDef jointDef;
-    jointDef.bodyA = _body;
-    jointDef.bodyB = car_body;
-    jointDef.localAnchorB = pivot;
-    
-    jointDef.enableMotor = false;
-    jointDef.motorSpeed = 10;
-    jointDef.maxMotorForce = 1000;
-    
-    jointDef.enableLimit = true;
-    jointDef.lowerTranslation = -20;
-    jointDef.upperTranslation = 20;
-    _joint = (b2CurveJoint*)world->CreateJoint(&jointDef);
-    _joint->SetRailPositionCallback(this);
     destroyers.push_back(bind(&b2World::DestroyBody, world, _body));
+
+    {
+      b2CurveJointDef jointDef;
+      jointDef.bodyA = _body;
+      jointDef.bodyB = car_body;
+      jointDef.localAnchorB = pivot;
+      
+      jointDef.enableMotor = false;
+      jointDef.motorSpeed = 10;
+      jointDef.maxMotorForce = 1000;
+      
+      jointDef.enableLimit = true;
+      jointDef.lowerTranslation = -20;
+      jointDef.upperTranslation = 20;
+      _joint = (b2CurveJoint*)world->CreateJoint(&jointDef);
+      _joint->SetRailPositionCallback(this);
+      _joint->SetPreventRotation(false);
+    }
+
   }
 
 
@@ -66,7 +68,8 @@ namespace rracer {
 
 
   float32 CurveJointSlotJoint::GetReferenceAngle( const b2Vec2& testPoint ) {
-    return _angle;
+    //return _angle;
+    return _car_body->GetAngle();
   }
 
 
@@ -182,33 +185,6 @@ namespace rracer {
     _body = world->CreateBody(&body_def);
     _destroyers.push_back(bind(&b2World::DestroyBody, _world, _body));
 
-    // b2BodyDef pivot_body_def;
-    // pivot_body_def.type = b2_kinematicBody;
-    // pivot_body_def.linearDamping = 0.0f;
-    // pivot_body_def.angularDamping = CAR_ANGULAR_DAMPING;
-    // pivot_body_def.active = true;
-    // pivot_body_def.position = vconv(position().position);
-    // pivot_body_def.angle = 0.0f;
-
-    // _pivot_body = world->CreateBody(&pivot_body_def);
-    // _destroyers.push_back(bind(&b2World::DestroyBody, _world, _pivot_body));
-
-    // b2PolygonShape foo;
-    // foo.SetAsBox(.1, .1); // box2d uses half-widths here
-    // b2FixtureDef fixture_def;
-    // fixture_def.shape = &foo;
-    // fixture_def.friction = 0.0f;
-    // fixture_def.density = 1000000.0;
-    // _pivot_body->CreateFixture(&fixture_def);
-
-    // b2RopeJointDef pivot_joint_def;
-    // pivot_joint_def.bodyA = _body;
-    // pivot_joint_def.bodyB = _pivot_body;
-    // pivot_joint_def.localAnchorA = pivot_body_def.position;
-    // pivot_joint_def.localAnchorB = b2Vec2(0, 0); //pivot_body_def.position;
-    // pivot_joint_def.maxLength = .1;
-    // world->CreateJoint(&pivot_joint_def);
-    
     b2PolygonShape chassis;
     chassis.SetAsBox(_length / 2.0, _width / 2.0); // box2d uses half-widths here
     b2FixtureDef fixture_def;
