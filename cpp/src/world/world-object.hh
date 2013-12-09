@@ -25,6 +25,8 @@ namespace rracer {
     typedef bi::list<WorldObject> WorldObjectList;
     typedef WorldObjectList::iterator wo_iterator;
 
+    WorldObject();
+
     virtual ~WorldObject() {}
 
     virtual void process_input_events(const InputEventVector& events, double elapsed);
@@ -33,6 +35,9 @@ namespace rracer {
     virtual void debug_render(DebugRenderer& debug_renderer) const;
 
     void add_object(WorldObject *obj);
+
+    string name() const;
+    void name(const string n);
 
     wo_iterator begin();
     wo_iterator end();
@@ -45,6 +50,9 @@ namespace rracer {
     virtual void dispatch_render(OpenVGCompanion&);
 
     WorldObjectList _children;
+
+  private:
+    string _name;
   };
 
 

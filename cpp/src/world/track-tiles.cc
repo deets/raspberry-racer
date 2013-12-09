@@ -21,6 +21,16 @@ namespace rracer {
   }
 
 
+  string TrackTile::name() const {
+    return _name;
+  }
+
+
+  void TrackTile::name(const string n) {
+    _name = n;
+  }
+
+
   Straight::Straight(const Json::Value& tile, const ConnectionPoint& start, const TileInfo& ti)
       : TrackTile(ti)
     {

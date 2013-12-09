@@ -1,7 +1,6 @@
 #include <cassert>
 #include <boost/foreach.hpp>
 #include <boost/bind.hpp>
-#include <boost/log/trivial.hpp>
 
 
 #include "world/car.hh"
@@ -9,8 +8,7 @@
 namespace rracer {
 
   CurveJointSlotJoint::CurveJointSlotJoint() 
-    : _initialized(false)
-    , _body(0)
+    : _body(0)
     , _joint(0)
   {
   }
@@ -27,14 +25,10 @@ namespace rracer {
     _angle = DEG2RAD(slot_point.direction);
     _body->SetTransform(_local_anchor_a, _angle);
     _translation = (pivot_point.position - slot_point.position).norm();
-    _initialized = true;
-    BOOST_LOG_TRIVIAL(trace) << "_local_anchor_a: " << _local_anchor_a.x << ", " <<_local_anchor_a.y;
-    BOOST_LOG_TRIVIAL(trace) << "_local_axis_a: " << _local_axis_a.x << ", " <<_local_axis_a.y;
-    BOOST_LOG_TRIVIAL(trace) << "_angle: " << _angle;
   }
 
 
-  void CurveJointSlotJoint::physics_setup(b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
+  void CurveJointSlotJoint::physics_setup(const b2Vec2& pivot, b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
     b2BodyDef kd;
     kd.type = b2_staticBody;
     kd.position.Set(0,0);
@@ -46,8 +40,7 @@ namespace rracer {
     b2CurveJointDef jointDef;
     jointDef.bodyA = _body;
     jointDef.bodyB = car_body;
-    // TODO: probably the pivot position
-    jointDef.localAnchorB.Set(3,0 );// = jointDef.bodyB->GetLocalCenter();
+    jointDef.localAnchorB = pivot;
     
     jointDef.enableMotor = false;
     jointDef.motorSpeed = 10;
@@ -63,8 +56,6 @@ namespace rracer {
 
 
   b2Vec2 CurveJointSlotJoint::GetLocalAnchorA( const b2Vec2& testPoint ) {
-    assert(_initialized);
-    _initialized = false;
     return _local_anchor_a;
   }
 
@@ -88,7 +79,7 @@ namespace rracer {
 
   Car::Car(AssetManager& am, const Json::Value& car_info) 
     : _am(am)
-    , _accelerate(false)
+    , _throttle(0.0)
   {
     assert(car_info.isMember("image") && car_info["image"].isString());
     assert(car_info.isMember("length") && car_info["length"].isDouble());
@@ -151,7 +142,7 @@ namespace rracer {
 
   void Car::step(Real elapsed) {
     BOOST_FOREACH(Wheel& wheel, _wheels) {
-      wheel.step(elapsed, _accelerate, _engine);
+      wheel.step(elapsed, _throttle, _engine);
     }
   }
 
@@ -160,7 +151,11 @@ namespace rracer {
     BOOST_FOREACH(const InputEvent event, events) {
       switch(event.key) {
       case K_UP:
-	_accelerate = event.pressed;
+	_throttle = event.pressed ? 1.0 : 0.0;
+	break;
+      case K_DOWN:
+	_throttle = event.pressed ? -1.0 : 0.0;
+	break;
       }
     }
     this->step(elapsed);
@@ -225,7 +220,7 @@ namespace rracer {
     BOOST_FOREACH(Wheel& wheel, _wheels) {
       wheel.physics_setup(world, _body, _destroyers);
     }
-    _slot_joint->physics_setup(world, _body, _destroyers);
+    _slot_joint->physics_setup(b2Vec2(_pivot_offset, 0), world, _body, _destroyers);
   }
 
 
@@ -293,14 +288,14 @@ namespace rracer {
   }
 
 
-  void Wheel::step(Real elapsed, bool accelerate, const EngineInfo& engine) {
+  void Wheel::step(Real elapsed, Real throttle, const EngineInfo& engine) {
     const b2Vec2 center = _body->GetWorldCenter();
     b2Vec2 vel = _body->GetLinearVelocity();
     b2Vec2 rn = _body->GetWorldVector(b2Vec2(0, 1.0));
     b2Vec2 fn = _body->GetWorldVector(b2Vec2(1.0, 0));
 
-    if(accelerate) {
-      _body->ApplyForce(engine.power * fn, center, true);
+    if(throttle != 0.0) {
+      _body->ApplyForce(throttle * engine.power * fn, center, true);
     }
     Real nvel = b2Dot(fn, vel);
     _body->ApplyForce(-DRAG_COEFFICIENT * nvel * fn, center, true);

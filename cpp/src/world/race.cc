@@ -5,6 +5,7 @@
 #include "world/car.hh"
 #include "debug/hud.hh"
 #include <boost/bind.hpp>
+#include <boost/log/trivial.hpp>
 
 namespace rracer {
 
@@ -36,6 +37,7 @@ namespace rracer {
       npi = tile->nearest_point(lane, car_pos);
     }
     assert(npi.offset >= 0 && npi.offset <= 1.0);    
+    BOOST_LOG_TRIVIAL(trace) << tile->name() << " dir: " << npi.point.direction; 
     return npi.point;
   }
 

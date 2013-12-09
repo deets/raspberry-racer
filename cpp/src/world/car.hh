@@ -21,7 +21,7 @@ namespace rracer {
 
   class SlotJoint {
   public:
-    virtual void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers)=0;
+    virtual void physics_setup(const b2Vec2& pivot, b2World*, b2Body* chassis, vector<function< void()> >& destroyers)=0;
     virtual void push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point)=0;
     virtual void debug_render(DebugRenderer& debug_renderer) const=0;
   };
@@ -32,7 +32,7 @@ namespace rracer {
   public:
     CurveJointSlotJoint();
 
-    virtual void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
+    virtual void physics_setup(const b2Vec2& pivot, b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
     virtual void push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point);
 
     virtual b2Vec2 GetLocalAnchorA( const b2Vec2& testPoint );
@@ -46,7 +46,6 @@ namespace rracer {
     b2Vec2 _local_axis_a;
     float32 _angle;
     float32 _translation;
-    bool _initialized;
     b2Body* _body;
     b2CurveJoint* _joint;
 
@@ -64,7 +63,7 @@ namespace rracer {
     Wheel(const Json::Value&);
     virtual ~Wheel();
     void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
-    void step(Real elapsed, bool accelerate, const EngineInfo&);
+    void step(Real elapsed, Real throttle, const EngineInfo&);
 
     b2Body* body();
   };
@@ -85,6 +84,9 @@ namespace rracer {
     void push_to_slot(const ConnectionPoint& slot);
   private:
 
+    void step(Real elapsed);
+    static void translate_body(b2Body* body, const Real rad_angle, const b2Vec2& dest, const b2Vec2& pos);
+
     AssetManager& _am;
     Real _length;
     Real _width;
@@ -94,11 +96,8 @@ namespace rracer {
     string _image_name;
     b2Body* _body;
     b2World* _world;
-    bool _accelerate;
 
-    void step(Real elapsed);
-
-    static void translate_body(b2Body* body, const Real rad_angle, const b2Vec2& dest, const b2Vec2& pos);
+    Real _throttle;
 
   protected:
     vector<function< void () > > _destroyers;

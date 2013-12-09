@@ -78,6 +78,9 @@ namespace rracer {
       );
 	     
       shared_ptr<TrackTile> tile = TrackTile::create_tile(tile_json, connection_point, *_tile_info);
+      stringstream ss;
+      ss << "tile:" <<i;
+      tile->name(ss.str());
       connection_point = tile->end();
       bounds = bounds | tile->bounds();
       _tiles.push_back(tile);

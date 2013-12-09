@@ -83,6 +83,8 @@ namespace rracer {
      */
     virtual Vector position(Real offset, int lane) const=0;
     virtual NearestPointInfo nearest_point(int lane, const Vector&) const=0;
+    string name() const;
+    void name(const string n);
 
   protected:
     Rect _bounds;
@@ -92,6 +94,9 @@ namespace rracer {
 
     TrackTile* _next;
     TrackTile* _prev;
+
+  private:
+    string _name;
   };
 
 

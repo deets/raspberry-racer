@@ -4,6 +4,21 @@
 #include "world-object.hh"
 
 namespace rracer {
+  
+  WorldObject::WorldObject() 
+    : _name("")
+  {
+  }
+
+
+  string WorldObject::name() const {
+    return _name;
+  }
+
+
+  void WorldObject::name(const string n) {
+    _name = n;
+  }
 
   void WorldObject::add_object(WorldObject* child) {
     _children.push_back(*child);
