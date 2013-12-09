@@ -18,16 +18,7 @@ namespace rracer {
     debug_renderer.render_arrow(_local_anchor_a, _local_axis_a, Color::red);
   }
 
-  
-  void CurveJointSlotJoint::push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point) {
-    _local_anchor_a = vconv(slot_point.position);
-    _local_axis_a = vconv(slot_point.tangent());
-    _angle = DEG2RAD(slot_point.direction);
-    _body->SetTransform(_local_anchor_a, _angle);
-    _translation = (pivot_point.position - slot_point.position).norm();
-  }
-
-
+ 
   void CurveJointSlotJoint::physics_setup(const b2Vec2& pivot, b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
     _car_body = car_body;
     b2BodyDef kd;
@@ -57,6 +48,15 @@ namespace rracer {
   }
 
 
+  void CurveJointSlotJoint::push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point) {
+    _local_anchor_a = vconv(slot_point.position);
+    _local_axis_a = vconv(slot_point.tangent());
+    _angle = DEG2RAD(slot_point.direction);
+    _translation = (pivot_point.position - slot_point.position).norm();
+  }
+
+
+
   b2Vec2 CurveJointSlotJoint::GetLocalAnchorA( const b2Vec2& testPoint ) {
     return _local_anchor_a;
   }
@@ -68,8 +68,8 @@ namespace rracer {
 
 
   float32 CurveJointSlotJoint::GetReferenceAngle( const b2Vec2& testPoint ) {
-    //return _angle;
-    return _car_body->GetAngle();
+    return _angle;
+    //return _car_body->GetAngle();
   }
 
 

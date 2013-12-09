@@ -39,7 +39,7 @@ struct b2CurveJointDef : public b2JointDef
 {
 	b2CurveJointDef()
 	{
-		type = e_prismaticJoint;
+		type = e_curveJoint;
 		localAnchorA.SetZero();
 		localAnchorB.SetZero();
 		localAxisA.Set(1.0f, 0.0f);

@@ -28,6 +28,7 @@
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 #include <Box2D/Dynamics/Joints/b2RopeJoint.h>
 #include <Box2D/Dynamics/Joints/b2MotorJoint.h>
+#include <Box2D/Dynamics/Joints/b2CurveJoint.h>
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Common/b2BlockAllocator.h>
@@ -95,7 +96,7 @@ b2Joint* b2Joint::Create(const b2JointDef* def, b2BlockAllocator* allocator)
 			joint = new (mem) b2WeldJoint(static_cast<const b2WeldJointDef*>(def));
 		}
 		break;
-        
+
 	case e_frictionJoint:
 		{
 			void* mem = allocator->Allocate(sizeof(b2FrictionJoint));
@@ -114,6 +115,12 @@ b2Joint* b2Joint::Create(const b2JointDef* def, b2BlockAllocator* allocator)
 		{
 			void* mem = allocator->Allocate(sizeof(b2MotorJoint));
 			joint = new (mem) b2MotorJoint(static_cast<const b2MotorJointDef*>(def));
+		}
+		break;
+	case e_curveJoint:
+		{
+			void* mem = allocator->Allocate(sizeof(b2CurveJoint));
+			joint = new (mem) b2CurveJoint(static_cast<const b2CurveJointDef*>(def));
 		}
 		break;
 
@@ -157,7 +164,7 @@ void b2Joint::Destroy(b2Joint* joint, b2BlockAllocator* allocator)
 	case e_wheelJoint:
 		allocator->Free(joint, sizeof(b2WheelJoint));
 		break;
-    
+
 	case e_weldJoint:
 		allocator->Free(joint, sizeof(b2WeldJoint));
 		break;
