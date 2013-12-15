@@ -61,15 +61,19 @@ namespace rracer {
 	_has_ended = true;
       }
     }
+    const Real step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
 
     BOOST_FOREACH(WorldObject& obj, _world_objects) {
-      obj.dispatch_input_events(events, elapsed);
+      obj.dispatch_input_events(events, step_size);
     }
 
     // simulate physics
-    const double step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
     _world->Step(step_size, WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
+    render();
+  }
 
+
+  void World::render() {
     OpenVGCompanion vgc(_ovg_adapter);
   
     VGint ww = _window_adapter.window_dimensions().first;
