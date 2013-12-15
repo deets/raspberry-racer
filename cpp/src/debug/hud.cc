@@ -20,7 +20,7 @@ namespace rracer {
     delete _debug_renderer;
   }
 
-  void HUD::process_input_events(const InputEventVector& events, double elapsed) {
+  InputEventVector HUD::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent event, events) {
       if(!event.pressed) {
 	switch(event.key) {
@@ -38,6 +38,8 @@ namespace rracer {
 	}
       }
     }
+    InputEventVector next_frame_events;
+    return next_frame_events;
   }
 
 

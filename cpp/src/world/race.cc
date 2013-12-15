@@ -1,11 +1,13 @@
 #include <boost/foreach.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/bind.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/range.hpp>
+#include <boost/range/algorithm_ext.hpp>
 #include "world/race.hh"
 #include "world/track.hh"
 #include "world/car.hh"
 #include "debug/hud.hh"
-#include <boost/bind.hpp>
-#include <boost/log/trivial.hpp>
 
 namespace rracer {
 
@@ -26,7 +28,7 @@ namespace rracer {
   }
 
 
-  ConnectionPoint CarInfo::slot_position() {
+  ConnectionPoint CarInfo::slot_position(InputEventVector& next_frame_events) {
     const Vector car_pos = car_position();
     NearestPointInfo npi = tile->nearest_point(lane, car_pos);
     if(npi.offset > 1.0) {
@@ -42,8 +44,10 @@ namespace rracer {
   }
 
 
-  void CarInfo::process_input_events(const InputEventVector& events, double elapsed) {
-    car->push_to_slot(slot_position());
+  InputEventVector CarInfo::process_input_events(const InputEventVector& events, double elapsed) {
+    InputEventVector next_frame_events;
+    car->push_to_slot(slot_position(next_frame_events));
+    return next_frame_events;
   }
 
 
@@ -78,10 +82,12 @@ namespace rracer {
     _world.add_object(hud);
   }
 
-  void Race::process_input_events(const InputEventVector& events, double elapsed) {
+  InputEventVector Race::process_input_events(const InputEventVector& events, double elapsed) {
+    InputEventVector next_frame_events;
     BOOST_FOREACH(CarInfo& ci, _cars) {
-      ci.process_input_events(events, elapsed);
+      push_back(next_frame_events, ci.process_input_events(events, elapsed));
     }
+    return next_frame_events;
   }
 
 } // end ns::rracer

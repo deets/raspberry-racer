@@ -35,12 +35,43 @@ public:
   {
   }
 
-  virtual void process_input_events(const InputEventVector& events, double elapsed) {
+  virtual InputEventVector process_input_events(const InputEventVector& events, double elapsed) {
     event_count += events.size();
     this->elapsed += elapsed;
+    InputEventVector next_frame_events;
+    return next_frame_events;
   }
 
 };
+
+
+class NextFrameEventAdderTestChild : public WorldObject {
+  
+  
+public:
+  string name;
+  int event_count;
+  double elapsed;
+
+  NextFrameEventAdderTestChild() 
+    : event_count(0)
+    , elapsed(.0)
+  {
+  }
+
+  virtual InputEventVector process_input_events(const InputEventVector& events, double elapsed) {
+    event_count += events.size();
+    this->elapsed += elapsed;
+    InputEventVector next_frame_events;
+    InputEvent event = {true, K_ESC, 53};
+    next_frame_events.push_back(event);
+    size_t s = next_frame_events.size();
+    assert(1==s);
+    return next_frame_events;
+  }
+
+};
+
 
 
 class WorldTests : public ::testing::Test {
@@ -138,4 +169,18 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
     }
     ASSERT_EQ(expected, result);
   }
+}
+
+
+TEST_F(WorldTests, TestWorldRetainsNextFrameEvents) {
+  InputEventVector events;
+  World world(*window_adapter, *ovg_adapter);
+  NextFrameEventAdderTestChild* other = new NextFrameEventAdderTestChild();
+  world.add_object(other);
+  world.start_frame(events, 1.0/30.0);
+  world.end_frame();
+  ASSERT_EQ(0, other->event_count);
+  world.start_frame(events, 1.0/30.0);
+  world.end_frame();
+  ASSERT_EQ(1, other->event_count);
 }

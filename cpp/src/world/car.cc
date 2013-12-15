@@ -150,7 +150,7 @@ namespace rracer {
   }
 
 
-  void Car::process_input_events(const InputEventVector& events, double elapsed) {
+  InputEventVector Car::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent event, events) {
       switch(event.key) {
       case K_UP:
@@ -162,6 +162,8 @@ namespace rracer {
       }
     }
     this->step(elapsed);
+    InputEventVector next_frame_events;
+    return next_frame_events;
   }
 
 

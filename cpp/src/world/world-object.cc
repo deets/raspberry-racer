@@ -1,4 +1,6 @@
 #include <boost/foreach.hpp>
+#include <boost/range.hpp>
+#include <boost/range/algorithm_ext.hpp>
 #include <math.h>
 
 #include "world-object.hh"
@@ -43,12 +45,14 @@ namespace rracer {
   }
 
 
-  void WorldObject::dispatch_input_events(const InputEventVector& events, double elapsed) {
-    this->process_input_events(events, elapsed);
+  InputEventVector WorldObject::dispatch_input_events(const InputEventVector& events, double elapsed) {
+    InputEventVector next_frame_events;
+    push_back(next_frame_events, this->process_input_events(events, elapsed));
 
     BOOST_FOREACH(WorldObject& child, _children) {
-      child.dispatch_input_events(events, elapsed);
+      boost::range::push_back(next_frame_events, child.dispatch_input_events(events, elapsed));
     }
+    return next_frame_events;
   }
 
 
@@ -60,7 +64,9 @@ namespace rracer {
     }
   }
 
-  void WorldObject::process_input_events(const InputEventVector&, double elapsed) {
+  InputEventVector WorldObject::process_input_events(const InputEventVector&, double elapsed) {
+    InputEventVector next_frame_events;
+    return next_frame_events;
   }
 
 
@@ -108,8 +114,10 @@ namespace rracer {
   }
 
 
-  void LissajouAnimator::process_input_events(const InputEventVector& events, double elapsed) {
+  InputEventVector LissajouAnimator::process_input_events(const InputEventVector& events, double elapsed) {
     _phase += elapsed;
+    InputEventVector next_frame_events;
+    return next_frame_events;
   }
 
 
@@ -164,12 +172,14 @@ namespace rracer {
   }
 
 
-  void KeyAction::process_input_events(const InputEventVector& events, double elapsed) {
+  InputEventVector KeyAction::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent& event, events) {
       if(event.pressed && event.key == _key) {
 	_key_callback();
       }
     }
+    InputEventVector next_frame_events;
+    return next_frame_events;
   }
   
 }; // ns::rracer

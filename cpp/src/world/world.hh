@@ -102,6 +102,7 @@ namespace rracer {
 
     Real _fixed_frame_rate;
 
+    InputEventVector _next_frame_events;
   };
 
 };

@@ -1,5 +1,6 @@
 #include <boost/foreach.hpp>
-
+#include <boost/range.hpp>
+#include <boost/range/algorithm_ext.hpp>
 #include "gfx/openvg-companion.hh"
 #include "world.hh"
 
@@ -53,9 +54,9 @@ namespace rracer {
   }
 
 
-  void World::start_frame(const InputEventVector& events, Real elapsed) {
+  void World::start_frame(const InputEventVector& events, const Real elapsed) {
     _window_adapter.start();
-
+    
     BOOST_FOREACH(const InputEvent event, events) {
       if(event.key == K_ESC) {
 	_has_ended = true;
@@ -63,12 +64,17 @@ namespace rracer {
     }
     const Real step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
 
-    BOOST_FOREACH(WorldObject& obj, _world_objects) {
-      obj.dispatch_input_events(events, step_size);
-    }
+    // prepare the event-vectors.
+    InputEventVector this_frame_events(events);
+    boost::range::push_back(this_frame_events, _next_frame_events);
+    _next_frame_events.clear();
 
+    BOOST_FOREACH(WorldObject& obj, _world_objects) {
+      boost::range::push_back(_next_frame_events, obj.dispatch_input_events(this_frame_events, step_size));
+    }
     // simulate physics
     _world->Step(step_size, WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
+    // render the game objects
     render();
   }
 
@@ -96,9 +102,7 @@ namespace rracer {
 	(*it).debug_render(*_debug_renderer);
       }
     }
-
   }
-
 
   OpenVGAdapter& World::vg() const {
     return _ovg_adapter;
