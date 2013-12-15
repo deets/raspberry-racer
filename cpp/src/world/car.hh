@@ -8,7 +8,6 @@
 #define CAR_ANGULAR_DAMPING 0.01f
 #define DRAG_COEFFICIENT 500.0f
 #define LAT_COEFFICIENT 2.5f
-#define SLOT_DISTANCE 0.1f
 
 using namespace boost;
 
@@ -58,6 +57,7 @@ namespace rracer {
     Real _mass;
 
     b2Body* _body;
+    b2Body* _chassis;
 
   public:
     Wheel(const Json::Value&);

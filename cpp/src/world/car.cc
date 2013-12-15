@@ -266,47 +266,57 @@ namespace rracer {
 
   void Wheel::step(Real elapsed, Real throttle, const EngineInfo& engine) {
     const b2Vec2 center = _body->GetWorldCenter();
-    b2Vec2 vel = _body->GetLinearVelocity();
-    b2Vec2 rn = _body->GetWorldVector(b2Vec2(0, 1.0));
-    b2Vec2 fn = _body->GetWorldVector(b2Vec2(1.0, 0));
+    const b2Vec2 car_velocity = _chassis->GetLinearVelocity();
+    const b2Vec2 right_normal = _body->GetWorldVector(b2Vec2(0, 1.0));
+    const b2Vec2 front_normal = _body->GetWorldVector(b2Vec2(1.0, 0));
+
+    b2Vec2 total_force(0, 0);
 
     if(throttle != 0.0) {
-      _body->ApplyForce(throttle * engine.power * fn, center, true);
+      total_force += throttle * engine.power * front_normal;
     }
-    Real nvel = b2Dot(fn, vel);
-    _body->ApplyForce(-DRAG_COEFFICIENT * nvel * fn, center, true);
 
-    Real pvel = b2Dot(rn, vel);
-    b2Vec2 lat_vel = pvel * rn;
-    _body->ApplyLinearImpulse(-LAT_COEFFICIENT * lat_vel, center, true);
+    Real front_velocity = b2Dot(front_normal, car_velocity);
+    total_force += -DRAG_COEFFICIENT * front_velocity * front_normal;
+
+    _body->ApplyForce(total_force, center, true);
+
+    // this kills the drift
+    b2Vec2 lateral_velocity = b2Dot(right_normal, car_velocity) * right_normal;
+    _body->ApplyLinearImpulse(_chassis->GetMass() * -lateral_velocity, center, true);
   }
 
   
   void Wheel::physics_setup(b2World* world, b2Body* chassis, vector<function< void()> >& destroyers) {
-    b2BodyDef body_def;
-    body_def.type = b2_dynamicBody;
-    body_def.linearDamping = 0.0f;
-    body_def.angularDamping = CAR_ANGULAR_DAMPING;
-    body_def.active = true;
-    body_def.position.Set(_offset[0], _offset[1]);
-    body_def.angle = 0.0f;
-    _body = world->CreateBody(&body_def);
-    destroyers.push_back(bind(&b2World::DestroyBody, world, _body));
-
-    b2PolygonShape wheel_shape;
-    wheel_shape.SetAsBox(_width / 2.0, _diameter / 2.0); // box2d uses half-widths here
-    b2FixtureDef fixture_def;
-    fixture_def.shape = &wheel_shape;
-    fixture_def.friction = 0.0f;
-    fixture_def.density = _mass / (_width * _diameter);
-    _body->CreateFixture(&fixture_def);
-
-    // attach our wheel to the chassis
-    b2WeldJointDef jointDef;
-    // limit the joint on our back-wheels
-    // so they can't rotate
-    jointDef.Initialize(_body, chassis, _body->GetWorldCenter());
-    world->CreateJoint(&jointDef);
+    _chassis = chassis;
+    {
+      b2BodyDef body_def;
+      body_def.type = b2_dynamicBody;
+      body_def.linearDamping = 0.0f;
+      body_def.angularDamping = CAR_ANGULAR_DAMPING;
+      body_def.active = true;
+      body_def.position.Set(_offset[0], _offset[1]);
+      body_def.angle = 0.0f;
+      _body = world->CreateBody(&body_def);
+      destroyers.push_back(bind(&b2World::DestroyBody, world, _body));
+    }
+    
+    {
+      // attach our wheel to the chassis
+      b2PolygonShape wheel_shape;
+      wheel_shape.SetAsBox(_width / 2.0, _diameter / 2.0); // box2d uses half-widths here
+      b2FixtureDef fixture_def;
+      fixture_def.shape = &wheel_shape;
+      fixture_def.friction = 0.0f;
+      fixture_def.density = _mass / (_width * _diameter);
+      _body->CreateFixture(&fixture_def);
+      
+      // limit the joint on our back-wheels
+      // so they can't rotate
+      b2WeldJointDef jointDef;
+      jointDef.Initialize(_body, chassis, _body->GetWorldCenter());
+      world->CreateJoint(&jointDef);
+    }
   }
 
 }; // end ns::rracer
