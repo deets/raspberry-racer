@@ -38,6 +38,7 @@
             'src/tests/test-tracks.cc',
             'src/tests/test-cars.cc',
             'src/tests/test-system-time.cc',
+            'src/tests/test-variants.cc',
             'src/tests/json-helper.cc',
             'src/tests/common.cc',
             'src/common/common.cc',
