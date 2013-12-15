@@ -43,6 +43,10 @@ public:
     return true;
   }
 
+  template<typename T> bool operator()(T ignored) {
+    return true;
+  }
+
 };
 
 class VariantTests : public ::testing::Test {
