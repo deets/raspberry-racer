@@ -22,8 +22,9 @@ namespace rracer {
 
   InputEventVector HUD::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent event, events) {
-      if(!event.pressed) {
-	switch(event.key) {
+      KeyEvent key_event = boost::get<KeyEvent>(event);
+      if(!key_event.pressed) {
+	switch(key_event.key) {
 	case K_h:
 	  _visible = !_visible;
 	  break;

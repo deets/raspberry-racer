@@ -2,6 +2,7 @@
 #define EVENTS_HH
 
 #include <vector>
+#include <boost/variant.hpp>
 
 using namespace std;
 
@@ -19,13 +20,27 @@ namespace rracer {
     K_SPACE = 49
   };
 
-  struct InputEvent {
+  struct KeyEvent {
+    KeyEvent()
+      : pressed(false)
+      , key(K_UNKNOWN)
+      , scancode(0)
+    {
+    }
+    KeyEvent(bool pressed, EKeys key, int scancode)
+      : pressed(pressed)
+      , key(key)
+      , scancode(scancode)
+    {
+    }
     bool pressed;
     EKeys key;
     int scancode;
   };
 
-typedef vector<InputEvent> InputEventVector;
+
+  typedef boost::variant<KeyEvent> InputEvent;
+  typedef vector<InputEvent> InputEventVector;
 
 }; // end ns::rracer
 #endif

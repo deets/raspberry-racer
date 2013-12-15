@@ -107,7 +107,7 @@ namespace fs = boost::filesystem;
 
 
 -(BOOL) convertEvent:(NSEvent*) event {
-  rracer::InputEvent game_event;
+  rracer::KeyEvent key_event;
   bool is_valid = false;
   bool pressed = false;
 
@@ -123,40 +123,40 @@ namespace fs = boost::filesystem;
   }
 
   if(is_valid) {
-    game_event.pressed = pressed;
-    game_event.scancode = [event keyCode];
+    key_event.pressed = pressed;
+    key_event.scancode = [event keyCode];
 
-    switch(game_event.scancode) {
+    switch(key_event.scancode) {
     case 2:
-      game_event.key = rracer::K_d;
+      key_event.key = rracer::K_d;
       break;
     case 4:
-      game_event.key = rracer::K_h;
+      key_event.key = rracer::K_h;
       break;
     case 53:
-      game_event.key = rracer::K_ESC;
+      key_event.key = rracer::K_ESC;
       break;
     case 126:
-      game_event.key = rracer::K_UP;
+      key_event.key = rracer::K_UP;
       break;
     case 125:
-      game_event.key = rracer::K_DOWN;
+      key_event.key = rracer::K_DOWN;
       break;
     case 123:
-      game_event.key = rracer::K_LEFT;
+      key_event.key = rracer::K_LEFT;
       break;
     case 124:
-      game_event.key = rracer::K_RIGHT;
+      key_event.key = rracer::K_RIGHT;
       break;
     case 49:
-      game_event.key = rracer::K_SPACE;
+      key_event.key = rracer::K_SPACE;
       break;
     default:
-      game_event.key = rracer::K_UNKNOWN;
+      key_event.key = rracer::K_UNKNOWN;
       break;
     }
-    if(game_event.key != rracer::K_UNKNOWN) {
-      _events->push_back(game_event);
+    if(key_event.key != rracer::K_UNKNOWN) {
+      _events->push_back(key_event);
       return YES;
     }
   }

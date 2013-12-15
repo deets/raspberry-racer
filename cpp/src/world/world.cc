@@ -58,7 +58,7 @@ namespace rracer {
     _window_adapter.start();
     
     BOOST_FOREACH(const InputEvent event, events) {
-      if(event.key == K_ESC) {
+      if(boost::get<KeyEvent>(event).key == K_ESC) {
 	_has_ended = true;
       }
     }

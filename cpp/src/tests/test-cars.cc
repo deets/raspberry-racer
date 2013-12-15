@@ -83,7 +83,7 @@ public:
 TEST_F(CarTests, TestCarLoading) {
   InputEventVector events;
   // simulate the user accelerating
-  InputEvent event = { true, K_UP, 126 };
+  KeyEvent event(true, K_UP, 126);
   events.push_back(event);
   World world(*window_adapter, *ovg_adapter);
   {

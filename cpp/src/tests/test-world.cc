@@ -63,10 +63,8 @@ public:
     event_count += events.size();
     this->elapsed += elapsed;
     InputEventVector next_frame_events;
-    InputEvent event = {true, K_ESC, 53};
-    next_frame_events.push_back(event);
-    size_t s = next_frame_events.size();
-    assert(1==s);
+    KeyEvent event(true, K_ESC, 53);
+    next_frame_events.push_back(InputEvent(event));
     return next_frame_events;
   }
 
@@ -106,7 +104,7 @@ TEST_F(WorldTests, TestWorldLifeCycle) {
 
 TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
   InputEventVector events;
-  InputEvent event = { false, K_ESC, 1 };
+  KeyEvent event(false, K_ESC, 1);
   events.push_back(event);
 
   TestChild* parent = new TestChild();
@@ -183,4 +181,7 @@ TEST_F(WorldTests, TestWorldRetainsNextFrameEvents) {
   world.start_frame(events, 1.0/30.0);
   world.end_frame();
   ASSERT_EQ(1, other->event_count);
+  world.start_frame(events, 1.0/30.0);
+  world.end_frame();
+  ASSERT_EQ(2, other->event_count);
 }

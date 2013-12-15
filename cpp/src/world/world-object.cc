@@ -174,7 +174,8 @@ namespace rracer {
 
   InputEventVector KeyAction::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent& event, events) {
-      if(event.pressed && event.key == _key) {
+      KeyEvent key_event = boost::get<KeyEvent>(event);
+      if(key_event.pressed && key_event.key == _key) {
 	_key_callback();
       }
     }

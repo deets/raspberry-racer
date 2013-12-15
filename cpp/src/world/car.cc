@@ -152,12 +152,13 @@ namespace rracer {
 
   InputEventVector Car::process_input_events(const InputEventVector& events, double elapsed) {
     BOOST_FOREACH(const InputEvent event, events) {
-      switch(event.key) {
+      KeyEvent key_event = boost::get<KeyEvent>(event);
+      switch(key_event.key) {
       case K_UP:
-	_throttle = event.pressed ? 1.0 : 0.0;
+	_throttle = key_event.pressed ? 1.0 : 0.0;
 	break;
       case K_DOWN:
-	_throttle = event.pressed ? -1.0 : 0.0;
+	_throttle = key_event.pressed ? -1.0 : 0.0;
 	break;
       }
     }
