@@ -8,14 +8,14 @@ LinuxEventPump::LinuxEventPump(raw_terminal_code_callback cb)
 }
 
 
-InputEventVector LinuxEventPump::pump_events() {
-  InputEventVector res;
+GameEventVector LinuxEventPump::pump_events() {
+  GameEventVector res;
   while(true) {
     int c = _read_raw_terminal_codes();
     if(c == -1) {
       break;
     }
-    InputEvent e;
+    GameEvent e;
     e.pressed = (c & 0x80) > 0;
     e.scancode = (c & 0x7f);
     

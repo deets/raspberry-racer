@@ -76,4 +76,5 @@ TEST_F(VariantTests, TestVariantVisitingWithSubclass) {
   TheVariant v = 10;
   boost::apply_visitor(visitor, v);
   ASSERT_TRUE(visitor.egal);
+  ASSERT_FALSE(visitor.found_int);
 }

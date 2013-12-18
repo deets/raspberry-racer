@@ -18,7 +18,7 @@ namespace rracer {
     HUD(const Vector& position, const Fontinfo&, World& world, function<AffineTransform ()> world_transform);
     virtual ~HUD();
 
-    virtual InputEventVector process_input_events(const InputEventVector& events, double elapsed);
+    virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed);
     virtual void render(OpenVGCompanion& vgc) const;
   };
 

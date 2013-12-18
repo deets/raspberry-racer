@@ -54,10 +54,10 @@ namespace rracer {
   }
 
 
-  void World::start_frame(const InputEventVector& events, const Real elapsed) {
+  void World::start_frame(const GameEventVector& events, const Real elapsed) {
     _window_adapter.start();
     
-    BOOST_FOREACH(const InputEvent event, events) {
+    BOOST_FOREACH(const GameEvent event, events) {
       if(boost::get<KeyEvent>(event).key == K_ESC) {
 	_has_ended = true;
       }
@@ -65,7 +65,7 @@ namespace rracer {
     const Real step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
 
     // prepare the event-vectors.
-    InputEventVector this_frame_events(events);
+    GameEventVector this_frame_events(events);
     boost::range::push_back(this_frame_events, _next_frame_events);
     _next_frame_events.clear();
 

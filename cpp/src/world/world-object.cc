@@ -45,8 +45,8 @@ namespace rracer {
   }
 
 
-  InputEventVector WorldObject::dispatch_input_events(const InputEventVector& events, double elapsed) {
-    InputEventVector next_frame_events;
+  GameEventVector WorldObject::dispatch_input_events(const GameEventVector& events, double elapsed) {
+    GameEventVector next_frame_events;
     push_back(next_frame_events, this->process_input_events(events, elapsed));
 
     BOOST_FOREACH(WorldObject& child, _children) {
@@ -64,8 +64,8 @@ namespace rracer {
     }
   }
 
-  InputEventVector WorldObject::process_input_events(const InputEventVector&, double elapsed) {
-    InputEventVector next_frame_events;
+  GameEventVector WorldObject::process_input_events(const GameEventVector&, double elapsed) {
+    GameEventVector next_frame_events;
     return next_frame_events;
   }
 
@@ -114,9 +114,9 @@ namespace rracer {
   }
 
 
-  InputEventVector LissajouAnimator::process_input_events(const InputEventVector& events, double elapsed) {
+  GameEventVector LissajouAnimator::process_input_events(const GameEventVector& events, double elapsed) {
     _phase += elapsed;
-    InputEventVector next_frame_events;
+    GameEventVector next_frame_events;
     return next_frame_events;
   }
 
@@ -172,14 +172,14 @@ namespace rracer {
   }
 
 
-  InputEventVector KeyAction::process_input_events(const InputEventVector& events, double elapsed) {
-    BOOST_FOREACH(const InputEvent& event, events) {
+  GameEventVector KeyAction::process_input_events(const GameEventVector& events, double elapsed) {
+    BOOST_FOREACH(const GameEvent& event, events) {
       KeyEvent key_event = boost::get<KeyEvent>(event);
       if(key_event.pressed && key_event.key == _key) {
 	_key_callback();
       }
     }
-    InputEventVector next_frame_events;
+    GameEventVector next_frame_events;
     return next_frame_events;
   }
   

@@ -6,7 +6,7 @@
 class EventPump {
 
 public:
-  virtual InputEventVector pump_events()=0;
+  virtual GameEventVector pump_events()=0;
 };
 
 

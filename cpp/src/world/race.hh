@@ -11,10 +11,10 @@ namespace rracer {
   public:
     CarInfo(Car* car, Track*, int number);
 
-    InputEventVector process_input_events(const InputEventVector& events, double elapsed);
+    GameEventVector process_input_events(const GameEventVector& events, double elapsed);
 
     Vector car_position() const;
-    ConnectionPoint slot_position(InputEventVector& next_frame_events);
+    ConnectionPoint slot_position(GameEventVector& next_frame_events);
 
     Car* car;
     Track* track;
@@ -27,7 +27,7 @@ namespace rracer {
   class Race : public WorldObject {
   public:
     Race(World& world, AssetManager&, const string& track_name, const string& car_name);
-    virtual InputEventVector process_input_events(const InputEventVector& events, double elapsed);
+    virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed);
 
   private:
     World& _world;

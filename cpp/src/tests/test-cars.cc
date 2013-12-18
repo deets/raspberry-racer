@@ -81,7 +81,7 @@ public:
 
 
 TEST_F(CarTests, TestCarLoading) {
-  InputEventVector events;
+  GameEventVector events;
   // simulate the user accelerating
   KeyEvent event(true, K_UP, 126);
   events.push_back(event);
@@ -100,7 +100,7 @@ TEST_F(CarTests, TestCarLoading) {
 
 
 TEST_F(CarTests, TestCarPlacing) {
-  InputEventVector events;
+  GameEventVector events;
   World world(*window_adapter, *ovg_adapter);
   {
     TestCar* car = new TestCar(*asset_manager, car_info);

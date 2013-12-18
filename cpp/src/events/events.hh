@@ -39,8 +39,8 @@ namespace rracer {
   };
 
 
-  typedef boost::variant<KeyEvent> InputEvent;
-  typedef vector<InputEvent> InputEventVector;
+  typedef boost::variant<KeyEvent> GameEvent;
+  typedef vector<GameEvent> GameEventVector;
 
 }; // end ns::rracer
 #endif

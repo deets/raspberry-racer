@@ -35,10 +35,10 @@ public:
   {
   }
 
-  virtual InputEventVector process_input_events(const InputEventVector& events, double elapsed) {
+  virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed) {
     event_count += events.size();
     this->elapsed += elapsed;
-    InputEventVector next_frame_events;
+    GameEventVector next_frame_events;
     return next_frame_events;
   }
 
@@ -59,12 +59,12 @@ public:
   {
   }
 
-  virtual InputEventVector process_input_events(const InputEventVector& events, double elapsed) {
+  virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed) {
     event_count += events.size();
     this->elapsed += elapsed;
-    InputEventVector next_frame_events;
+    GameEventVector next_frame_events;
     KeyEvent event(true, K_ESC, 53);
-    next_frame_events.push_back(InputEvent(event));
+    next_frame_events.push_back(GameEvent(event));
     return next_frame_events;
   }
 
@@ -92,7 +92,7 @@ public:
 
 
 TEST_F(WorldTests, TestWorldLifeCycle) {
-  InputEventVector events;
+  GameEventVector events;
   TestWindowAdapter window_adapter;
   EXPECT_CALL(window_adapter, start()).Times(1);
   EXPECT_CALL(window_adapter, end()).Times(1);
@@ -103,7 +103,7 @@ TEST_F(WorldTests, TestWorldLifeCycle) {
 }
 
 TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
-  InputEventVector events;
+  GameEventVector events;
   KeyEvent event(false, K_ESC, 1);
   events.push_back(event);
 
@@ -171,7 +171,7 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
 
 
 TEST_F(WorldTests, TestWorldRetainsNextFrameEvents) {
-  InputEventVector events;
+  GameEventVector events;
   World world(*window_adapter, *ovg_adapter);
   NextFrameEventAdderTestChild* other = new NextFrameEventAdderTestChild();
   world.add_object(other);

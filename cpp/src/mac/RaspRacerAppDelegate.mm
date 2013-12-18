@@ -31,7 +31,7 @@ namespace fs = boost::filesystem;
   _hud = 0;
   _asset_manager = 0;
   _world = 0;
-  _events = new rracer::InputEventVector();
+  _events = new rracer::GameEventVector();
   _world_timer = new Timer();
   return self;
 }

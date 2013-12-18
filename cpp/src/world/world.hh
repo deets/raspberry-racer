@@ -71,7 +71,7 @@ namespace rracer {
     // const_iterator begin() const;
     // const_iterator end() const;
 
-    void start_frame(const InputEventVector &events, Real elapsed);
+    void start_frame(const GameEventVector &events, Real elapsed);
     void end_frame();
     bool has_ended() { return _has_ended; };
     void add_object(WorldObject* child);
@@ -102,7 +102,7 @@ namespace rracer {
 
     Real _fixed_frame_rate;
 
-    InputEventVector _next_frame_events;
+    GameEventVector _next_frame_events;
   };
 
 };
