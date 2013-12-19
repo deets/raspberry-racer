@@ -28,7 +28,7 @@ namespace rracer {
   }
 
 
-  ConnectionPoint CarInfo::slot_position(GameEventVector& next_frame_events) {
+  ConnectionPoint CarInfo::slot_position(function<void (const GameEvent&)> emit_event) {
     const Vector car_pos = car_position();
     NearestPointInfo npi = tile->nearest_point(lane, car_pos);
     if(npi.offset > 1.0) {
@@ -44,10 +44,8 @@ namespace rracer {
   }
 
 
-  GameEventVector CarInfo::process_input_events(const GameEventVector& events, double elapsed) {
-    GameEventVector next_frame_events;
-    car->push_to_slot(slot_position(next_frame_events));
-    return next_frame_events;
+  void CarInfo::process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event) {
+    car->push_to_slot(slot_position(emit_event));
   }
 
 
@@ -82,12 +80,10 @@ namespace rracer {
     _world.add_object(hud);
   }
 
-  GameEventVector Race::process_input_events(const GameEventVector& events, double elapsed) {
-    GameEventVector next_frame_events;
+  void Race::process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event) {
     BOOST_FOREACH(CarInfo& ci, _cars) {
-      push_back(next_frame_events, ci.process_input_events(events, elapsed));
+      ci.process_input_events(events, elapsed, emit_event);
     }
-    return next_frame_events;
   }
 
 } // end ns::rracer

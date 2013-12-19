@@ -35,11 +35,9 @@ public:
   {
   }
 
-  virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed) {
+  virtual void process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     event_count += events.size();
     this->elapsed += elapsed;
-    GameEventVector next_frame_events;
-    return next_frame_events;
   }
 
 };
@@ -59,13 +57,11 @@ public:
   {
   }
 
-  virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed) {
+  virtual void process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     event_count += events.size();
     this->elapsed += elapsed;
-    GameEventVector next_frame_events;
     KeyEvent event(true, K_ESC, 53);
-    next_frame_events.push_back(GameEvent(event));
-    return next_frame_events;
+    emit_event(GameEvent(event));
   }
 
 };

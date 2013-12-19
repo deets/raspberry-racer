@@ -86,7 +86,6 @@ namespace rracer {
     void fixed_frame_rate(Real fixed_frame_rate);
 
   private:
-
     void render();
 
     bool _has_ended;

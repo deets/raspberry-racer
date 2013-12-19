@@ -29,7 +29,7 @@ namespace rracer {
 
     virtual ~WorldObject() {}
 
-    virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed);
+    virtual void process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event);
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
@@ -46,7 +46,7 @@ namespace rracer {
 
   protected:
 
-    virtual GameEventVector dispatch_input_events(const GameEventVector& events, double elapsed);
+    virtual void dispatch_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event);
     virtual void dispatch_render(OpenVGCompanion&);
 
     WorldObjectList _children;
@@ -84,7 +84,7 @@ namespace rracer {
   public:
     LissajouAnimator(float width, float height, float alpha, float _beta);
 
-    virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed);
+    virtual void process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event);
     virtual void render(OpenVGCompanion& vgc) const;
 
   };
@@ -117,7 +117,7 @@ namespace rracer {
 
   public:
     KeyAction(EKeys key, function< void () >);
-    virtual GameEventVector process_input_events(const GameEventVector& events, double elapsed);
+    virtual void process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event);
   };
 }; //ns::rracer
 

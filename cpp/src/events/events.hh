@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <boost/variant.hpp>
+#include <boost/function.hpp>
 
 using namespace std;
 
@@ -41,6 +42,6 @@ namespace rracer {
 
   typedef boost::variant<KeyEvent> GameEvent;
   typedef vector<GameEvent> GameEventVector;
-
+  typedef boost::function<void (const GameEvent&)> EventEmitter;
 }; // end ns::rracer
 #endif
