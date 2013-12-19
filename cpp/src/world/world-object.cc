@@ -45,7 +45,7 @@ namespace rracer {
   }
 
 
-  void WorldObject::dispatch_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event) {
+  void WorldObject::dispatch_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     this->process_input_events(events, elapsed, emit_event);
     BOOST_FOREACH(WorldObject& child, _children) {
       child.dispatch_input_events(events, elapsed, emit_event);
@@ -61,7 +61,7 @@ namespace rracer {
     }
   }
 
-  void WorldObject::process_input_events(const GameEventVector&, double elapsed, function<void (const GameEvent&)> emit_event) {
+  void WorldObject::process_input_events(const GameEventVector&, double elapsed, EventEmitter emit_event) {
   }
 
 
@@ -109,7 +109,7 @@ namespace rracer {
   }
 
 
-  void LissajouAnimator::process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event) {
+  void LissajouAnimator::process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     _phase += elapsed;
   }
 
@@ -165,7 +165,7 @@ namespace rracer {
   }
 
 
-  void KeyAction::process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event) {
+  void KeyAction::process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     BOOST_FOREACH(const GameEvent& event, events) {
       KeyEvent key_event = boost::get<KeyEvent>(event);
       if(key_event.pressed && key_event.key == _key) {

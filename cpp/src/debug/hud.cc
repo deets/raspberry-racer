@@ -20,7 +20,7 @@ namespace rracer {
     delete _debug_renderer;
   }
 
-  void HUD::process_input_events(const GameEventVector& events, double elapsed, function<void (const GameEvent&)> emit_event) {
+  void HUD::process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     BOOST_FOREACH(const GameEvent event, events) {
       KeyEvent key_event = boost::get<KeyEvent>(event);
       if(!key_event.pressed) {

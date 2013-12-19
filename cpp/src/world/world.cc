@@ -70,7 +70,7 @@ namespace rracer {
     boost::range::push_back(this_frame_events, _next_frame_events);
     _next_frame_events.clear();
 
-    boost::function<void (const GameEvent&)> emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
+    EventEmitter emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
     BOOST_FOREACH(WorldObject& obj, _world_objects) {
       obj.dispatch_input_events(this_frame_events, step_size, emit_event);
     }
