@@ -28,6 +28,7 @@
             'src/world/track.cc',
             'src/world/car.cc',
             'src/world/race.cc',
+            'src/events/events.cc',
             'src/world/track-tiles.cc',
             'src/world/world-object.cc',
             'src/gfx/openvg-companion.cc',
