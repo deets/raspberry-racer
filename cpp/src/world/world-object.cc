@@ -45,10 +45,10 @@ namespace rracer {
   }
 
 
-  void WorldObject::dispatch_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
-    this->process_input_events(events, time_info, emit_event);
+  void WorldObject::dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+    this->process_frame_events(events, time_info, emit_event);
     BOOST_FOREACH(WorldObject& child, _children) {
-      child.dispatch_input_events(events, time_info, emit_event);
+      child.dispatch_frame_events(events, time_info, emit_event);
     }
   }
 
@@ -61,7 +61,7 @@ namespace rracer {
     }
   }
 
-  void WorldObject::process_input_events(const GameEventVector&, const TimeInfo& time_info, EventEmitter emit_event) {
+  void WorldObject::process_frame_events(const GameEventVector&, const TimeInfo& time_info, EventEmitter emit_event) {
   }
 
 
@@ -109,7 +109,7 @@ namespace rracer {
   }
 
 
-  void LissajouAnimator::process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+  void LissajouAnimator::process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     _phase += time_info.elapsed();
   }
 
@@ -165,7 +165,7 @@ namespace rracer {
   }
 
 
-  void KeyAction::process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+  void KeyAction::process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     BOOST_FOREACH(const GameEvent& event, events) {
       KeyEvent key_event = boost::get<KeyEvent>(event.event);
       if(key_event.pressed && key_event.key == _key) {

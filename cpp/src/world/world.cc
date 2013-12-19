@@ -75,7 +75,7 @@ namespace rracer {
 
     EventEmitter emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
     BOOST_FOREACH(WorldObject& obj, _world_objects) {
-      obj.dispatch_input_events(this_frame_events, _time_info, emit_event);
+      obj.dispatch_frame_events(this_frame_events, _time_info, emit_event);
     }
     // simulate physics
     _world->Step(_time_info.elapsed(), WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);

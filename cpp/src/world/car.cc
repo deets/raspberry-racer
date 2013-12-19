@@ -150,7 +150,7 @@ namespace rracer {
   }
 
 
-  void Car::process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter event_emitter) {
+  void Car::process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter event_emitter) {
     BOOST_FOREACH(const GameEvent event, events) {
       KeyEvent key_event = boost::get<KeyEvent>(event.event);
       switch(key_event.key) {

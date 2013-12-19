@@ -35,7 +35,7 @@ public:
   {
   }
 
-  virtual void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+  virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     event_count += events.size();
     this->elapsed += time_info.elapsed();
   }
@@ -57,7 +57,7 @@ public:
   {
   }
 
-  virtual void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+  virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     event_count += events.size();
     this->elapsed += time_info.elapsed();
     KeyEvent event(true, K_ESC, 53);

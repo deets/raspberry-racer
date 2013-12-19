@@ -76,7 +76,7 @@ namespace rracer {
 
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
-    virtual void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
+    virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
 
     ConnectionPoint position() const;
