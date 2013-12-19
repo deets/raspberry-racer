@@ -102,6 +102,8 @@ namespace rracer {
     Real _fixed_frame_rate;
 
     GameEventVector _next_frame_events;
+
+    TimeInfo _time_info;
   };
 
 };

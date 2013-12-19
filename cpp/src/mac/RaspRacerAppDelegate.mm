@@ -156,10 +156,24 @@ namespace fs = boost::filesystem;
       break;
     }
     if(key_event.key != rracer::K_UNKNOWN) {
-      _events->push_back(key_event);
+      _events->push_back(rracer::GameEvent(rracer::TimeInfo(), rracer::Event(key_event)));
       return YES;
     }
   }
   return NO;
 }
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

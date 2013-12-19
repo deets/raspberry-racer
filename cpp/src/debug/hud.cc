@@ -22,7 +22,7 @@ namespace rracer {
 
   void HUD::process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
     BOOST_FOREACH(const GameEvent event, events) {
-      KeyEvent key_event = boost::get<KeyEvent>(event);
+      KeyEvent key_event = boost::get<KeyEvent>(event.event);
       if(!key_event.pressed) {
 	switch(key_event.key) {
 	case K_h:

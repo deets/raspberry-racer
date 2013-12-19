@@ -17,6 +17,7 @@ namespace rracer {
     , _has_ended(false)
     , _debug_renderer(0)
     , _fixed_frame_rate(0.0)
+    , _time_info()
   {
     b2Vec2 gravity(.0, 0);
     _world = new b2World(gravity);
@@ -57,13 +58,15 @@ namespace rracer {
 
   void World::start_frame(const GameEventVector& events, const Real elapsed) {
     _window_adapter.start();
-    
+
     BOOST_FOREACH(const GameEvent event, events) {
-      if(boost::get<KeyEvent>(event).key == K_ESC) {
+      if(boost::get<KeyEvent>(event.event).key == K_ESC) {
 	_has_ended = true;
       }
     }
     const Real step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
+
+    _time_info = TimeInfo(_time_info.when() + step_size, step_size);
 
     // prepare the event-vectors.
     GameEventVector this_frame_events(events);
@@ -72,10 +75,10 @@ namespace rracer {
 
     EventEmitter emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
     BOOST_FOREACH(WorldObject& obj, _world_objects) {
-      obj.dispatch_input_events(this_frame_events, step_size, emit_event);
+      obj.dispatch_input_events(this_frame_events, _time_info, emit_event);
     }
     // simulate physics
-    _world->Step(step_size, WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
+    _world->Step(_time_info.elapsed(), WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
     // render the game objects
     render();
   }

@@ -20,7 +20,7 @@ class TestChild : public WorldObject {
 public:
   string name;
   int event_count;
-  double elapsed;
+  Real elapsed;
 
   TestChild() 
     : event_count(0)
@@ -35,9 +35,9 @@ public:
   {
   }
 
-  virtual void process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
+  virtual void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     event_count += events.size();
-    this->elapsed += elapsed;
+    this->elapsed += time_info.elapsed();
   }
 
 };
@@ -49,7 +49,7 @@ class NextFrameEventAdderTestChild : public WorldObject {
 public:
   string name;
   int event_count;
-  double elapsed;
+  Real elapsed;
 
   NextFrameEventAdderTestChild() 
     : event_count(0)
@@ -57,11 +57,11 @@ public:
   {
   }
 
-  virtual void process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
+  virtual void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     event_count += events.size();
-    this->elapsed += elapsed;
+    this->elapsed += time_info.elapsed();
     KeyEvent event(true, K_ESC, 53);
-    emit_event(GameEvent(event));
+    emit_event(GameEvent(time_info, Event(event)));
   }
 
 };
@@ -101,7 +101,7 @@ TEST_F(WorldTests, TestWorldLifeCycle) {
 TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
   GameEventVector events;
   KeyEvent event(false, K_ESC, 1);
-  events.push_back(event);
+  events.push_back(GameEvent(TimeInfo(), event));
 
   TestChild* parent = new TestChild();
   TestChild* child = new TestChild();

@@ -44,7 +44,7 @@ namespace rracer {
   }
 
 
-  void CarInfo::process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
+  void CarInfo::process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     car->push_to_slot(slot_position(emit_event));
   }
 
@@ -80,9 +80,9 @@ namespace rracer {
     _world.add_object(hud);
   }
 
-  void Race::process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
+  void Race::process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     BOOST_FOREACH(CarInfo& ci, _cars) {
-      ci.process_input_events(events, elapsed, emit_event);
+      ci.process_input_events(events, time_info, emit_event);
     }
   }
 

@@ -11,7 +11,7 @@ namespace rracer {
   public:
     CarInfo(Car* car, Track*, int number);
 
-    void process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event);
+    void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
 
     Vector car_position() const;
     ConnectionPoint slot_position(EventEmitter emit_event);
@@ -27,7 +27,7 @@ namespace rracer {
   class Race : public WorldObject {
   public:
     Race(World& world, AssetManager&, const string& track_name, const string& car_name);
-    virtual void process_input_events(const GameEventVector& events, double elapsed, EventEmitter emit_event);
+    virtual void process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
 
   private:
     World& _world;

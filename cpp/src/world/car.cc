@@ -150,9 +150,9 @@ namespace rracer {
   }
 
 
-  GameEventVector Car::process_input_events(const GameEventVector& events, double elapsed) {
+  void Car::process_input_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter event_emitter) {
     BOOST_FOREACH(const GameEvent event, events) {
-      KeyEvent key_event = boost::get<KeyEvent>(event);
+      KeyEvent key_event = boost::get<KeyEvent>(event.event);
       switch(key_event.key) {
       case K_UP:
 	_throttle = key_event.pressed ? 1.0 : 0.0;
@@ -162,17 +162,12 @@ namespace rracer {
 	break;
       }
     }
-    this->step(elapsed);
-    GameEventVector next_frame_events;
-    return next_frame_events;
+    this->step(time_info.elapsed());
   }
 
 
   void Car::push_to_slot(const ConnectionPoint& slot) {
     _slot_joint->push_to_slot(this->position(), slot);
-    // _pivot_body->SetTransform(vconv(slot.position), 0);
-    // _pivot_body->SetAngularVelocity(0);
-    // _pivot_body->SetLinearVelocity(b2Vec2(0, 0));
   }
 
 

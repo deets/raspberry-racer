@@ -5,6 +5,8 @@
 #include <boost/variant.hpp>
 #include <boost/function.hpp>
 
+#include "common/common.hh"
+
 using namespace std;
 
 namespace rracer {
@@ -39,8 +41,29 @@ namespace rracer {
     int scancode;
   };
 
+  class TimeInfo {
 
-  typedef boost::variant<KeyEvent> GameEvent;
+  public:
+    TimeInfo();
+    TimeInfo(const Real when, const Real elapsed);
+    //    TimeInfo(const TimeInfo& other);
+    Real when() const;
+    Real elapsed() const;
+
+  private:
+    Real _when, _elapsed;
+  };
+
+  typedef boost::variant<KeyEvent> Event;
+
+  class GameEvent {
+  public:
+    GameEvent(const TimeInfo& time_info, const Event& event);
+    Event event;
+    TimeInfo time_info;
+
+  };
+
   typedef vector<GameEvent> GameEventVector;
   typedef boost::function<void (const GameEvent&)> EventEmitter;
 }; // end ns::rracer
