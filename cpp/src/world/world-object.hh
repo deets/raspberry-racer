@@ -33,6 +33,8 @@ namespace rracer {
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void physics_setup(b2World *);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
+    WorldObject* parent() const;
+    void parent(WorldObject* parent);
 
     void add_object(WorldObject *obj);
 
@@ -49,10 +51,14 @@ namespace rracer {
     virtual void dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void dispatch_render(OpenVGCompanion&);
 
+    void object_added(WorldObject* parent, WorldObject* child);
+    virtual void on_object_added(WorldObject* parent, WorldObject* child);
+
     WorldObjectList _children;
 
   private:
     string _name;
+    WorldObject* _parent;
   };
 
 

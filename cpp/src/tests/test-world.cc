@@ -22,11 +22,14 @@ public:
   int event_count;
   Real elapsed;
 
+  vector<pair<WorldObject*, WorldObject*> > subtree_objects;
+
   TestChild() 
     : event_count(0)
     , elapsed(.0)
   {
   }
+
 
   TestChild(const string &name) 
     : name(name)
@@ -34,6 +37,12 @@ public:
     , elapsed(.0)
   {
   }
+
+
+  virtual void on_object_added(WorldObject* parent, WorldObject* child) {
+    subtree_objects.push_back(make_pair(parent, child));
+  }
+
 
   virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     event_count += events.size();
@@ -180,4 +189,28 @@ TEST_F(WorldTests, TestWorldRetainsNextFrameEvents) {
   world.start_frame(events, 1.0/30.0);
   world.end_frame();
   ASSERT_EQ(2, other->event_count);
+}
+
+
+TEST_F(WorldTests, TestWorldObjectsFormHierarchyWhenAddingChildrenToThem) {
+  TestChild parent;
+  TestChild* child = new TestChild();
+  ASSERT_TRUE(parent.parent() == NULL);
+  ASSERT_TRUE(child->parent() == NULL);
+  parent.add_object(child);
+  ASSERT_TRUE(child->parent() == &parent);
+}
+
+
+TEST_F(WorldTests, TestWorldObjectsAddingChildrenPropagatesUpwardsParentChain) {
+  shared_ptr<TestChild> grandparent = shared_ptr<TestChild>(new TestChild());
+  TestChild* parent = new TestChild();
+  TestChild* child = new TestChild();
+  grandparent->add_object(parent);
+  parent->add_object(child);
+  ASSERT_TRUE(grandparent.get() == parent->parent());
+  ASSERT_TRUE(parent == child->parent());
+  ASSERT_EQ(2, grandparent->subtree_objects.size());
+  ASSERT_EQ(1, parent->subtree_objects.size());
+  ASSERT_EQ(0, child->subtree_objects.size());
 }

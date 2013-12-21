@@ -9,7 +9,20 @@ namespace rracer {
   
   WorldObject::WorldObject() 
     : _name("")
+    , _parent(NULL)
   {
+  }
+
+
+  void WorldObject::object_added(WorldObject* parent, WorldObject* child) {
+    on_object_added(parent, child);
+    if(this->parent()) {
+      this->parent()->object_added(parent, child);
+    }
+  }
+
+
+  void WorldObject::on_object_added(WorldObject* parent, WorldObject* child) {
   }
 
 
@@ -22,8 +35,21 @@ namespace rracer {
     _name = n;
   }
 
+
+  WorldObject* WorldObject::parent() const {
+    return _parent;
+  }
+
+
+  void WorldObject::parent(WorldObject* p) {
+    _parent = p;
+  }
+
+
   void WorldObject::add_object(WorldObject* child) {
+    child->parent(this);
     _children.push_back(*child);
+    object_added(this, child);
   }
 
 
