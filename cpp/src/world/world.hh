@@ -18,6 +18,15 @@ namespace rracer {
   #define WORLD_VELOCITY_ITERATIONS 6
   #define WORLD_POSITION_ITERATIONS 2
 
+  class WorldRoot : public WorldObject {
+  public:
+    WorldRoot(function<void (WorldObject*, WorldObject*)> on_object_added_callback);
+    virtual void on_object_added(WorldObject*, WorldObject*);
+
+  private:
+    function<void (WorldObject*, WorldObject*)> _on_object_added_callback;
+  };
+
 
   class World {
 
@@ -37,8 +46,6 @@ namespace rracer {
       iterator& operator++();
       reference operator*() const;
       pointer operator->() const;
-
-      Rect screen_rect() const;
 
     private:
       stack<pair<wo_iterator, wo_iterator> > _iterators;
@@ -71,6 +78,7 @@ namespace rracer {
     // const_iterator begin() const;
     // const_iterator end() const;
 
+    void on_object_added(WorldObject* parent, WorldObject* child);
     void start_frame(const GameEventVector &events, Real elapsed);
     void end_frame();
     bool has_ended() { return _has_ended; };
@@ -93,7 +101,9 @@ namespace rracer {
     WindowAdapter &_window_adapter;
     OpenVGAdapter &_ovg_adapter;
 
-    WorldObject::WorldObjectList _world_objects;
+    shared_ptr<WorldRoot> _root;
+
+    //WorldObject::WorldObjectList _world_objects;
 
     b2World* _world;
 

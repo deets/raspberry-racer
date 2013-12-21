@@ -53,12 +53,12 @@ namespace rracer {
   }
 
 
-  WorldObject::wo_iterator WorldObject::begin() {
+  WorldObject::iterator WorldObject::begin() {
     return _children.begin();
   }
 
   
-  WorldObject::wo_iterator WorldObject::end() {
+  WorldObject::iterator WorldObject::end() {
     return _children.end();
   }
 
