@@ -198,6 +198,7 @@
                 'src/mac/RaspRacerView.mm',
                 'src/mac/RRApplication.mm',
                 'src/mac/main.m',
+                'src/events/events.cc',
                 'src/world/world.cc',
                 'src/world/world-object.cc',
                 'src/world/track.cc',
