@@ -37,7 +37,7 @@ namespace rracer {
     void add_object(WorldObject *obj);
 
     string name() const;
-    void name(const string n);
+    void name(const string& n);
 
     wo_iterator begin();
     wo_iterator end();

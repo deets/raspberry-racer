@@ -52,31 +52,36 @@ namespace rracer {
   Race::Race(World& world, AssetManager& asset_manager, const string& track_name, const string& car_name) 
   : _world(world)
   , _asset_manager(asset_manager)
+  , _track_name(track_name)
+  , _car_name(car_name)
   {
+  }
+
+
+  void Race::physics_setup(b2World *physics_world) {
     struct local {
       static Vector to_vector(function<ConnectionPoint () > cpf) {
 	return cpf().position;
       }
     };
 
-    rracer::Track* track = new rracer::Track(_asset_manager, track_name);
+    rracer::Track* track = new rracer::Track(_asset_manager, _track_name);
     rracer::AffineTransformator* t = new rracer::AffineTransformator(_world.screen_rect().fit(track->bounds() * 1.1));
-    rracer::Car* car = new rracer::Car(_asset_manager, _asset_manager.json(car_name));
-    car->physics_setup(_world.world());
+
+    rracer::Car* car = create_car(_asset_manager, _asset_manager.json(_car_name));
+    car->physics_setup(physics_world);
     t->add_object(track);
     t->add_object(car);
     _world.add_object(t);
 
     CarInfo car_info(car, track, 0);
     _cars.push_back(car_info);
-
     HUD* hud = new HUD(
-        rracer::Vector(20, world.screen_rect().height() - 20),
+        rracer::Vector(20, _world.screen_rect().height() - 20),
         _asset_manager.font(),
         _world,
         boost::bind(&rracer::AffineTransformator::affine_transform, t)
     );
-
     _world.add_object(hud);
   }
 

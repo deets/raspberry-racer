@@ -18,7 +18,7 @@ namespace rracer {
   }
 
 
-  void WorldObject::name(const string n) {
+  void WorldObject::name(const string& n) {
     _name = n;
   }
 

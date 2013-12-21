@@ -54,7 +54,16 @@ namespace rracer {
     Real _when, _elapsed;
   };
 
-  typedef boost::variant<KeyEvent> Event;
+  struct HUDStringEvent {
+    std::string payload;
+  };
+
+
+  class CarInfoEvent {
+
+  };
+
+  typedef boost::variant<KeyEvent, HUDStringEvent, CarInfoEvent> Event;
 
   class GameEvent {
   public:
