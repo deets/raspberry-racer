@@ -120,7 +120,7 @@ namespace rracer {
 
   void World::add_object(WorldObject* obj) {
     _world_objects.push_back(*obj);
-    obj->physics_setup(world());
+    obj->setup_within_world(world());
   }
 
 

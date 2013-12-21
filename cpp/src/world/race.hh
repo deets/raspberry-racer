@@ -50,7 +50,7 @@ namespace rracer {
   class Race : public WorldObject {
   public:
     Race(World& world, AssetManager&, const string& track_name, const string& car_name);
-    virtual void physics_setup(b2World *physics_world);
+    virtual void setup_within_world(b2World *physics_world);
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
 
   private:

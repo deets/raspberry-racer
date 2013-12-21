@@ -63,7 +63,7 @@ namespace rracer {
   }
 
 
-  void WorldObject::physics_setup(b2World* ) {
+  void WorldObject::setup_within_world(b2World* ) {
   }
 
 

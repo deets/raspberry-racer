@@ -31,7 +31,7 @@ namespace rracer {
 
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void render(OpenVGCompanion& vgc) const;
-    virtual void physics_setup(b2World *);
+    virtual void setup_within_world(b2World *);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
     WorldObject* parent() const;
     void parent(WorldObject* parent);

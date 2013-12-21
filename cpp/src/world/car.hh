@@ -19,7 +19,7 @@ namespace rracer {
 
   class SlotJoint {
   public:
-    virtual void physics_setup(const b2Vec2& pivot, b2World*, b2Body* chassis, vector<function< void()> >& destroyers)=0;
+    virtual void setup_within_world(const b2Vec2& pivot, b2World*, b2Body* chassis, vector<function< void()> >& destroyers)=0;
     virtual void push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point)=0;
     virtual void debug_render(DebugRenderer& debug_renderer) const=0;
   };
@@ -30,7 +30,7 @@ namespace rracer {
   public:
     CurveJointSlotJoint();
 
-    virtual void physics_setup(const b2Vec2& pivot, b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
+    virtual void setup_within_world(const b2Vec2& pivot, b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
     virtual void push_to_slot(const ConnectionPoint& pivot_point, const ConnectionPoint& slot_point);
 
     virtual b2Vec2 GetLocalAnchorA( const b2Vec2& testPoint );
@@ -62,7 +62,7 @@ namespace rracer {
   public:
     Wheel(const Json::Value&);
     virtual ~Wheel();
-    void physics_setup(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
+    void setup_within_world(b2World*, b2Body* chassis, vector<function< void()> >& destroyers);
     void step(Real elapsed, Real throttle, const EngineInfo&);
 
     b2Body* body();
@@ -75,7 +75,7 @@ namespace rracer {
     virtual ~Car();
 
     virtual void render(OpenVGCompanion& vgc) const;
-    virtual void physics_setup(b2World *);
+    virtual void setup_within_world(b2World *);
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
 

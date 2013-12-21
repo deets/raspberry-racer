@@ -58,7 +58,7 @@ namespace rracer {
   }
 
 
-  void Race::physics_setup(b2World *physics_world) {
+  void Race::setup_within_world(b2World *physics_world) {
     struct local {
       static Vector to_vector(function<ConnectionPoint () > cpf) {
 	return cpf().position;
@@ -69,7 +69,7 @@ namespace rracer {
     AffineTransformator* t = new AffineTransformator(_world.screen_rect().fit(track->bounds() * 1.1));
 
     Car* car = new Car(_asset_manager, _asset_manager.json(_car_name));
-    car->physics_setup(physics_world);
+    car->setup_within_world(physics_world);
     t->add_object(track);
     t->add_object(car);
     _world.add_object(t);
