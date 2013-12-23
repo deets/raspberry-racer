@@ -23,7 +23,7 @@ namespace rracer {
 
   public:
     typedef bi::list<WorldObject> WorldObjectList;
-    typedef WorldObjectList::iterator wo_iterator;
+    typedef WorldObjectList::iterator iterator;
 
     WorldObject();
 
@@ -31,16 +31,18 @@ namespace rracer {
 
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void render(OpenVGCompanion& vgc) const;
-    virtual void physics_setup(b2World *);
+    virtual void setup_within_world(b2World *);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
 
+    WorldObject* parent() const;
+    void parent(WorldObject* parent);
     void add_object(WorldObject *obj);
 
     string name() const;
-    void name(const string n);
+    void name(const string& n);
 
-    wo_iterator begin();
-    wo_iterator end();
+    iterator begin();
+    iterator end();
 
     friend class World;
 
@@ -49,10 +51,14 @@ namespace rracer {
     virtual void dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void dispatch_render(OpenVGCompanion&);
 
+    void object_added(WorldObject* parent, WorldObject* child);
+    virtual void on_object_added(WorldObject* parent, WorldObject* child);
+
     WorldObjectList _children;
 
   private:
     string _name;
+    WorldObject* _parent;
   };
 
 

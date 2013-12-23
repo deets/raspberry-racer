@@ -8,6 +8,19 @@
 
 namespace rracer {
 
+  //================================================
+
+  WorldRoot::WorldRoot(function<void (WorldObject*, WorldObject*)> on_object_added_callback) 
+    : WorldObject()
+    , _on_object_added_callback(on_object_added_callback)
+  {
+  }
+
+
+  void WorldRoot::on_object_added(WorldObject* parent, WorldObject* child) {
+    _on_object_added_callback(parent, child);
+  }
+
 
   //================================================
 
@@ -21,6 +34,12 @@ namespace rracer {
   {
     b2Vec2 gravity(.0, 0);
     _world = new b2World(gravity);
+    _root = shared_ptr<WorldRoot>(new WorldRoot(boost::bind(&World::on_object_added, this, _1, _2)));
+  }
+
+
+  void World::on_object_added(WorldObject* parent, WorldObject* child) {
+    child->setup_within_world(_world);
   }
 
 
@@ -74,14 +93,17 @@ namespace rracer {
     _next_frame_events.clear();
 
     EventEmitter emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
-    BOOST_FOREACH(WorldObject& obj, _world_objects) {
-      obj.dispatch_frame_events(this_frame_events, _time_info, emit_event);
+
+    for(WorldObject::iterator it = _root->begin(); it != _root->end(); ++it) {
+      (*it).dispatch_frame_events(this_frame_events, _time_info, emit_event);
     }
+
     // simulate physics
     _world->Step(_time_info.elapsed(), WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
     // render the game objects
     render();
   }
+
 
   void World::render() {
     OpenVGCompanion vgc(_ovg_adapter);
@@ -96,8 +118,8 @@ namespace rracer {
 
     _ovg_adapter.vgLoadIdentity();
 
-    BOOST_FOREACH(WorldObject& obj, _world_objects) {
-      obj.dispatch_render(vgc);
+    for(WorldObject::iterator it = _root->begin(); it != _root->end(); ++it) {
+      (*it).dispatch_render(vgc);
     }
 
     if(_debug_renderer) {
@@ -119,28 +141,18 @@ namespace rracer {
 
 
   void World::add_object(WorldObject* obj) {
-    _world_objects.push_back(*obj);
-    obj->physics_setup(world());
+    _root->add_object(obj);
   }
 
 
   World::iterator World::begin() {
-    return iterator(_world_objects.begin(), _world_objects.end());
+    return iterator(_root->begin(), _root->end());
   }
 
 
   World::iterator World::end() {
-    return iterator(_world_objects.end(), _world_objects.end());
+    return iterator(_root->end(), _root->end());
   }
-
-  // World::const_iterator World::begin() const {
-  //   return const_iterator(true);
-  // }
-
-
-  // World::const_iterator World::end() const {
-  //   return const_iterator(true);
-  // }
 
 
   //===== iterator ========

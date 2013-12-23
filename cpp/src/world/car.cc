@@ -19,7 +19,7 @@ namespace rracer {
   }
 
  
-  void CurveJointSlotJoint::physics_setup(const b2Vec2& pivot, b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
+  void CurveJointSlotJoint::setup_within_world(const b2Vec2& pivot, b2World* world, b2Body* car_body, vector<function< void()> >& destroyers) {
     _car_body = car_body;
     b2BodyDef kd;
     kd.type = b2_staticBody;
@@ -81,7 +81,8 @@ namespace rracer {
   //=====================
 
   Car::Car(AssetManager& am, const Json::Value& car_info) 
-    : _am(am)
+    : WorldObject()
+    , _am(am)
     , _throttle(0.0)
   {
     assert(car_info.isMember("image") && car_info["image"].isString());
@@ -171,7 +172,7 @@ namespace rracer {
   }
 
 
-  void Car::physics_setup(b2World* world) {
+  void Car::setup_within_world(b2World* world) {
     _world = world;
     b2BodyDef body_def;
     body_def.type = b2_dynamicBody;
@@ -192,9 +193,9 @@ namespace rracer {
     _body->CreateFixture(&fixture_def);
 
     BOOST_FOREACH(Wheel& wheel, _wheels) {
-      wheel.physics_setup(world, _body, _destroyers);
+      wheel.setup_within_world(world, _body, _destroyers);
     }
-    _slot_joint->physics_setup(b2Vec2(_pivot_offset, 0), world, _body, _destroyers);
+    _slot_joint->setup_within_world(b2Vec2(_pivot_offset, 0), world, _body, _destroyers);
   }
 
 
@@ -285,7 +286,7 @@ namespace rracer {
   }
 
   
-  void Wheel::physics_setup(b2World* world, b2Body* chassis, vector<function< void()> >& destroyers) {
+  void Wheel::setup_within_world(b2World* world, b2Body* chassis, vector<function< void()> >& destroyers) {
     _chassis = chassis;
     {
       b2BodyDef body_def;

@@ -9,7 +9,20 @@ namespace rracer {
   
   WorldObject::WorldObject() 
     : _name("")
+    , _parent(NULL)
   {
+  }
+
+
+  void WorldObject::object_added(WorldObject* parent, WorldObject* child) {
+    on_object_added(parent, child);
+    if(this->parent()) {
+      this->parent()->object_added(parent, child);
+    }
+  }
+
+
+  void WorldObject::on_object_added(WorldObject* parent, WorldObject* child) {
   }
 
 
@@ -18,26 +31,39 @@ namespace rracer {
   }
 
 
-  void WorldObject::name(const string n) {
+  void WorldObject::name(const string& n) {
     _name = n;
   }
 
-  void WorldObject::add_object(WorldObject* child) {
-    _children.push_back(*child);
+
+  WorldObject* WorldObject::parent() const {
+    return _parent;
   }
 
 
-  WorldObject::wo_iterator WorldObject::begin() {
+  void WorldObject::parent(WorldObject* p) {
+    _parent = p;
+  }
+
+
+  void WorldObject::add_object(WorldObject* child) {
+    child->parent(this);
+    _children.push_back(*child);
+    object_added(this, child);
+  }
+
+
+  WorldObject::iterator WorldObject::begin() {
     return _children.begin();
   }
 
   
-  WorldObject::wo_iterator WorldObject::end() {
+  WorldObject::iterator WorldObject::end() {
     return _children.end();
   }
 
 
-  void WorldObject::physics_setup(b2World* ) {
+  void WorldObject::setup_within_world(b2World* ) {
   }
 
 
@@ -54,9 +80,10 @@ namespace rracer {
 
 
   void WorldObject::dispatch_render(OpenVGCompanion& vgc) {
+    AffineTransform t = vgc.current_matrix();
     this->render(vgc);
-
     BOOST_FOREACH(WorldObject& child, _children) {
+      vgc.set(t);
       child.dispatch_render(vgc);
     }
   }

@@ -39,6 +39,8 @@ namespace rracer {
     VGint width = image_data.width();
     VGint height = image_data.height();
     VGImage img = _vg.vgCreateImage(
+	// TODO: this needs to be architecture-dependent
+	// it's different on the PI
 	VG_lABGR_8888, 
 	width, height,
 	VG_IMAGE_QUALITY_BETTER);
@@ -151,8 +153,12 @@ namespace rracer {
     _matrix_stack.pop();
   }
 
+
   void OpenVGCompanion::set() const {
-    const AffineTransform& t = current_matrix();
+    set(current_matrix());
+  }
+
+  void OpenVGCompanion::set(const AffineTransform& t) const {
     VGfloat m[] = { t(0, 0), t(1, 0), t(2, 0), t(0, 1), t(1, 1), t(2, 1), t(0, 2), t(1, 2), t(2, 2)};
     _vg.vgSeti(VG_MATRIX_MODE, VG_MATRIX_IMAGE_USER_TO_SURFACE);
     _vg.vgLoadMatrix(m);

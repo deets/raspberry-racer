@@ -6,6 +6,9 @@
  - [ ] check nearest_point() works
  - [ ] check rendering
 
+** TODO check ways of integrating b2CurveJoint into Box2D 
+
+Currently, we need a friend-declaration in b2Body.h. That sucks.
 ** TODO deletion of world-objects
 
 for know I think that should happen when the world has ended.
@@ -16,9 +19,11 @@ I should move to shared_ptr
 
 It currently goes to 360
 
-** TODO assert track is closed
+** DONE assert track is closed
+   CLOSED: [2013-12-11 Wed 20:37]
 
-** TODO implement logging
+** DONE implement logging
+   CLOSED: [2013-12-11 Wed 20:37]
 
 This could be a candidate:
 
@@ -26,7 +31,7 @@ http://pastie.org/1574516
 
 
 ** TODO Add credits 
-
+ - box2d
  - jsoncpp http://sourceforge.net/projects/jsoncpp/
  - ShivaVG http://ivanleben.blogspot.de/2007/07/shivavg-open-source-ansi-c-openvg.html
  - GO openvg https://github.com/ajstarks/openvg/blob/master/openvg.go

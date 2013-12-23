@@ -51,6 +51,7 @@ namespace rracer {
     void rmultiply(const AffineTransform&);
     void pop_matrix();
     void set() const;
+    void set(const AffineTransform& m) const;
   };
 
 

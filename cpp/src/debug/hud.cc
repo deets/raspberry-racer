@@ -1,3 +1,4 @@
+#include <sstream>
 #include <boost/foreach.hpp>
 #include "debug/hud.hh"
 
@@ -20,7 +21,8 @@ namespace rracer {
     delete _debug_renderer;
   }
 
-  void HUD::process_frame_events(const GameEventVector& events, double elapsed, EventEmitter emit_event) {
+  void HUD::process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+    _time_info = time_info;
     BOOST_FOREACH(const GameEvent event, events) {
       KeyEvent key_event = boost::get<KeyEvent>(event.event);
       if(!key_event.pressed) {
@@ -50,13 +52,15 @@ namespace rracer {
     PaintScope text_color(vgc, Color::yellow, VG_FILL_PATH);
     VGfloat pos = _position[1];
     vgc.drawText(_fi, _position[0], pos, "HUD", 10);
-    const char *preamble[] = {
-      "H - toggle HUD",
-      "D - toggle Debug Draw",
-    };
+    std::stringstream lines;
+    lines << "H - toggle HUD" << std::endl;
+    lines << "D - toggle Debug Draw" << std::endl;
+    lines << "time: " << _time_info.when() << std::endl;
     pos -= 12;
-    for(int i = 0; i < 2; ++i) {
-      vgc.drawText(_fi, _position[0], pos, (char*)preamble[i], 10);
+    while(!lines.eof()) {
+      std::string line;
+      std::getline(lines, line);
+      vgc.drawText(_fi, _position[0], pos, line.c_str(), 10);
       pos -= 12;
     }
   }
