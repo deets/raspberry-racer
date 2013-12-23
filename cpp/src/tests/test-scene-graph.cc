@@ -6,7 +6,7 @@
 #include "tests/test-openvg-adapter.hh"
 
 // include objects under test
-#include "world/world.hh"
+#include "scene/scene-graph.hh"
 
 using ::testing::Return;
 using ::testing::Eq;

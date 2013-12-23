@@ -3,7 +3,7 @@
 #include <vector>
 #include <boost/function.hpp>
 #include <json/json.h>
-#include "world/world-object.hh"
+#include "scene/scene-node.hh"
 
 #define CAR_ANGULAR_DAMPING 0.01f
 #define DRAG_COEFFICIENT 500.0f

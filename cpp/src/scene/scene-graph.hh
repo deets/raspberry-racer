@@ -9,7 +9,7 @@
 #include "gfx/window-adapter.hh"
 #include "gfx/openvg-adapter.hh"
 #include "events/events.hh"
-#include "world/world-object.hh"
+#include "scene/scene-node.hh"
 #include "debug/debug.hh"
 
 namespace rracer {

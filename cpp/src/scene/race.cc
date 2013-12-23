@@ -4,9 +4,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/range.hpp>
 #include <boost/range/algorithm_ext.hpp>
-#include "world/race.hh"
-#include "world/track.hh"
-#include "world/car.hh"
+#include "scene/race.hh"
+#include "scene/track.hh"
+#include "scene/car.hh"
 #include "debug/hud.hh"
 
 namespace rracer {

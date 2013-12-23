@@ -3,7 +3,7 @@
 #include <boost/range/algorithm_ext.hpp>
 #include <math.h>
 
-#include "world-object.hh"
+#include "scene/scene-node.hh"
 
 namespace rracer {
   

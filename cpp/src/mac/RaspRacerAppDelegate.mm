@@ -14,7 +14,7 @@
 
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
-#include "world/race.hh"
+#include "scene/race.hh"
 
 #import "RaspRacerAppDelegate.h"
 

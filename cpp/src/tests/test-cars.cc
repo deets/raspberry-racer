@@ -15,8 +15,8 @@
 #include "events/events.hh"
 
 // include objects under test
-#include "world/world.hh"
-#include "world/car.hh"
+#include "scene/scene-graph.hh"
+#include "scene/car.hh"
 
 using ::testing::_;
 using ::testing::Eq;

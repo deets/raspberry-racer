@@ -1,7 +1,7 @@
 #ifndef HUD_HH
 #define HUD_HH
 
-#include "world/world.hh"
+#include "scene/scene-graph.hh"
 #include "debug/debug.hh"
 
 using namespace boost;

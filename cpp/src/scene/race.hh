@@ -1,9 +1,9 @@
 #ifndef RACE_HH
 #define RACE_HH
 #include "assets/assets.hh"
-#include "world/world.hh"
-#include "world/track.hh"
-#include "world/car.hh"
+#include "scene/scene-graph.hh"
+#include "scene/track.hh"
+#include "scene/car.hh"
 
 namespace rracer {
 

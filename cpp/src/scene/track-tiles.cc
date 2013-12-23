@@ -1,6 +1,6 @@
 #include <boost/foreach.hpp>
 #include "json/json.h"
-#include "world/track-tiles.hh"
+#include "scene/track-tiles.hh"
 
 
 namespace rracer {

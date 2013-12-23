@@ -3,7 +3,7 @@
 #include <boost/range.hpp>
 #include <boost/range/algorithm_ext.hpp>
 #include "gfx/openvg-companion.hh"
-#include "world.hh"
+#include "scene-graph.hh"
 
 
 namespace rracer {

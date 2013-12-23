@@ -3,7 +3,7 @@
 #include <boost/bind.hpp>
 
 
-#include "world/car.hh"
+#include "scene/car.hh"
 
 namespace rracer {
 
