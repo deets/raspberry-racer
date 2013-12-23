@@ -47,14 +47,14 @@ namespace rracer {
     int box;
   };
 
-  class Race : public WorldObject {
+  class Race : public SceneNode {
   public:
-    Race(World& world, AssetManager&, const string& track_name, const string& car_name);
+    Race(SceneGraph& world, AssetManager&, const string& track_name, const string& car_name);
     virtual void setup_within_world(b2World *physics_world);
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
 
   private:
-    World& _world;
+    SceneGraph& _scene_graph;
     AssetManager& _asset_manager;
     string _track_name;
     string _car_name;

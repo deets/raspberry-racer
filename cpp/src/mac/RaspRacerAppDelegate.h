@@ -21,7 +21,7 @@
   rracer::HUD* _hud;
 
   rracer::GameEventVector* _events;
-  rracer::World* _world;
+  rracer::SceneGraph* _scene_graph;
   Timer* _world_timer;
 }
 -(void) timerCallback:(NSTimer*)timer;

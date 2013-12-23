@@ -18,23 +18,23 @@ namespace rracer {
   #define WORLD_VELOCITY_ITERATIONS 6
   #define WORLD_POSITION_ITERATIONS 2
 
-  class WorldRoot : public WorldObject {
+  class WorldRoot : public SceneNode {
   public:
-    WorldRoot(function<void (WorldObject*, WorldObject*)> on_object_added_callback);
-    virtual void on_object_added(WorldObject*, WorldObject*);
+    WorldRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback);
+    virtual void on_object_added(SceneNode*, SceneNode*);
 
   private:
-    function<void (WorldObject*, WorldObject*)> _on_object_added_callback;
+    function<void (SceneNode*, SceneNode*)> _on_object_added_callback;
   };
 
 
-  class World {
+  class SceneGraph {
 
   public:
 
-    class iterator : public std::iterator<std::forward_iterator_tag, WorldObject> {
+    class iterator : public std::iterator<std::forward_iterator_tag, SceneNode> {
     public:
-      typedef WorldObject::WorldObjectList::iterator wo_iterator;
+      typedef SceneNode::SceneNodeList::iterator wo_iterator;
       iterator(wo_iterator, wo_iterator);
       iterator(const iterator&);
       virtual ~iterator();
@@ -51,7 +51,7 @@ namespace rracer {
       stack<pair<wo_iterator, wo_iterator> > _iterators;
     };
 
-    // class const_iterator : public std::iterator<std::forward_iterator_tag, const WorldObject> {
+    // class const_iterator : public std::iterator<std::forward_iterator_tag, const SceneNode> {
     // public:
     //   const_iterator(bool);
 
@@ -69,8 +69,8 @@ namespace rracer {
 
     // };
 
-    World(WindowAdapter &, OpenVGAdapter &);
-    virtual ~World();
+    SceneGraph(WindowAdapter &, OpenVGAdapter &);
+    virtual ~SceneGraph();
 
     iterator begin();
     iterator end();
@@ -78,11 +78,11 @@ namespace rracer {
     // const_iterator begin() const;
     // const_iterator end() const;
 
-    void on_object_added(WorldObject* parent, WorldObject* child);
+    void on_object_added(SceneNode* parent, SceneNode* child);
     void start_frame(const GameEventVector &events, Real elapsed);
     void end_frame();
     bool has_ended() { return _has_ended; };
-    void add_object(WorldObject* child);
+    void add_object(SceneNode* child);
 
     void set_debug_renderer(DebugRenderer*);
     b2World* world() const;
@@ -103,7 +103,7 @@ namespace rracer {
 
     shared_ptr<WorldRoot> _root;
 
-    //WorldObject::WorldObjectList _world_objects;
+    //SceneNode::SceneNodeList _world_objects;
 
     b2World* _world;
 

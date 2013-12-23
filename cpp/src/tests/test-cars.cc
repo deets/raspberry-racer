@@ -86,7 +86,7 @@ TEST_F(CarTests, TestCarLoading) {
   KeyEvent event(true, K_UP, 126);
   TimeInfo ti;
   events.push_back(GameEvent(ti, Event(event)));
-  World world(*window_adapter, *ovg_adapter);
+  SceneGraph world(*window_adapter, *ovg_adapter);
   {
     TestCar* car = new TestCar(*asset_manager, car_info);
     world.add_object(car);
@@ -102,7 +102,7 @@ TEST_F(CarTests, TestCarLoading) {
 
 TEST_F(CarTests, TestCarPlacing) {
   GameEventVector events;
-  World world(*window_adapter, *ovg_adapter);
+  SceneGraph world(*window_adapter, *ovg_adapter);
   {
     TestCar* car = new TestCar(*asset_manager, car_info);
     world.add_object(car);

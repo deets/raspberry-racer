@@ -17,7 +17,7 @@ using namespace boost;
 
 namespace rracer {
 
-  class Track : public WorldObject {
+  class Track : public SceneNode {
   public:
     Track(AssetManager& am, fs::path data);
     virtual ~Track();

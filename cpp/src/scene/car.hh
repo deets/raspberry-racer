@@ -68,7 +68,7 @@ namespace rracer {
     b2Body* body();
   };
 
-  class Car : public WorldObject {
+  class Car : public SceneNode {
 
   public:
     Car(AssetManager&, const Json::Value&);
