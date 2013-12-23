@@ -67,12 +67,10 @@ namespace rracer {
 
     Track* track = new rracer::Track(_asset_manager, _track_name);
     AffineTransformator* t = new AffineTransformator(_world.screen_rect().fit(track->bounds() * 1.1));
-
-    Car* car = new Car(_asset_manager, _asset_manager.json(_car_name));
-    car->setup_within_world(physics_world);
+    this->add_object(t);
     t->add_object(track);
+    Car* car = new Car(_asset_manager, _asset_manager.json(_car_name));
     t->add_object(car);
-    _world.add_object(t);
 
     CarInfo car_info(car, track, 0);
     _cars.push_back(car_info);
@@ -84,6 +82,7 @@ namespace rracer {
     );
     _world.add_object(hud);
   }
+
 
   void Race::process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     BOOST_FOREACH(CarInfo& ci, _cars) {

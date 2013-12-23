@@ -81,7 +81,8 @@ namespace rracer {
   //=====================
 
   Car::Car(AssetManager& am, const Json::Value& car_info) 
-    : _am(am)
+    : WorldObject()
+    , _am(am)
     , _throttle(0.0)
   {
     assert(car_info.isMember("image") && car_info["image"].isString());
