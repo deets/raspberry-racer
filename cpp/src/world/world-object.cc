@@ -80,9 +80,10 @@ namespace rracer {
 
 
   void WorldObject::dispatch_render(OpenVGCompanion& vgc) {
+    AffineTransform t = vgc.current_matrix();
     this->render(vgc);
-
     BOOST_FOREACH(WorldObject& child, _children) {
+      vgc.set(t);
       child.dispatch_render(vgc);
     }
   }
