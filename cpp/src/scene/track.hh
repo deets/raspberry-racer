@@ -8,16 +8,16 @@
 #include "json/json-forwards.h"
 
 #include "common/common.hh"
-#include "world/world-object.hh"
+#include "scene/scene-node.hh"
 #include "assets/assets.hh"
-#include "world/track-tiles.hh"
+#include "scene/track-tiles.hh"
 
 using namespace std;
 using namespace boost;
 
 namespace rracer {
 
-  class Track : public WorldObject {
+  class Track : public SceneNode {
   public:
     Track(AssetManager& am, fs::path data);
     virtual ~Track();

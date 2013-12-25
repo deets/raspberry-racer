@@ -1,5 +1,5 @@
-#ifndef WORLD_OBJECT_HH
-#define WORLD_OBJECT_HH
+#ifndef SCENE_NODE_HH
+#define SCENE_NODE_HH
 
 #include <string>
 #include <boost/intrusive/list.hpp>
@@ -17,26 +17,26 @@ namespace bi = boost::intrusive;
 using namespace boost;
 
 namespace rracer {
-  class World;
+  class SceneGraph;
 
-  class WorldObject : public bi::list_base_hook<> {
+  class SceneNode : public bi::list_base_hook<> {
 
   public:
-    typedef bi::list<WorldObject> WorldObjectList;
-    typedef WorldObjectList::iterator iterator;
+    typedef bi::list<SceneNode> SceneNodeList;
+    typedef SceneNodeList::iterator iterator;
 
-    WorldObject();
+    SceneNode();
 
-    virtual ~WorldObject() {}
+    virtual ~SceneNode() {}
 
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void render(OpenVGCompanion& vgc) const;
     virtual void setup_within_world(b2World *);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
 
-    WorldObject* parent() const;
-    void parent(WorldObject* parent);
-    void add_object(WorldObject *obj);
+    SceneNode* parent() const;
+    void parent(SceneNode* parent);
+    void add_object(SceneNode *obj);
 
     string name() const;
     void name(const string& n);
@@ -44,26 +44,26 @@ namespace rracer {
     iterator begin();
     iterator end();
 
-    friend class World;
+    friend class SceneGraph;
 
   protected:
 
     virtual void dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void dispatch_render(OpenVGCompanion&);
 
-    void object_added(WorldObject* parent, WorldObject* child);
-    virtual void on_object_added(WorldObject* parent, WorldObject* child);
+    void object_added(SceneNode* parent, SceneNode* child);
+    virtual void on_object_added(SceneNode* parent, SceneNode* child);
 
-    WorldObjectList _children;
+    SceneNodeList _children;
 
   private:
     string _name;
-    WorldObject* _parent;
+    SceneNode* _parent;
   };
 
 
 
-  class Image : public WorldObject {
+  class Image : public SceneNode {
 
     AssetManager& _am;
     string _asset_name;
@@ -75,7 +75,7 @@ namespace rracer {
   };
 
 
-  class Translator : public WorldObject {
+  class Translator : public SceneNode {
 
     float _x, _y;
   public:
@@ -84,7 +84,7 @@ namespace rracer {
   };
 
 
-  class LissajouAnimator : public WorldObject {
+  class LissajouAnimator : public SceneNode {
 
     float _width, _height, _alpha, _beta, _phase;
   public:
@@ -96,7 +96,7 @@ namespace rracer {
   };
 
 
-  class AffineTransformator : public WorldObject {
+  class AffineTransformator : public SceneNode {
     AffineTransform _t;
   public:
     AffineTransformator(const AffineTransform& t);
@@ -106,7 +106,7 @@ namespace rracer {
   };
 
 
-  class CircleRenderer : public WorldObject {
+  class CircleRenderer : public SceneNode {
     function< Vector ()> _position_callback;
     Real _radius;
     const Color& _color;
@@ -117,7 +117,7 @@ namespace rracer {
   };
 
 
-  class KeyAction : public WorldObject {
+  class KeyAction : public SceneNode {
     function< void () > _key_callback;
     EKeys _key;
 

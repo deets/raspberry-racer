@@ -2,7 +2,7 @@
 #include <math.h>
 #include "json/json.h"
 
-#include "world/track.hh"
+#include "scene/track.hh"
 
 namespace rracer {
 

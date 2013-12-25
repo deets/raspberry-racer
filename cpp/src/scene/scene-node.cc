@@ -3,18 +3,18 @@
 #include <boost/range/algorithm_ext.hpp>
 #include <math.h>
 
-#include "world-object.hh"
+#include "scene/scene-node.hh"
 
 namespace rracer {
   
-  WorldObject::WorldObject() 
+  SceneNode::SceneNode() 
     : _name("")
     , _parent(NULL)
   {
   }
 
 
-  void WorldObject::object_added(WorldObject* parent, WorldObject* child) {
+  void SceneNode::object_added(SceneNode* parent, SceneNode* child) {
     on_object_added(parent, child);
     if(this->parent()) {
       this->parent()->object_added(parent, child);
@@ -22,77 +22,77 @@ namespace rracer {
   }
 
 
-  void WorldObject::on_object_added(WorldObject* parent, WorldObject* child) {
+  void SceneNode::on_object_added(SceneNode* parent, SceneNode* child) {
   }
 
 
-  string WorldObject::name() const {
+  string SceneNode::name() const {
     return _name;
   }
 
 
-  void WorldObject::name(const string& n) {
+  void SceneNode::name(const string& n) {
     _name = n;
   }
 
 
-  WorldObject* WorldObject::parent() const {
+  SceneNode* SceneNode::parent() const {
     return _parent;
   }
 
 
-  void WorldObject::parent(WorldObject* p) {
+  void SceneNode::parent(SceneNode* p) {
     _parent = p;
   }
 
 
-  void WorldObject::add_object(WorldObject* child) {
+  void SceneNode::add_object(SceneNode* child) {
     child->parent(this);
     _children.push_back(*child);
     object_added(this, child);
   }
 
 
-  WorldObject::iterator WorldObject::begin() {
+  SceneNode::iterator SceneNode::begin() {
     return _children.begin();
   }
 
   
-  WorldObject::iterator WorldObject::end() {
+  SceneNode::iterator SceneNode::end() {
     return _children.end();
   }
 
 
-  void WorldObject::setup_within_world(b2World* ) {
+  void SceneNode::setup_within_world(b2World* ) {
   }
 
 
-  void WorldObject::debug_render(DebugRenderer& debug_renderer) const {
+  void SceneNode::debug_render(DebugRenderer& debug_renderer) const {
   }
 
 
-  void WorldObject::dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
+  void SceneNode::dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
     this->process_frame_events(events, time_info, emit_event);
-    BOOST_FOREACH(WorldObject& child, _children) {
+    BOOST_FOREACH(SceneNode& child, _children) {
       child.dispatch_frame_events(events, time_info, emit_event);
     }
   }
 
 
-  void WorldObject::dispatch_render(OpenVGCompanion& vgc) {
+  void SceneNode::dispatch_render(OpenVGCompanion& vgc) {
     AffineTransform t = vgc.current_matrix();
     this->render(vgc);
-    BOOST_FOREACH(WorldObject& child, _children) {
+    BOOST_FOREACH(SceneNode& child, _children) {
       vgc.set(t);
       child.dispatch_render(vgc);
     }
   }
 
-  void WorldObject::process_frame_events(const GameEventVector&, const TimeInfo& time_info, EventEmitter emit_event) {
+  void SceneNode::process_frame_events(const GameEventVector&, const TimeInfo& time_info, EventEmitter emit_event) {
   }
 
 
-  void WorldObject::render(OpenVGCompanion& vgc) const {
+  void SceneNode::render(OpenVGCompanion& vgc) const {
   }
 
 
@@ -162,7 +162,7 @@ namespace rracer {
 
   void AffineTransformator::dispatch_render(OpenVGCompanion& vgc) {
     MatrixStacker ms(vgc, _t);
-    WorldObject::dispatch_render(vgc);
+    SceneNode::dispatch_render(vgc);
   }
 
 

@@ -13,8 +13,8 @@
 #include "assets/assets.hh"
 
 // include objects under test
-#include "world/track.hh"
-#include "world/track-tiles.hh"
+#include "scene/track.hh"
+#include "scene/track-tiles.hh"
 
 using ::testing::_;
 using ::testing::Eq;

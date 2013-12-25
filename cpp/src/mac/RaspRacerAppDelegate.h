@@ -4,7 +4,7 @@
 #include "assets/assets.hh"
 #include "mac/RRRenderCallback.h"
 #include "events/events.hh"
-#include "world/world.hh"
+#include "scene/scene-graph.hh"
 #include "common/time.hh"
 #include "RaspRacerView.h"
 #include "debug/hud.hh"
@@ -21,7 +21,7 @@
   rracer::HUD* _hud;
 
   rracer::GameEventVector* _events;
-  rracer::World* _world;
+  rracer::SceneGraph* _scene_graph;
   Timer* _world_timer;
 }
 -(void) timerCallback:(NSTimer*)timer;

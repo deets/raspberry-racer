@@ -6,7 +6,7 @@
 #include "tests/test-openvg-adapter.hh"
 
 // include objects under test
-#include "world/world.hh"
+#include "scene/scene-graph.hh"
 
 using ::testing::Return;
 using ::testing::Eq;
@@ -14,7 +14,7 @@ using ::testing::An;
 using ::testing::NiceMock;
 using namespace rracer;
 
-class TestChild : public WorldObject {
+class TestChild : public SceneNode {
   
   
 public:
@@ -22,7 +22,7 @@ public:
   int event_count;
   Real elapsed;
 
-  vector<pair<WorldObject*, WorldObject*> > subtree_objects;
+  vector<pair<SceneNode*, SceneNode*> > subtree_objects;
 
   TestChild() 
     : event_count(0)
@@ -39,7 +39,7 @@ public:
   }
 
 
-  virtual void on_object_added(WorldObject* parent, WorldObject* child) {
+  virtual void on_object_added(SceneNode* parent, SceneNode* child) {
     subtree_objects.push_back(make_pair(parent, child));
   }
 
@@ -52,7 +52,7 @@ public:
 };
 
 
-class NextFrameEventAdderTestChild : public WorldObject {
+class NextFrameEventAdderTestChild : public SceneNode {
   
   
 public:
@@ -77,7 +77,7 @@ public:
 
 
 
-class WorldTests : public ::testing::Test {
+class SceneGraphTests : public ::testing::Test {
 public:
   NiceMock<TestWindowAdapter>* window_adapter;
   NiceMock<TestOpenvgAdaptper>* ovg_adapter;
@@ -96,18 +96,18 @@ public:
 };
 
 
-TEST_F(WorldTests, TestWorldLifeCycle) {
+TEST_F(SceneGraphTests, TestSceneGraphLifeCycle) {
   GameEventVector events;
   TestWindowAdapter window_adapter;
   EXPECT_CALL(window_adapter, start()).Times(1);
   EXPECT_CALL(window_adapter, end()).Times(1);
   EXPECT_CALL(window_adapter, window_dimensions()).WillRepeatedly(Return(make_pair(1920, 1080)));
-  World world(window_adapter, *ovg_adapter);
+  SceneGraph world(window_adapter, *ovg_adapter);
   world.start_frame(events, 1.0/30.0);
   world.end_frame();
 }
 
-TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
+TEST_F(SceneGraphTests, TestSceneGraphEventDispatchToChildren) {
   GameEventVector events;
   KeyEvent event(false, K_ESC, 1);
   events.push_back(GameEvent(TimeInfo(), event));
@@ -116,7 +116,7 @@ TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
   TestChild* child = new TestChild();
   parent->add_object(child);
   {
-    World world(*window_adapter, *ovg_adapter);
+    SceneGraph world(*window_adapter, *ovg_adapter);
     world.add_object(parent);
     world.start_frame(events, 1.0/30.0);
     world.end_frame();
@@ -129,12 +129,12 @@ TEST_F(WorldTests, TestWorldEventDispatchToChildren) {
 }
 
 
-TEST_F(WorldTests, TestWorldTraverseObjectTree) {
-  World world(*window_adapter, *ovg_adapter);
-  vector<WorldObject*> expected;
+TEST_F(SceneGraphTests, TestSceneGraphTraverseObjectTree) {
+  SceneGraph world(*window_adapter, *ovg_adapter);
+  vector<SceneNode*> expected;
   {
-    vector<WorldObject*> result;
-    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+    vector<SceneNode*> result;
+    for(SceneGraph::iterator it = world.begin(); it != world.end(); ++it) {
       result.push_back(&*it);
     }
     ASSERT_EQ(expected, result);
@@ -144,8 +144,8 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
   world.add_object(parent);
   expected.push_back(parent);
   {
-    vector<WorldObject*> result;
-    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+    vector<SceneNode*> result;
+    for(SceneGraph::iterator it = world.begin(); it != world.end(); ++it) {
       result.push_back(&*it);
     }
     ASSERT_EQ(expected, result);
@@ -155,8 +155,8 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
   parent->add_object(child);
   expected.push_back(child);
   {
-    vector<WorldObject*> result;
-    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+    vector<SceneNode*> result;
+    for(SceneGraph::iterator it = world.begin(); it != world.end(); ++it) {
       result.push_back(&*it);
     }
     ASSERT_EQ(expected, result);
@@ -166,8 +166,8 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
   world.add_object(other);
   expected.push_back(other);
   {
-    vector<WorldObject*> result;
-    for(World::iterator it = world.begin(); it != world.end(); ++it) {
+    vector<SceneNode*> result;
+    for(SceneGraph::iterator it = world.begin(); it != world.end(); ++it) {
       result.push_back(&*it);
     }
     ASSERT_EQ(expected, result);
@@ -175,9 +175,9 @@ TEST_F(WorldTests, TestWorldTraverseObjectTree) {
 }
 
 
-TEST_F(WorldTests, TestWorldRetainsNextFrameEvents) {
+TEST_F(SceneGraphTests, TestSceneGraphRetainsNextFrameEvents) {
   GameEventVector events;
-  World world(*window_adapter, *ovg_adapter);
+  SceneGraph world(*window_adapter, *ovg_adapter);
   NextFrameEventAdderTestChild* other = new NextFrameEventAdderTestChild();
   world.add_object(other);
   world.start_frame(events, 1.0/30.0);
@@ -192,7 +192,7 @@ TEST_F(WorldTests, TestWorldRetainsNextFrameEvents) {
 }
 
 
-TEST_F(WorldTests, TestWorldObjectsFormHierarchyWhenAddingChildrenToThem) {
+TEST_F(SceneGraphTests, TestSceneNodesFormHierarchyWhenAddingChildrenToThem) {
   TestChild parent;
   TestChild* child = new TestChild();
   ASSERT_TRUE(parent.parent() == NULL);
@@ -202,7 +202,7 @@ TEST_F(WorldTests, TestWorldObjectsFormHierarchyWhenAddingChildrenToThem) {
 }
 
 
-TEST_F(WorldTests, TestWorldObjectsAddingChildrenPropagatesUpwardsParentChain) {
+TEST_F(SceneGraphTests, TestSceneNodesAddingChildrenPropagatesUpwardsParentChain) {
   shared_ptr<TestChild> grandparent = shared_ptr<TestChild>(new TestChild());
   TestChild* parent = new TestChild();
   TestChild* child = new TestChild();

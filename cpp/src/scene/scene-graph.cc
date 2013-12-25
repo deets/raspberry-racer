@@ -3,28 +3,28 @@
 #include <boost/range.hpp>
 #include <boost/range/algorithm_ext.hpp>
 #include "gfx/openvg-companion.hh"
-#include "world.hh"
+#include "scene-graph.hh"
 
 
 namespace rracer {
 
   //================================================
 
-  WorldRoot::WorldRoot(function<void (WorldObject*, WorldObject*)> on_object_added_callback) 
-    : WorldObject()
+  SceneRoot::SceneRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback) 
+    : SceneNode()
     , _on_object_added_callback(on_object_added_callback)
   {
   }
 
 
-  void WorldRoot::on_object_added(WorldObject* parent, WorldObject* child) {
+  void SceneRoot::on_object_added(SceneNode* parent, SceneNode* child) {
     _on_object_added_callback(parent, child);
   }
 
 
   //================================================
 
-  World::World(WindowAdapter &window_adapter, OpenVGAdapter &ovg_adapter)
+  SceneGraph::SceneGraph(WindowAdapter &window_adapter, OpenVGAdapter &ovg_adapter)
     : _window_adapter(window_adapter)
     , _ovg_adapter(ovg_adapter)
     , _has_ended(false)
@@ -34,48 +34,48 @@ namespace rracer {
   {
     b2Vec2 gravity(.0, 0);
     _world = new b2World(gravity);
-    _root = shared_ptr<WorldRoot>(new WorldRoot(boost::bind(&World::on_object_added, this, _1, _2)));
+    _root = shared_ptr<SceneRoot>(new SceneRoot(boost::bind(&SceneGraph::on_object_added, this, _1, _2)));
   }
 
 
-  void World::on_object_added(WorldObject* parent, WorldObject* child) {
+  void SceneGraph::on_object_added(SceneNode* parent, SceneNode* child) {
     child->setup_within_world(_world);
   }
 
 
-  World::~World() {
+  SceneGraph::~SceneGraph() {
     delete _world;
   }
 
 
-  void World::set_debug_renderer(DebugRenderer* dr) {
+  void SceneGraph::set_debug_renderer(DebugRenderer* dr) {
     _debug_renderer = dr;
     _world->SetDebugDraw(dr);
   }
 
 
-  Real World::fixed_frame_rate() const {
+  Real SceneGraph::fixed_frame_rate() const {
     return _fixed_frame_rate;
   }
 
 
-  void World::fixed_frame_rate(Real fixed_frame_rate) {
+  void SceneGraph::fixed_frame_rate(Real fixed_frame_rate) {
     _fixed_frame_rate = fixed_frame_rate;
   }
 
 
-  b2World* World::world() const {
+  b2World* SceneGraph::world() const {
     return _world;
   }
 
 
-  Rect World::screen_rect() const {
+  Rect SceneGraph::screen_rect() const {
     pair<int, int> window_dims = _window_adapter.window_dimensions();
     return Rect(0, 0, window_dims.first, window_dims.second);
   }
 
 
-  void World::start_frame(const GameEventVector& events, const Real elapsed) {
+  void SceneGraph::start_frame(const GameEventVector& events, const Real elapsed) {
     _window_adapter.start();
 
     BOOST_FOREACH(const GameEvent event, events) {
@@ -94,7 +94,7 @@ namespace rracer {
 
     EventEmitter emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
 
-    for(WorldObject::iterator it = _root->begin(); it != _root->end(); ++it) {
+    for(SceneNode::iterator it = _root->begin(); it != _root->end(); ++it) {
       (*it).dispatch_frame_events(this_frame_events, _time_info, emit_event);
     }
 
@@ -105,7 +105,7 @@ namespace rracer {
   }
 
 
-  void World::render() {
+  void SceneGraph::render() {
     OpenVGCompanion vgc(_ovg_adapter);
   
     VGint ww = _window_adapter.window_dimensions().first;
@@ -118,46 +118,46 @@ namespace rracer {
 
     _ovg_adapter.vgLoadIdentity();
 
-    for(WorldObject::iterator it = _root->begin(); it != _root->end(); ++it) {
+    for(SceneNode::iterator it = _root->begin(); it != _root->end(); ++it) {
       (*it).dispatch_render(vgc);
     }
 
     if(_debug_renderer) {
       _debug_renderer->render(_world);
-      for(World::iterator it = begin(); it != end(); ++it) {
+      for(SceneGraph::iterator it = begin(); it != end(); ++it) {
 	(*it).debug_render(*_debug_renderer);
       }
     }
   }
 
-  OpenVGAdapter& World::vg() const {
+  OpenVGAdapter& SceneGraph::vg() const {
     return _ovg_adapter;
   }
 
 
-  void World::end_frame() {
+  void SceneGraph::end_frame() {
     _window_adapter.end();
   }
 
 
-  void World::add_object(WorldObject* obj) {
+  void SceneGraph::add_object(SceneNode* obj) {
     _root->add_object(obj);
   }
 
 
-  World::iterator World::begin() {
+  SceneGraph::iterator SceneGraph::begin() {
     return iterator(_root->begin(), _root->end());
   }
 
 
-  World::iterator World::end() {
+  SceneGraph::iterator SceneGraph::end() {
     return iterator(_root->end(), _root->end());
   }
 
 
   //===== iterator ========
 
-  World::iterator::iterator(wo_iterator begin, wo_iterator end) 
+  SceneGraph::iterator::iterator(wo_iterator begin, wo_iterator end) 
   {
     if(begin == end) {
       return;
@@ -166,32 +166,32 @@ namespace rracer {
   }
 
 
-  World::iterator::iterator(const iterator& other) {
+  SceneGraph::iterator::iterator(const iterator& other) {
     this->_iterators = other._iterators;
   }
 
 
-  World::iterator::~iterator() {
+  SceneGraph::iterator::~iterator() {
   }
 
 
-  World::iterator& World::iterator::operator=(const iterator& rhs) {
+  SceneGraph::iterator& SceneGraph::iterator::operator=(const iterator& rhs) {
     this->_iterators = rhs._iterators;
     return *this;
   }
 
 
-  bool World::iterator::operator==(const iterator& rhs) const {
+  bool SceneGraph::iterator::operator==(const iterator& rhs) const {
     return _iterators.size() == 0 && rhs._iterators.size() == 0;
   }
 
 
-  bool World::iterator::operator!=(const iterator& rhs) const {
+  bool SceneGraph::iterator::operator!=(const iterator& rhs) const {
     return !(*this==rhs);
   }
 
 
-  World::iterator& World::iterator::operator++() {
+  SceneGraph::iterator& SceneGraph::iterator::operator++() {
     if(_iterators.size()) {
       reference current = **this;
       // if we *have* children,
@@ -221,58 +221,58 @@ namespace rracer {
     return *this;
   }
   
-  World::iterator::reference World::iterator::operator*() const {
+  SceneGraph::iterator::reference SceneGraph::iterator::operator*() const {
     return *_iterators.top().first;
   }
 
 
-  World::iterator::pointer World::iterator::operator->() const {
+  SceneGraph::iterator::pointer SceneGraph::iterator::operator->() const {
   }
 
   // ===== iterator const =====
 
-  // World::const_iterator::const_iterator(bool end) 
+  // SceneGraph::const_iterator::const_iterator(bool end) 
   //   : _end(end)
   // {
   // }
 
 
-  // World::const_iterator::const_iterator(const const_iterator& other) {
+  // SceneGraph::const_iterator::const_iterator(const const_iterator& other) {
   //   this->_end = other._end;
   // }
 
 
-  // World::const_iterator::~const_iterator() {
+  // SceneGraph::const_iterator::~const_iterator() {
   // }
 
 
-  // World::const_iterator& World::const_iterator::operator=(const const_iterator& rhs) {
+  // SceneGraph::const_iterator& SceneGraph::const_iterator::operator=(const const_iterator& rhs) {
   //   this->_end = rhs._end;
   //   return *this;
   // }
 
 
-  // bool World::const_iterator::operator==(const const_iterator& rhs) const {
+  // bool SceneGraph::const_iterator::operator==(const const_iterator& rhs) const {
   //   return _end == rhs._end;
   // }
 
 
-  // bool World::const_iterator::operator!=(const const_iterator& rhs) const {
+  // bool SceneGraph::const_iterator::operator!=(const const_iterator& rhs) const {
   //   return !(*this==rhs);
   // }
 
 
-  // World::const_iterator& World::const_iterator::operator++() {
+  // SceneGraph::const_iterator& SceneGraph::const_iterator::operator++() {
   //   return *this;
   // }
   
 
-  // World::const_iterator::reference World::const_iterator::operator*() const {
+  // SceneGraph::const_iterator::reference SceneGraph::const_iterator::operator*() const {
   //   return *const_cast<value_type*>(_current);
   // }
 
 
-  // World::const_iterator::pointer World::const_iterator::operator->() const {
+  // SceneGraph::const_iterator::pointer SceneGraph::const_iterator::operator->() const {
   // }
 
 }; // ns::rracer
