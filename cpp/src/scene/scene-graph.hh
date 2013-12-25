@@ -1,5 +1,5 @@
-#ifndef WORLD_HH
-#define WORLD_HH
+#ifndef SCENE_HH
+#define SCENE_HH
 #include <stack>
 #include <iterator>
 #include <boost/intrusive/list.hpp>
@@ -14,13 +14,13 @@
 
 namespace rracer {
 
-  #define WORLD_FRAMERATE 60.0
+  #define SCENE_FRAMERATE 60.0
   #define WORLD_VELOCITY_ITERATIONS 6
   #define WORLD_POSITION_ITERATIONS 2
 
-  class WorldRoot : public SceneNode {
+  class SceneRoot : public SceneNode {
   public:
-    WorldRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback);
+    SceneRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback);
     virtual void on_object_added(SceneNode*, SceneNode*);
 
   private:
@@ -101,9 +101,7 @@ namespace rracer {
     WindowAdapter &_window_adapter;
     OpenVGAdapter &_ovg_adapter;
 
-    shared_ptr<WorldRoot> _root;
-
-    //SceneNode::SceneNodeList _world_objects;
+    shared_ptr<SceneRoot> _root;
 
     b2World* _world;
 

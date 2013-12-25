@@ -10,14 +10,14 @@ namespace rracer {
 
   //================================================
 
-  WorldRoot::WorldRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback) 
+  SceneRoot::SceneRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback) 
     : SceneNode()
     , _on_object_added_callback(on_object_added_callback)
   {
   }
 
 
-  void WorldRoot::on_object_added(SceneNode* parent, SceneNode* child) {
+  void SceneRoot::on_object_added(SceneNode* parent, SceneNode* child) {
     _on_object_added_callback(parent, child);
   }
 
@@ -34,7 +34,7 @@ namespace rracer {
   {
     b2Vec2 gravity(.0, 0);
     _world = new b2World(gravity);
-    _root = shared_ptr<WorldRoot>(new WorldRoot(boost::bind(&SceneGraph::on_object_added, this, _1, _2)));
+    _root = shared_ptr<SceneRoot>(new SceneRoot(boost::bind(&SceneGraph::on_object_added, this, _1, _2)));
   }
 
 

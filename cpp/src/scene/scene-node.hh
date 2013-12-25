@@ -1,5 +1,5 @@
-#ifndef WORLD_OBJECT_HH
-#define WORLD_OBJECT_HH
+#ifndef SCENE_NODE_HH
+#define SCENE_NODE_HH
 
 #include <string>
 #include <boost/intrusive/list.hpp>

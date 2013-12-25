@@ -77,14 +77,15 @@ namespace fs = boost::filesystem;
 
   _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
   _scene_graph = new rracer::SceneGraph(*_window_adapter, *_window_adapter);
-  _scene_graph->fixed_frame_rate(WORLD_FRAMERATE);
+  _scene_graph->fixed_frame_rate(SCENE_FRAMERATE);
   rracer::Race* race = new rracer::Race(*_scene_graph, *_asset_manager, "tests/simple-test-track.json", "cars/car-one.json");
   _scene_graph->add_object(race);
 
   [_glview setRenderCallback: self];
-  _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / WORLD_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
+  _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / SCENE_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
 
 }
+
 
 -(void) timerCallback:(NSTimer*) timer {
   [_glview setNeedsDisplay: YES];
