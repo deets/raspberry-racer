@@ -1,3 +1,4 @@
+#include <boost/function.hpp>
 #include <time.h>
 #import <Cocoa/Cocoa.h>
 #include "mac/mac-window-adapter.hh"
@@ -7,6 +8,9 @@
 #include "RaspRacerView.h"
 #include "hub/hub.hh"
 
+
+rracer::Hub* s_create_hub();
+void s_set_hub_factory(boost::function<rracer::Hub* ()> factory);
 
 @interface RaspRacerAppDelegate : NSObject <NSApplicationDelegate, RRRenderCallback> {
   RaspRacerView *_glview;

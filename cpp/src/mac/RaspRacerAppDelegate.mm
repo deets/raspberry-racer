@@ -20,6 +20,19 @@
 
 namespace fs = boost::filesystem;
 
+static function<rracer::Hub* ()> S_HUB_FACTORY;
+
+
+rracer::Hub* s_create_hub() {
+  return S_HUB_FACTORY();
+}
+
+
+void s_set_hub_factory(function<rracer::Hub* ()> factory) {
+  S_HUB_FACTORY = factory;
+}
+
+
 @implementation RaspRacerAppDelegate
 
 @synthesize window = _window;
@@ -65,7 +78,7 @@ namespace fs = boost::filesystem;
   _window_adapter = new MacWindowAdapter(size.width, size.height);
   fs::path bundle_resources([[[NSBundle mainBundle] resourcePath] UTF8String]);
 
-  _hub = new rracer::RRacerHub();
+  _hub = s_create_hub();
   _hub->setup(*_window_adapter, *_window_adapter, bundle_resources);
 
   [_glview setRenderCallback: self];

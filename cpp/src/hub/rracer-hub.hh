@@ -15,6 +15,8 @@ namespace rracer {
     virtual void setup(OpenVGAdapter& vg, WindowAdapter& window_adapter, fs::path bundle_path);
     virtual bool frame(Real elapsed, const GameEventVector& events);
 
+    static Hub* s_factory();
+
   private:
 
     AssetManager* _asset_manager;

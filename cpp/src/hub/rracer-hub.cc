@@ -3,6 +3,11 @@
 
 namespace rracer {
 
+  Hub* RRacerHub::s_factory() {
+    return new RRacerHub();
+  }
+
+
   RRacerHub::RRacerHub() 
     : _asset_manager(0)
     , _scene_graph(0)

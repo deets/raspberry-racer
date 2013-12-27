@@ -181,7 +181,7 @@
                 'src/mac/RaspRacerView.h',
                 'src/mac/RaspRacerView.mm',
                 'src/mac/RRApplication.mm',
-                'src/mac/main.m',
+                'src/mac/main.mm',
                 ],
             'libraries' : [
                 '-L/usr/local/opt/libpng/lib',
