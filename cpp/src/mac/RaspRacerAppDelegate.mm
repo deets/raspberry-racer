@@ -14,7 +14,7 @@
 
 #include "mac/common.h"
 #include "gfx/openvg-companion.hh"
-#include "scene/race.hh"
+#include "hub/rracer-hub.hh"
 
 #import "RaspRacerAppDelegate.h"
 
@@ -28,9 +28,7 @@ namespace fs = boost::filesystem;
 - (id) init {
   self = [super init];
   _window_adapter = 0;
-  _hud = 0;
-  _asset_manager = 0;
-  _scene_graph = 0;
+  _hub = 0;
   _events = new rracer::GameEventVector();
   _world_timer = new Timer();
   return self;
@@ -39,23 +37,16 @@ namespace fs = boost::filesystem;
 
 - (void)dealloc
 {
+  if(_hub) {
+    delete _hub;
+  }
+
   if (_window_adapter) {
     delete _window_adapter;
-  }
-  if (_asset_manager) {
-    delete _asset_manager;
   }
 
   if(_events) {
     delete _events;
-  }
-
-  if(_hud) {
-    delete _hud;
-  }
-
-  if(_scene_graph) {
-    delete _scene_graph;
   }
 
   if(_world_timer) {
@@ -72,18 +63,13 @@ namespace fs = boost::filesystem;
 
   NSSize size = [_glview frame].size;
   _window_adapter = new MacWindowAdapter(size.width, size.height);
-
   fs::path bundle_resources([[[NSBundle mainBundle] resourcePath] UTF8String]);
 
-  _asset_manager = new AssetManager(*_window_adapter, bundle_resources / "resources");
-  _scene_graph = new rracer::SceneGraph(*_window_adapter, *_window_adapter);
-  _scene_graph->fixed_frame_rate(SCENE_FRAMERATE);
-  rracer::Race* race = new rracer::Race(*_scene_graph, *_asset_manager, "tests/simple-test-track.json", "cars/car-one.json");
-  _scene_graph->add_object(race);
+  _hub = new rracer::RRacerHub();
+  _hub->setup(*_window_adapter, *_window_adapter, bundle_resources);
 
   [_glview setRenderCallback: self];
   _timer = [NSTimer scheduledTimerWithTimeInterval: 1.0 / SCENE_FRAMERATE target: self selector: @selector(timerCallback:) userInfo: nil repeats: YES];
-
 }
 
 
@@ -93,12 +79,10 @@ namespace fs = boost::filesystem;
 
 
 -(void)render {
-  if(_scene_graph) {
+  if(_hub) {
     double elapsed = _world_timer->elapsed();
     if(elapsed > 0.0) {
-      _scene_graph->start_frame(*_events, elapsed);
-      _scene_graph->end_frame();
-      if(_scene_graph->has_ended()) {
+      if(_hub->frame(elapsed, *_events)) {
 	[[NSApplication sharedApplication] terminate: self];
       }
     }

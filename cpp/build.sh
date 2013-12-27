@@ -1,5 +1,6 @@
 configuration=Debug
 if [ `uname` == Darwin ]; then
+    export PATH=/usr/local/bin:$PATH
     NINJA=/usr/local/bin/ninja
     $NINJA -C out/$configuration/ -v box2dlib test mac_rracer
 else

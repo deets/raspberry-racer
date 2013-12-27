@@ -1,13 +1,11 @@
 #include <time.h>
 #import <Cocoa/Cocoa.h>
 #include "mac/mac-window-adapter.hh"
-#include "assets/assets.hh"
 #include "mac/RRRenderCallback.h"
 #include "events/events.hh"
-#include "scene/scene-graph.hh"
 #include "common/time.hh"
 #include "RaspRacerView.h"
-#include "debug/hud.hh"
+#include "hub/hub.hh"
 
 
 @interface RaspRacerAppDelegate : NSObject <NSApplicationDelegate, RRRenderCallback> {
@@ -16,14 +14,11 @@
   NSTimer* _timer;
 
   MacWindowAdapter* _window_adapter;
-  AssetManager* _asset_manager;
-
-  rracer::HUD* _hud;
-
-  rracer::GameEventVector* _events;
-  rracer::SceneGraph* _scene_graph;
   Timer* _world_timer;
+  rracer::Hub* _hub;
+  rracer::GameEventVector *_events;
 }
+
 -(void) timerCallback:(NSTimer*)timer;
 -(void) render;
 -(BOOL) convertEvent:(NSEvent*) event;
