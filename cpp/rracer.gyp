@@ -167,7 +167,7 @@
                 ],
             },
         {
-            'target_name': 'mac_rracer',
+            'target_name': 'mac-rracer',
             'product_name': 'MacRaspberryRacer',
             'dependencies' : ['core'],
             'type': 'executable',
@@ -181,6 +181,7 @@
                 'src/mac/RaspRacerView.h',
                 'src/mac/RaspRacerView.mm',
                 'src/mac/RRApplication.mm',
+                'src/hub/rracer-hub.cc',
                 'src/mac/main.mm',
                 ],
             'libraries' : [
@@ -218,6 +219,61 @@
             'xcode_settings': {
                 'ARCHS': [ 'x86_64' ],
                 'INFOPLIST_FILE': 'src/mac/RaspRacer-Info.plist',
+                },
+            },
+{
+            'target_name': 'openvg-playground',
+            'product_name': 'OpenVGPlayground',
+            'dependencies' : ['core'],
+            'type': 'executable',
+            'cflags' : ["-g"],
+            'mac_bundle': 1,
+            'sources': [
+                'src/gfx/openvg-adapter-impl.cc',
+                'src/mac/mac-window-adapter.cc',
+                'src/mac/RaspRacerAppDelegate.h',
+                'src/mac/RaspRacerAppDelegate.mm',
+                'src/mac/RaspRacerView.h',
+                'src/mac/RaspRacerView.mm',
+                'src/mac/RRApplication.mm',
+                'src/hub/playground-hub.cc',
+                'src/mac/openvg-playground-main.mm',
+                ],
+            'libraries' : [
+                '-L/usr/local/opt/libpng/lib',
+                '-lpng15',
+                '-L/usr/local/lib',
+                '-lboost_filesystem-mt',
+                '-lboost_system-mt',
+                '-lboost_log-mt',
+                '-lboost_log_setup-mt',
+                '-lpng15',
+                ],
+
+            'mac_bundle_resources': [
+                'src/mac/Resources/InfoPlist.strings',
+                'src/mac/Resources/MainMenu.xib',
+                'resources',
+                ],
+            'link_settings': {
+                'libraries': [
+                    '$(SDKROOT)/System/Library/Frameworks/Cocoa.framework',
+                    '$(SDKROOT)/System/Library/Frameworks/OpenGL.framework',
+                    '/opt/ShivaVG/lib/libOpenVG.a',
+                    ],
+                },
+            'include_dirs' : [
+                'third-party/jsoncpp',
+                'third-party/eigen',
+                'third-party/box2d',
+                "/opt/ShivaVG/include",
+                '/usr/local/opt/libpng/include',
+                '/usr/local/include',
+                "src",
+                ],
+            'xcode_settings': {
+                'ARCHS': [ 'x86_64' ],
+                'INFOPLIST_FILE': 'src/mac/OpenVGPlayground-Info.plist',
                 },
             },
             {
@@ -317,7 +373,6 @@
                 'src/scene/track-tiles.cc',
                 'src/scene/scene-node.cc',
                 'src/gfx/openvg-companion.cc',
-                'src/hub/rracer-hub.cc',
                 'src/common/common.cc',
                 'src/debug/debug.cc',
                 'src/debug/hud.cc',
