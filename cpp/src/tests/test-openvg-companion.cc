@@ -2,6 +2,8 @@
 
 #include <gmock/gmock.h>
 
+#include "tests/common.hh"
+
 // include mocks
 #include "tests/test-openvg-adapter.hh"
 
@@ -16,10 +18,31 @@ using ::testing::IsNull;
 using ::testing::An;
 using ::testing::Return;
 using ::testing::TypedEq;
+using ::testing::NiceMock;
 
 using namespace std;
 
 namespace fs = boost::filesystem;
+
+using namespace rracer;
+
+TEST(OpenVGCompanionTests, TestMatrixStacking) {
+  NiceMock<TestOpenvgAdaptper> ovg_adapter;
+  OpenVGCompanion vgc(ovg_adapter);
+  AffineTransform id = AffineTransform::Identity();
+  ASSERT_MATRIX_EQ(id, vgc.current_matrix());
+  {
+    AffineTransform t = translate(Vector(100, 100));
+    MatrixStacker stacker1(vgc, t);
+    ASSERT_MATRIX_EQ(t, vgc.current_matrix());
+    {
+      AffineTransform t2 = translate(Vector(50, 50));
+      MatrixStacker stacker2(vgc, t2);
+      ASSERT_MATRIX_EQ(t * t2, vgc.current_matrix());
+    }
+    ASSERT_MATRIX_EQ(t, vgc.current_matrix());
+  }
+}
 
 
 TEST(OpenVGCompanionTests, TestImageDrawing) {

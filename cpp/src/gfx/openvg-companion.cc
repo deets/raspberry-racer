@@ -175,6 +175,8 @@ namespace rracer {
     _vgc.rmultiply(t);
     _vgc.set();
   }
+
+
   MatrixStacker::~MatrixStacker() {
     _vgc.pop_matrix();
   }
