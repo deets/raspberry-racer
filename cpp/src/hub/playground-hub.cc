@@ -12,6 +12,8 @@ namespace rracer {
     : _asset_manager(0)
     , _scene_graph(0)
     , _hud(0)
+    , _animator(1000, 800, 1.0, 1.0)
+    , _animator2(100, 10.0)
   {
   }
   
@@ -32,11 +34,19 @@ namespace rracer {
   void PlaygroundHub::setup(OpenVGAdapter& vg, WindowAdapter& window_adapter, fs::path bundle_path) {
     _asset_manager = new AssetManager(vg, bundle_path / "resources");
     _scene_graph = new rracer::SceneGraph(window_adapter, vg);
-    //  _scene_graph->fixed_frame_rate(SCENE_FRAMERATE);
+    Image* image = new Image(*_asset_manager, "cars/yellow.png");
+    image->animator(&_animator);
+    _scene_graph->add_object(image);
+
+    Image* image2 = new Image(*_asset_manager, "cars/yellow.png");
+    image2->animator(&_animator2);
+    image->add_object(image2);
   }
   
   
   bool PlaygroundHub::frame(Real elapsed, const GameEventVector& events) {
+    _animator.step(elapsed);
+    _animator2.step(elapsed);
     _scene_graph->start_frame(events, elapsed);
     _scene_graph->end_frame();
     return _scene_graph->has_ended();
