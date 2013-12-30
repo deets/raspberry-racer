@@ -17,6 +17,16 @@ namespace bi = boost::intrusive;
 using namespace boost;
 
 namespace rracer {
+
+  class Animator {
+  public:
+    virtual ~Animator();
+
+    virtual ConnectionPoint position();
+    virtual Real scale();
+
+  };
+
   class SceneGraph;
 
   class SceneNode : public bi::list_base_hook<> {
@@ -44,6 +54,12 @@ namespace rracer {
     iterator begin();
     iterator end();
 
+
+    void animator(Animator* animator);
+    Animator* animator() const;
+
+    static AffineTransform animator_transform(Animator* animator);
+
     friend class SceneGraph;
 
   protected:
@@ -59,6 +75,7 @@ namespace rracer {
   private:
     string _name;
     SceneNode* _parent;
+    Animator* _animator;
   };
 
 
@@ -84,14 +101,15 @@ namespace rracer {
   };
 
 
-  class LissajouAnimator : public SceneNode {
+  class LissajouAnimator : public Animator {
 
     float _width, _height, _alpha, _beta, _phase;
   public:
     LissajouAnimator(float width, float height, float alpha, float _beta);
 
-    virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
-    virtual void render(OpenVGCompanion& vgc) const;
+    void step(Real elapsed);
+    virtual ConnectionPoint position();
+    virtual Real scale();
 
   };
 

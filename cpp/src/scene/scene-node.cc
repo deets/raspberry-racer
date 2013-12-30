@@ -6,11 +6,39 @@
 #include "scene/scene-node.hh"
 
 namespace rracer {
+
+
+  Animator::~Animator() {
+  }
+  ConnectionPoint Animator::position() {
+    ConnectionPoint res = { Vector(0, 0), 0};
+    return res;
+  }
+
   
+  Real Animator::scale() {
+    return 1.0;
+  }
+
+
+  //=====================================
+
+
   SceneNode::SceneNode() 
     : _name("")
     , _parent(NULL)
+    , _animator(NULL)
   {
+  }
+
+
+  Animator* SceneNode::animator() const {
+    return _animator;
+  }
+
+
+  void SceneNode::animator(Animator* animator) {
+    _animator = animator;
   }
 
 
@@ -80,13 +108,29 @@ namespace rracer {
 
 
   void SceneNode::dispatch_render(OpenVGCompanion& vgc) {
-    AffineTransform t = vgc.current_matrix();
+    const AffineTransform t = animator_transform(_animator);
+    MatrixStacker ms(vgc, t);
+
+    AffineTransform current = vgc.current_matrix();
     this->render(vgc);
     BOOST_FOREACH(SceneNode& child, _children) {
-      vgc.set(t);
+      vgc.set(current);
       child.dispatch_render(vgc);
     }
   }
+
+
+  AffineTransform SceneNode::animator_transform(Animator* animator) {
+    AffineTransform t = AffineTransform::Identity();
+    if(animator) {
+      ConnectionPoint p = animator->position();
+      t = scale(animator->scale());
+      t = rotation(p.direction) * t;
+      t = translate(p.position) * t;
+    }
+    return t;
+  }
+
 
   void SceneNode::process_frame_events(const GameEventVector&, const TimeInfo& time_info, EventEmitter emit_event) {
   }
@@ -107,7 +151,6 @@ namespace rracer {
     const PNGImageData& img_data = _am.image(_asset_name);
     VGfloat w = (VGfloat)img_data.width();
     VGfloat h = (VGfloat)img_data.height();
-    vgc.vg().vgRotate(10);
     vgc.vg().vgTranslate(-w / 2.0, -h / 2.0);
     vgc.drawImage(img_data);
   }
@@ -136,17 +179,24 @@ namespace rracer {
   }
 
 
-  void LissajouAnimator::process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event) {
-    _phase += time_info.elapsed();
+  void LissajouAnimator::step(Real elapsed) {
+    _phase += elapsed;
   }
 
 
-  void LissajouAnimator::render(OpenVGCompanion& vgc) const {
+  ConnectionPoint LissajouAnimator::position() {
     float w = sin(_phase * _alpha) * _width / 2.0;
     float h = sin(_phase * _beta) * _height / 2.0;
-    vgc.vg().vgTranslate(w, h);
+    ConnectionPoint res;
+    res.position = Vector(w, h);
+    res.direction = 0;
+    return res;
   }
 
+
+  Real LissajouAnimator::scale() {
+    return 1.0;
+  }
 
 
   AffineTransformator::AffineTransformator(const AffineTransform& t)
