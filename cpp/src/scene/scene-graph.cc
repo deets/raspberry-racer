@@ -10,16 +10,16 @@ namespace rracer {
 
   //================================================
 
-  SceneRoot::SceneRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback) 
+  SceneRoot::SceneRoot() // function<void (SceneNode*, SceneNode*)> on_object_added_callback) 
     : SceneNode()
-    , _on_object_added_callback(on_object_added_callback)
+      //, _on_object_added_callback(on_object_added_callback)
   {
   }
 
 
-  void SceneRoot::on_object_added(SceneNode* parent, SceneNode* child) {
-    _on_object_added_callback(parent, child);
-  }
+  // void SceneRoot::on_object_added(SceneNode* parent, SceneNode* child) {
+  //   _on_object_added_callback(parent, child);
+  // }
 
 
   //================================================
@@ -27,30 +27,24 @@ namespace rracer {
   SceneGraph::SceneGraph(WindowAdapter &window_adapter, OpenVGAdapter &ovg_adapter)
     : _window_adapter(window_adapter)
     , _ovg_adapter(ovg_adapter)
-    , _has_ended(false)
     , _debug_renderer(0)
     , _fixed_frame_rate(0.0)
-    , _time_info()
   {
-    b2Vec2 gravity(.0, 0);
-    _world = new b2World(gravity);
-    _root = shared_ptr<SceneRoot>(new SceneRoot(boost::bind(&SceneGraph::on_object_added, this, _1, _2)));
+    _root = shared_ptr<SceneRoot>(new SceneRoot());//boost::bind(&SceneGraph::on_object_added, this, _1, _2)));
   }
-
-
-  void SceneGraph::on_object_added(SceneNode* parent, SceneNode* child) {
-    child->setup_within_world(_world);
-  }
-
 
   SceneGraph::~SceneGraph() {
-    delete _world;
   }
+
+
+  // void SceneGraph::on_object_added(SceneNode* parent, SceneNode* child) {
+  //   child->setup_within_world(_world);
+  // }
 
 
   void SceneGraph::set_debug_renderer(DebugRenderer* dr) {
     _debug_renderer = dr;
-    _world->SetDebugDraw(dr);
+    //_world->SetDebugDraw(dr);
   }
 
 
@@ -64,42 +58,14 @@ namespace rracer {
   }
 
 
-  b2World* SceneGraph::world() const {
-    return _world;
-  }
-
-
   Rect SceneGraph::screen_rect() const {
     pair<int, int> window_dims = _window_adapter.window_dimensions();
     return Rect(0, 0, window_dims.first, window_dims.second);
   }
 
 
-  void SceneGraph::start_frame(const GameEventVector& events, const Real elapsed) {
+  void SceneGraph::start_frame(const Real elapsed) {
     _window_adapter.start();
-
-    BOOST_FOREACH(const GameEvent event, events) {
-      if(boost::get<KeyEvent>(event.event).key == K_ESC) {
-	_has_ended = true;
-      }
-    }
-    const Real step_size = _fixed_frame_rate == 0.0 ? elapsed : 1.0 / _fixed_frame_rate;
-
-    _time_info = TimeInfo(_time_info.when() + step_size, step_size);
-
-    // prepare the event-vectors.
-    GameEventVector this_frame_events(events);
-    boost::range::push_back(this_frame_events, _next_frame_events);
-    _next_frame_events.clear();
-
-    EventEmitter emit_event = boost::bind(&GameEventVector::push_back, &_next_frame_events, _1);
-
-    for(SceneNode::iterator it = _root->begin(); it != _root->end(); ++it) {
-      (*it).dispatch_frame_events(this_frame_events, _time_info, emit_event);
-    }
-
-    // simulate physics
-    _world->Step(_time_info.elapsed(), WORLD_VELOCITY_ITERATIONS, WORLD_POSITION_ITERATIONS);
     // render the game objects
     render();
   }
@@ -123,7 +89,7 @@ namespace rracer {
     }
 
     if(_debug_renderer) {
-      _debug_renderer->render(_world);
+      //_debug_renderer->render(_world);
       for(SceneGraph::iterator it = begin(); it != end(); ++it) {
 	(*it).debug_render(*_debug_renderer);
       }

@@ -3,7 +3,7 @@
 #include <boost/bind.hpp>
 
 
-#include "scene/car.hh"
+#include "game/car.hh"
 
 namespace rracer {
 
@@ -81,7 +81,7 @@ namespace rracer {
   //=====================
 
   Car::Car(AssetManager& am, const Json::Value& car_info) 
-    : SceneNode()
+    : GameObject()
     , _am(am)
     , _throttle(0.0)
   {

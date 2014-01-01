@@ -1,4 +1,4 @@
-#include "scene/race.hh"
+#include "game/race.hh"
 #include "hub/rracer-hub.hh"
 
 namespace rracer {
@@ -26,6 +26,9 @@ namespace rracer {
     if(_asset_manager) {
       delete _asset_manager;
     }
+    if(_race) {
+      delete _race;
+    }
   }
   
   
@@ -33,15 +36,15 @@ namespace rracer {
     _asset_manager = new AssetManager(vg, bundle_path / "resources");
     _scene_graph = new rracer::SceneGraph(window_adapter, vg);
     //  _scene_graph->fixed_frame_rate(SCENE_FRAMERATE);
-    Race* race = new Race(*_scene_graph, *_asset_manager, "tests/simple-test-track.json", "cars/car-one.json");
-    _scene_graph->add_object(race);
+    Race* race = new Race(_scene_graph, *_asset_manager, "tests/simple-test-track.json", "cars/car-one.json");
   }
   
   
   bool RRacerHub::frame(Real elapsed, const GameEventVector& events) {
-    _scene_graph->start_frame(events, elapsed);
+    _race->step(events, elapsed);
+    _scene_graph->start_frame(elapsed);
     _scene_graph->end_frame();
-    return _scene_graph->has_ended();
+    return _race->has_ended();
   }
 
 } // end ns::racer

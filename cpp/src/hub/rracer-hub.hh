@@ -3,6 +3,7 @@
 
 #include "debug/hud.hh"
 #include "hub/hub.hh"
+#include "game/race.hh"
 
 namespace rracer {
 
@@ -22,6 +23,7 @@ namespace rracer {
     AssetManager* _asset_manager;
     HUD* _hud;
     SceneGraph* _scene_graph;
+    Race* _race;
   };
 
 }; // end ns::rracer

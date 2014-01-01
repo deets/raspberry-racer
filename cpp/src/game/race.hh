@@ -3,7 +3,8 @@
 #include "assets/assets.hh"
 #include "scene/scene-graph.hh"
 #include "scene/track.hh"
-#include "scene/car.hh"
+#include "game/game.hh"
+#include "game/car.hh"
 
 namespace rracer {
 
@@ -47,14 +48,14 @@ namespace rracer {
     int box;
   };
 
-  class Race : public SceneNode {
+  class Race : public Game {
   public:
-    Race(SceneGraph& world, AssetManager&, const string& track_name, const string& car_name);
+    Race(SceneGraph* scene_graph, AssetManager&, const string& track_name, const string& car_name);
     virtual void setup_within_world(b2World *physics_world);
     virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
 
   private:
-    SceneGraph& _scene_graph;
+
     AssetManager& _asset_manager;
     string _track_name;
     string _car_name;

@@ -4,9 +4,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/range.hpp>
 #include <boost/range/algorithm_ext.hpp>
-#include "scene/race.hh"
+#include "game/race.hh"
 #include "scene/track.hh"
-#include "scene/car.hh"
+#include "game/car.hh"
 #include "debug/hud.hh"
 
 namespace rracer {
@@ -49,8 +49,8 @@ namespace rracer {
   }
 
 
-  Race::Race(SceneGraph& scene_graph, AssetManager& asset_manager, const string& track_name, const string& car_name) 
-  : _scene_graph(scene_graph)
+  Race::Race(SceneGraph* scene_graph, AssetManager& asset_manager, const string& track_name, const string& car_name) 
+  : Game(scene_graph)
   , _asset_manager(asset_manager)
   , _track_name(track_name)
   , _car_name(car_name)
@@ -66,21 +66,19 @@ namespace rracer {
     };
 
     Track* track = new rracer::Track(_asset_manager, _track_name);
-    AffineTransformator* t = new AffineTransformator(_scene_graph.screen_rect().fit(track->bounds() * 1.1));
-    this->add_object(t);
+    AffineTransformator* t = new AffineTransformator(_scene_graph->screen_rect().fit(track->bounds() * 1.1));
+    _scene_graph->add_object(t);
     t->add_object(track);
     Car* car = new Car(_asset_manager, _asset_manager.json(_car_name));
-    t->add_object(car);
-
     CarInfo car_info(car, track, 0);
     _cars.push_back(car_info);
     HUD* hud = new HUD(
-        Vector(20, _scene_graph.screen_rect().height() - 20),
+        Vector(20, _scene_graph->screen_rect().height() - 20),
         _asset_manager.font(),
-        _scene_graph,
+        *_scene_graph,
         boost::bind(&AffineTransformator::affine_transform, t)
     );
-    _scene_graph.add_object(hud);
+    _scene_graph->add_object(hud);
   }
 
 

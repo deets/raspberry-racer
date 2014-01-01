@@ -3,7 +3,6 @@
 #include <stack>
 #include <iterator>
 #include <boost/intrusive/list.hpp>
-#include <Box2D/Box2D.h>
 
 #include "common/common.hh"
 #include "gfx/window-adapter.hh"
@@ -15,16 +14,14 @@
 namespace rracer {
 
   #define SCENE_FRAMERATE 60.0
-  #define WORLD_VELOCITY_ITERATIONS 6
-  #define WORLD_POSITION_ITERATIONS 2
 
   class SceneRoot : public SceneNode {
   public:
-    SceneRoot(function<void (SceneNode*, SceneNode*)> on_object_added_callback);
-    virtual void on_object_added(SceneNode*, SceneNode*);
+    SceneRoot(); // function<void (SceneNode*, SceneNode*)> on_object_added_callback);
+    //virtual void on_object_added(SceneNode*, SceneNode*);
 
   private:
-    function<void (SceneNode*, SceneNode*)> _on_object_added_callback;
+    //function<void (SceneNode*, SceneNode*)> _on_object_added_callback;
   };
 
 
@@ -78,14 +75,13 @@ namespace rracer {
     // const_iterator begin() const;
     // const_iterator end() const;
 
-    void on_object_added(SceneNode* parent, SceneNode* child);
-    void start_frame(const GameEventVector &events, Real elapsed);
+    // void on_object_added(SceneNode* parent, SceneNode* child);
+    void start_frame(Real elapsed);
     void end_frame();
-    bool has_ended() { return _has_ended; };
+
     void add_object(SceneNode* child);
 
     void set_debug_renderer(DebugRenderer*);
-    b2World* world() const;
     Rect screen_rect() const;
 
     OpenVGAdapter& vg() const;
@@ -96,22 +92,14 @@ namespace rracer {
   private:
     void render();
 
-    bool _has_ended;
-
     WindowAdapter &_window_adapter;
     OpenVGAdapter &_ovg_adapter;
 
     shared_ptr<SceneRoot> _root;
 
-    b2World* _world;
-
     DebugRenderer* _debug_renderer;
 
     Real _fixed_frame_rate;
-
-    GameEventVector _next_frame_events;
-
-    TimeInfo _time_info;
   };
 
 };

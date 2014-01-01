@@ -1,4 +1,4 @@
-#include "scene/race.hh"
+#include "game/race.hh"
 #include "hub/playground-hub.hh"
 
 namespace rracer {
@@ -47,9 +47,9 @@ namespace rracer {
   bool PlaygroundHub::frame(Real elapsed, const GameEventVector& events) {
     _animator.step(elapsed);
     _animator2.step(elapsed);
-    _scene_graph->start_frame(events, elapsed);
+    _scene_graph->start_frame(elapsed);
     _scene_graph->end_frame();
-    return _scene_graph->has_ended();
+    return true;//_scene_graph->has_ended();
   }
 
 } // end ns::racer

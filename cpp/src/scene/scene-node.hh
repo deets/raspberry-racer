@@ -39,9 +39,7 @@ namespace rracer {
 
     virtual ~SceneNode() {}
 
-    virtual void process_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void render(OpenVGCompanion& vgc) const;
-    virtual void setup_within_world(b2World *);
     virtual void debug_render(DebugRenderer& debug_renderer) const;
 
     SceneNode* parent() const;
@@ -54,7 +52,6 @@ namespace rracer {
     iterator begin();
     iterator end();
 
-
     void animator(Animator* animator);
     Animator* animator() const;
 
@@ -64,11 +61,11 @@ namespace rracer {
 
   protected:
 
-    virtual void dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
     virtual void dispatch_render(OpenVGCompanion&);
 
-    void object_added(SceneNode* parent, SceneNode* child);
-    virtual void on_object_added(SceneNode* parent, SceneNode* child);
+    // virtual void dispatch_frame_events(const GameEventVector& events, const TimeInfo& time_info, EventEmitter emit_event);
+    // void object_added(SceneNode* parent, SceneNode* child);
+    // virtual void on_object_added(SceneNode* parent, SceneNode* child);
 
     SceneNodeList _children;
 
